@@ -7,6 +7,7 @@
   * `ProfilesIndex`
     * `ProfileIndexItem`
   * `ProfileForm`
+    * `Header`
   * `ProfileDetail`
     * `Splash`
     * `Title`
