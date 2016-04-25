@@ -56,32 +56,50 @@ progress. Put an x between the brackets for a checkmark: [x] -->
 
 ### Phase 2: Profiles Model, API, and basic APIUtil (1.5 days)
 
-**Objective:** Profiles can be created, read, edited and destroyed through
+**Objective:** Profiles can be created, viewed, edited and destroyed through
 the API.
 
-- [ ] create `Note` model
-- [ ] seed the database with a small amount of test data
+- [ ] create `Profile` model
+- [ ] profiles belong to users
+- [ ] seed the database with Profiles and demo user
 - [ ] CRUD API for notes (`ProfilesController`)
-- [ ] jBuilder views for notes
+- [ ] jBuilder views for profiles
 - [ ] setup Webpack & Flux scaffold
 - [ ] setup `APIUtil` to interact with the API
 - [ ] test out API interaction in the console.
 
-### Phase 3: Flux Architecture and Router (1.5 days)
+### Phase 3: Flux Architecture and Router (2.0 days)
 
 **Objective:** Profiles can be created, read, edited and destroyed with the
 user interface.
 
 - [ ] setup the flux loop with skeleton files
 - [ ] setup React Router
-- implement each note component, building out the flux loop as needed.
-  - [ ] `NotesIndex`
-  - [ ] `NoteIndexItem`
-  - [ ] `NoteForm`
-- [ ] save Notes to the DB when the form loses focus or is left idle
-  after editing.
+- implement each profile component, building out the flux loop as needed.
+  - [ ] `ProfileIndex`
+  - [ ] `ProfileIndexItem`
+  - [ ] `ProfileDetail`
+  - [ ] `DetailDescription`
+  - [ ] `DescriptionItem`
+  - [ ] `DescriptionItemDetail`
+  - [ ] `ProfileForm`
 
-### Phase 4: Start Styling (0.5 days)
+### Phase 4: Google Maps API (2.0 days)
+
+**Objective:** Integrate maps with profiles for geolocation.
+
+- setup Google Maps API
+  - [ ] Get API key for JavaScript Google Map
+- [ ] Add ajax request methods to Utils
+- [ ] Add receive methods in Server Actions and Update Profile Store as needed
+- implement each map component, building out the flux loop as needed.
+  - [ ] `Map`
+- add markers to map to display the location of profiles
+- add filtering to map
+  - [ ] update backend with proper methods to return profiles within params
+- [ ] Test api methods then the map component with Seed data
+
+### Phase 5: Start Styling (0.5 days)
 
 **Objective:** Existing pages (including singup/signin) will look good.
 
@@ -89,40 +107,26 @@ user interface.
 - [ ] position elements on the page
 - [ ] add basic colors & styles
 
-### Phase 5: Notebooks (1 day)
+### Phase 6: Cities (0.5 days)
 
-**Objective:** Notes belong to Notebooks, and can be viewed by notebook.
+**Objective:** Cities are searchable.
 
-- [ ] create `Notebook` model
+- [ ] create `City` model
 - build out API, Flux loop, and components for:
-  - [ ] Notebook CRUD
-  - [ ] adding notes requires a notebook
-  - [ ] moving notes to a different notebook
-  - [ ] viewing notes by notebook
+  - [ ] `Cities`
+
+### Phase 7: Home Page (1.5 day)
+
+**Objective:** Create appealing home page s
+
+- [ ] Integrate React-Bootstrap.
+
+- implement home page components
+  - [ ] `Navbar`
+  - [ ] `SplashScreen`
+  - [ ] `SearchBar`
+  - [ ] `Footer`
 - Use CSS to style new views
-
-Phase 3 adds organization to the Notes. Notes belong to a Notebook,
-which has its own `Index` view.
-
-### Phase 6: Tags (1.5 days)
-
-**Objective:** Notes can be tagged with multiple tags, and tags are searchable.
-
-- [ ] create `Tag` model and join table
-- build out API, Flux loop, and components for:
-  - [ ] fetching tags for notebook
-  - [ ] adding tags to notebook
-  - [ ] creating tags while adding to notebooks
-  - [ ] searching notebooks by tag
-- [ ] Style new elements
-
-### Phase 7: Allow Complex Styling in Notes (0.5 days)
-
-**objective:** Enable complex styling of notes.
-
-- [ ] Integrate `react-quill` (based on Quill.js).
-- [ ] Use Rails helpers to sanitize HTML before rendering.
-- [ ] Style the new Quill elements.
 
 ### Phase 8: Styling Cleanup and Seeding (1 day)
 
@@ -133,11 +137,9 @@ which has its own `Index` view.
 - [ ] Add modals, transitions, and other styling flourishes.
 
 ### Bonus Features (TBD)
-- [ ] Search through notes for blocks of text
-- [ ] Pagination / infinite scroll for Notes Index
-- [ ] Set reminders on notes
-- [ ] Changelogs for Notes
-- [ ] Multiple sessions
+- [ ] Messaging in app instead of using Email
+- [ ] List cities matching search input in dropdown
+- [ ] Add video splash view for home page
 
 [phase-one]: ./docs/phases/phase1.md
 [phase-two]: ./docs/phases/phase2.md
