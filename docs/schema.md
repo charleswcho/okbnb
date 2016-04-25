@@ -12,8 +12,8 @@ location     | string    | not null
 exactLocation| string    | not null
 diet         | string    | not null
 smoker       | boolean   | not null
-Pet          | string    | not null
-Budget       | integer   | not null
+pet          | string    | not null
+budget       | integer   | not null
 
 ## cities
 column name | data type | details
