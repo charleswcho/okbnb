@@ -6,29 +6,28 @@
 
 ## Minimum Viable Product
 
-FresherNote is a web application inspired by Evernote that will be build using Ruby on Rails and React.js.  By the end of Week 9, this app will, at a minimum, satisfy the following criteria:
+OkBnB is a web application inspired by AirBnb that will be build using Ruby on Rails and React.js.  By the end of Week 9, this app will, at a minimum, satisfy the following criteria:
 
 - [ ] New account creation, login, and guest/demo login
 - [ ] Smooth, bug-free navigation
 - [ ] Adequate seed data to demonstrate the site's features
-- [ ] The minimally necessary features for an Evernote-inspired site: note creation and saving, note editing, and notes organized into notebooks
+- [ ] The minimally necessary features for an AirBnb-inspired site: viewing potential tenant profiles and filtering by certain parameters, offer a booking to a tenant, and create new profiles
 - [ ] Hosting on Heroku
 - [ ] CSS styling that is satisfactorily visually appealing
-- [ ] A production README, replacing this README (**NB**: check out the [sample production README](https://github.com/appacademy/sample-project-proposal/blob/master/docs/production_readme.md) -- you'll write this later)
 
 ## Product Goals and Priorities
 
-FresherNote will allow users to do the following:
+OkBnb will allow users to do the following:
 
 <!-- This is a Markdown checklist. Use it to keep track of your
 progress. Put an x between the brackets for a checkmark: [x] -->
 
 - [ ] Create an account (MVP)
 - [ ] Log in / Log out, including as a Guest/Demo User (MVP)
-- [ ] Create, read, edit, and delete notes (MVP)
-- [ ] Organize notes within Notebooks (MVP)
-- [ ] Tag notes with multiple tags (expected feature, but not MVP)
-- [ ] Apply complex styling to notes while editing (expected feature, but not MVP)
+- [ ] View and create tenant profiles (MVP)
+- [ ] Filter through tenant profiles with parameters (MVP)
+- [ ] Contact potential tenants (MVP)
+- [ ] Offer a date range of availability to tenant (expected feature, but not MVP)
 
 ## Design Docs
 * [View Wireframes][views]
@@ -55,14 +54,14 @@ progress. Put an x between the brackets for a checkmark: [x] -->
 - [ ] user signup/signin pages
 - [ ] blank landing page after signin
 
-### Phase 2: Notes Model, API, and basic APIUtil (1.5 days)
+### Phase 2: Profiles Model, API, and basic APIUtil (1.5 days)
 
-**Objective:** Notes can be created, read, edited and destroyed through
+**Objective:** Profiles can be created, read, edited and destroyed through
 the API.
 
 - [ ] create `Note` model
 - [ ] seed the database with a small amount of test data
-- [ ] CRUD API for notes (`NotesController`)
+- [ ] CRUD API for notes (`ProfilesController`)
 - [ ] jBuilder views for notes
 - [ ] setup Webpack & Flux scaffold
 - [ ] setup `APIUtil` to interact with the API
@@ -70,7 +69,7 @@ the API.
 
 ### Phase 3: Flux Architecture and Router (1.5 days)
 
-**Objective:** Notes can be created, read, edited and destroyed with the
+**Objective:** Profiles can be created, read, edited and destroyed with the
 user interface.
 
 - [ ] setup the flux loop with skeleton files

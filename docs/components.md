@@ -1,13 +1,15 @@
 ## Component Hierarchy
 
 * `App`
-  * `SearchIndex`
-  * `NotebooksIndex`
-    * `NotebookIndexItem`
-  * `NotebookForm`
-  * `NotesIndex`
-    * `NoteForm`
-    * `NoteIndexItem`
-  * `NoteDetail`
-    * `NoteTags`
-    * `NoteEditArea`
+  * `SplashScreen`
+    * `Navbar`
+    * `SearchBar`
+  * `ProfilesIndex`
+    * `ProfileIndexItem`
+  * `ProfileForm`
+  * `ProfileDetail`
+    * `Splash`
+    * `Title`
+    * `Description`
+      * `DescriptionItem`
+        * `DescriptionItemDetail`
