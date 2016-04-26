@@ -7,7 +7,8 @@ var UserStore = new Store(AppDispatcher);
 var _currentUsers = {};
 var _authErrors = [];
 
-var addCurrentUser = function(user) {
+var setCurrentUser = function(user) {
+  console.log("5 Set currentUser");
   _currentUser = user;
 };
 
@@ -26,6 +27,7 @@ UserStore.authErrors = function () {
 UserStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
     case UserConstants.RECEIVE_CURRENT_USER:
+      console.log("4 Received currentUser");
       setCurrentUser(payload.currentUser);
       UserStore.__emitChange();
       break;

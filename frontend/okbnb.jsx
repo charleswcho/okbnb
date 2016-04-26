@@ -7,6 +7,9 @@ var Route = ReactRouter.Route;
 var IndexRoute = ReactRouter.IndexRoute;
 var hashHistory = ReactRouter.hashHistory;
 
+var UserActions = require('./actions/userActions');
+window.UserActions = UserActions;
+
 var App = React.createClass({
   render: function(){
     return (

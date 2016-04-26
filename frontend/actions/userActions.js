@@ -5,15 +5,16 @@ var UserConstants = require('../constants/userConstants');
 module.exports = {
   // Client Actions
 
-  fetchCurrentUser: UserApiUtil.fetchCurrentUser,
+  create: UserApiUtil.create,
   login: UserApiUtil.login,
   logout: UserApiUtil.logout,
-  create: UserApiUtil.create,
-  destroy: UserApiUtil.destroy,
+  fetchCurrentUser: UserApiUtil.fetchCurrentUser,
+  // destroy: UserApiUtil.destroy,
 
   // Server Actions
 
   receiveCurrentUser: function (currentUser) {
+    console.log("3 Sending currentUser to store")
     AppDispatcher.dispatch({
       actionType: UserConstants.RECEIVE_CURRENT_USER,
       currentUser: currentUser

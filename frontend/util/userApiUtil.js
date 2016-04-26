@@ -1,16 +1,19 @@
 var UserActions = require('../actions/userActions');
 
 module.exports = {
-
-  create: function () {
+  create: function (credentials) {
+    console.log("1 Sent Create request");
     $.ajax({
       method: "POST",
       url: "api/user",
+      data: { user: credentials },
       success: function (currentUser) {
+        console.log(["2 Received responce", currentUser]);
+        debugger;
         UserActions.receiveCurrentUser(currentUser);
       },
       error: function (e, s) {
-        console.log(["Error", e, "Status", s]);
+        console.log(["Error", e.responseText, "Status", s]);
       }
     });
   },
@@ -33,12 +36,12 @@ module.exports = {
     $.ajax({
       method: "POST",
       url: "api/session",
-      data: { user: credentials }
+      data: { user: credentials },
       success: function (currentUser) {
         UserActions.receiveCurrentUser(currentUser);
       },
       error: function (e, s) {
-        console.log(["Error", e, "Status", s]);
+        console.log(["Error", e.responseText, "Status", s]);
       }
     });
   },
@@ -51,7 +54,7 @@ module.exports = {
         UserActions.removeCurrentUser(currentUser);
       },
       error: function (e, s) {
-        console.log(["Error", e, "Status", s]);
+        console.log(["Error", e.responseText, "Status", s]);
       }
     });
   },
@@ -63,7 +66,7 @@ module.exports = {
         UserActions.receiveCurrentUser(currentUser);
       },
       error: function (e, s) {
-        console.log(["Error", e, "Status", s]);
+        console.log(["Error", e.responseText, "Status", s]);
       }
     });
   }
