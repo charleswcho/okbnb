@@ -25,6 +25,8 @@ class User < ActiveRecord::Base
   validates :session_token, presence: true, uniqueness: true
   validates :username, presence: true, uniqueness: true
 
+  has_one :profile
+
   def self.find_by_credentials(username, password)
     user = User.find_by(username: username)
 

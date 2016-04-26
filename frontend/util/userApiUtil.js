@@ -12,8 +12,8 @@ module.exports = {
         debugger;
         UserActions.receiveCurrentUser(currentUser);
       },
-      error: function (e, s) {
-        console.log(["Error", e.responseText, "Status", s]);
+      error: function (e) {
+        console.log(["Error", e.responseText]);
       }
     });
   },
@@ -26,8 +26,8 @@ module.exports = {
   //     success: function (currentUser) {
   //       UserActions.receiveCurrentUser(currentUser);
   //     },
-  //     error: function (e, s) {
-  //       console.log(["Error", e, "Status", s]);
+  //     error: function (e) {
+  //       console.log(["Error", e]);
   //     }
   //   });
   // }
@@ -40,8 +40,8 @@ module.exports = {
       success: function (currentUser) {
         UserActions.receiveCurrentUser(currentUser);
       },
-      error: function (e, s) {
-        console.log(["Error", e.responseText, "Status", s]);
+      error: function (e) {
+        console.log(["Error", e.responseText]);
       }
     });
   },
@@ -53,8 +53,8 @@ module.exports = {
       success: function (currentUser) {
         UserActions.removeCurrentUser(currentUser);
       },
-      error: function (e, s) {
-        console.log(["Error", e.responseText, "Status", s]);
+      error: function (e) {
+        console.log(["Error", e.responseText]);
       }
     });
   },
@@ -65,8 +65,8 @@ module.exports = {
       success: function (currentUser) {
         UserActions.receiveCurrentUser(currentUser);
       },
-      error: function (e, s) {
-        console.log(["Error", e.responseText, "Status", s]);
+      error: function (e) {
+        console.log(["Error", e.responseText]);
       }
     });
   }
