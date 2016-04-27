@@ -1,10 +1,9 @@
+var AppDispatcher = require('../dispatcher/dispatcher');
+var UserConstants = require('../constants/userConstants');
 var Store = require('flux/utils').Store;
-var AppDispatcher = require('../dispatcher/dispatcher.js');
-var UserConstants = require('../constants/sessionConstants.js');
 
 var UserStore = new Store(AppDispatcher);
-
-var _currentUsers = {};
+var _currentUser = {};
 var _authErrors = [];
 
 var setCurrentUser = function(user) {

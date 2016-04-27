@@ -1,4 +1,4 @@
-var UserActions = require('../actions/userActions');
+var ServerActions = require('../actions/serverActions');
 
 module.exports = {
   create: function (credentials) {
@@ -9,8 +9,7 @@ module.exports = {
       data: { user: credentials },
       success: function (currentUser) {
         console.log(["2 Received responce", currentUser]);
-        debugger;
-        UserActions.receiveCurrentUser(currentUser);
+        ServerActions.receiveCurrentUser(currentUser);
       },
       error: function (e) {
         console.log(["Error", e.responseText]);
@@ -24,7 +23,7 @@ module.exports = {
   //     method: "POST",
   //     url: "api/user",
   //     success: function (currentUser) {
-  //       UserActions.receiveCurrentUser(currentUser);
+  //       ServerActions.receiveCurrentUser(currentUser);
   //     },
   //     error: function (e) {
   //       console.log(["Error", e]);
@@ -38,7 +37,7 @@ module.exports = {
       url: "api/session",
       data: { user: credentials },
       success: function (currentUser) {
-        UserActions.receiveCurrentUser(currentUser);
+        ServerActions.receiveCurrentUser(currentUser);
       },
       error: function (e) {
         console.log(["Error", e.responseText]);
@@ -51,7 +50,7 @@ module.exports = {
       method: "DELETE",
       url: "api/session",
       success: function (currentUser) {
-        UserActions.removeCurrentUser(currentUser);
+        ServerActions.removeCurrentUser(currentUser);
       },
       error: function (e) {
         console.log(["Error", e.responseText]);
@@ -63,7 +62,7 @@ module.exports = {
     $.ajax({
       url: "api/session",
       success: function (currentUser) {
-        UserActions.receiveCurrentUser(currentUser);
+        ServerActions.receiveCurrentUser(currentUser);
       },
       error: function (e) {
         console.log(["Error", e.responseText]);

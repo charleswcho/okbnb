@@ -1,4 +1,4 @@
-var UserActions = require('../actions/userActions');
+var ClientActions = require('../actions/clientActions');
 var UserStore = require('../stores/userStore');
 
 // We can add this mixin to any component by requiring it and adding it under the property mixins like so:
@@ -19,7 +19,7 @@ module.exports = {
   componentDidMount: function () {
     UserStore.addListener(updateUser);
     if (!UserStore.currentUser()) {
-      UserActions.fetchCurrentUser()
+      ClientActions.fetchCurrentUser()
     }
   },
 

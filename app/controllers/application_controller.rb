@@ -26,7 +26,6 @@ class ApplicationController < ActionController::Base
   end
 
   def require_user!
-    # TODO: Need to pop up my model if the User needs to login
-    # redirect_to new_session_url if current_user.nil?
+    render json: ["Login Required"] unless logged_in?
   end
 end

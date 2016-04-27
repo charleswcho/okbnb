@@ -26,6 +26,7 @@ ProfileStore.find = function(id){
 ProfileStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
     case ProfileConstants.PROFILES_RECEIVED:
+      console.log("Received Profiles at store");
       resetProfiles(payload.profiles);
       ProfileStore.__emitChange();
       break;

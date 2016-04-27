@@ -53,12 +53,15 @@
 	var IndexRoute = ReactRouter.IndexRoute;
 	var hashHistory = ReactRouter.hashHistory;
 	
-	var UserActions = __webpack_require__(225);
-	window.UserActions = UserActions;
+	var NavBar = __webpack_require__(253);
 	
-	var ClientActions = __webpack_require__(232);
+	var ClientActions = __webpack_require__(225);
 	window.ClientActions = ClientActions;
-	var ProfileStore = __webpack_require__(236);
+	
+	var UserStore = __webpack_require__(254);
+	window.UserStore = UserStore;
+	
+	var ProfileStore = __webpack_require__(235);
 	window.ProfileStore = ProfileStore;
 	
 	var App = React.createClass({
@@ -68,13 +71,14 @@
 	    return React.createElement(
 	      'div',
 	      null,
+	      React.createElement(NavBar, null),
 	      React.createElement(
 	        'header',
 	        null,
 	        React.createElement(
 	          'h1',
 	          null,
-	          'Bench BnB'
+	          'OKBnB'
 	        )
 	      ),
 	      this.props.children
@@ -25464,41 +25468,26 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var UserApiUtil = __webpack_require__(226);
-	var AppDispatcher = __webpack_require__(228);
-	var UserConstants = __webpack_require__(227);
+	var ApiUtil = __webpack_require__(227);
 	
 	module.exports = {
-	  // Client Actions
-	
+	  // User and Session methods
 	  create: UserApiUtil.create,
 	  login: UserApiUtil.login,
 	  logout: UserApiUtil.logout,
 	  fetchCurrentUser: UserApiUtil.fetchCurrentUser,
-	  // destroy: UserApiUtil.destroy,
 	
-	  // Server Actions
-	
-	  receiveCurrentUser: function (currentUser) {
-	    console.log("3 Sending currentUser to store");
-	    AppDispatcher.dispatch({
-	      actionType: UserConstants.RECEIVE_CURRENT_USER,
-	      currentUser: currentUser
-	    });
-	  },
-	
-	  removeCurrentUser: function (currentUser) {
-	    AppDispatcher.dispatch({
-	      actionType: UserConstants.REMOVE_CURRENT_USER,
-	      currentUser: currentUser
-	    });
-	  }
+	  // Profile methods
+	  fetchProfiles: ApiUtil.fetchProfiles,
+	  fetchProfile: ApiUtil.fetchProfile,
+	  createProfile: ApiUtil.createProfile
 	};
 
 /***/ },
 /* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var UserActions = __webpack_require__(225);
+	var ServerActions = __webpack_require__(228);
 	
 	module.exports = {
 	  create: function (credentials) {
@@ -25509,8 +25498,7 @@
 	      data: { user: credentials },
 	      success: function (currentUser) {
 	        console.log(["2 Received responce", currentUser]);
-	        debugger;
-	        UserActions.receiveCurrentUser(currentUser);
+	        ServerActions.receiveCurrentUser(currentUser);
 	      },
 	      error: function (e) {
 	        console.log(["Error", e.responseText]);
@@ -25524,7 +25512,7 @@
 	  //     method: "POST",
 	  //     url: "api/user",
 	  //     success: function (currentUser) {
-	  //       UserActions.receiveCurrentUser(currentUser);
+	  //       ServerActions.receiveCurrentUser(currentUser);
 	  //     },
 	  //     error: function (e) {
 	  //       console.log(["Error", e]);
@@ -25538,7 +25526,7 @@
 	      url: "api/session",
 	      data: { user: credentials },
 	      success: function (currentUser) {
-	        UserActions.receiveCurrentUser(currentUser);
+	        ServerActions.receiveCurrentUser(currentUser);
 	      },
 	      error: function (e) {
 	        console.log(["Error", e.responseText]);
@@ -25551,7 +25539,7 @@
 	      method: "DELETE",
 	      url: "api/session",
 	      success: function (currentUser) {
-	        UserActions.removeCurrentUser(currentUser);
+	        ServerActions.removeCurrentUser(currentUser);
 	      },
 	      error: function (e) {
 	        console.log(["Error", e.responseText]);
@@ -25563,7 +25551,7 @@
 	    $.ajax({
 	      url: "api/session",
 	      success: function (currentUser) {
-	        UserActions.receiveCurrentUser(currentUser);
+	        ServerActions.receiveCurrentUser(currentUser);
 	      },
 	      error: function (e) {
 	        console.log(["Error", e.responseText]);
@@ -25574,24 +25562,105 @@
 
 /***/ },
 /* 227 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	
+	var ServerActions = __webpack_require__(228);
 	
 	module.exports = {
-	  RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER",
-	  REMOVE_CURRENT_USER: "REMOVE_CURRENT_USER"
+	  fetchProfiles: function () {
+	    $.ajax({
+	      url: "api/profiles",
+	      success: function (profiles) {
+	        ServerActions.receiveProfiles(profiles);
+	      },
+	      error: function (e) {
+	        console.log(["Error", e.responseText]);
+	      }
+	    });
+	  },
+	
+	  fetchProfile: function (id) {
+	    $.ajax({
+	      url: "api/profile" + id,
+	      success: function (profile) {
+	        ServerActions.receiveProfile(profile);
+	      },
+	      error: function (e) {
+	        console.log(["Error", e.responseText]);
+	      }
+	    });
+	  },
+	
+	  createProfile: function (profileParams) {
+	    console.log("Sent profile POST request");
+	    $.ajax({
+	      method: "POST",
+	      url: "api/profiles",
+	      data: {
+	        profile: profileParams
+	      },
+	      success: function (profile) {
+	        console.log("Created new Profile");
+	        ServerActions.receiveProfile(profile);
+	      },
+	      error: function (e) {
+	        console.log(["Error", e.responseText]);
+	      }
+	    });
+	  }
 	};
 
 /***/ },
 /* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(229).Dispatcher;
-	module.exports = new Dispatcher();
+	var AppDispatcher = __webpack_require__(229);
+	var ProfileConstants = __webpack_require__(233);
+	var UserConstants = __webpack_require__(234);
+	
+	module.exports = {
+	  // User and Session methods
+	  receiveCurrentUser: function (currentUser) {
+	    console.log("3 Sending currentUser to store");
+	    AppDispatcher.dispatch({
+	      actionType: UserConstants.RECEIVE_CURRENT_USER,
+	      currentUser: currentUser
+	    });
+	    console.log(AppDispatcher.isDispatching());
+	  },
+	
+	  removeCurrentUser: function (currentUser) {
+	    AppDispatcher.dispatch({
+	      actionType: UserConstants.REMOVE_CURRENT_USER,
+	      currentUser: currentUser
+	    });
+	  },
+	
+	  // Profile methods
+	  receiveProfiles: function (profiles) {
+	    AppDispatcher.dispatch({
+	      actionType: ProfileConstants.PROFILES_RECEIVED,
+	      profiles: profiles
+	    });
+	  },
+	  receiveProfile: function (profile) {
+	    console.log("Sending profile to store");
+	    AppDispatcher.dispatch({
+	      actionType: ProfileConstants.PROFILE_RECEIVED,
+	      profile: profile
+	    });
+	  }
+	};
 
 /***/ },
 /* 229 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Dispatcher = __webpack_require__(230).Dispatcher;
+	module.exports = new Dispatcher();
+
+/***/ },
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25603,11 +25672,11 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Dispatcher = __webpack_require__(230);
+	module.exports.Dispatcher = __webpack_require__(231);
 
 
 /***/ },
-/* 230 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25629,7 +25698,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(231);
+	var invariant = __webpack_require__(232);
 	
 	var _prefix = 'ID_';
 	
@@ -25844,7 +25913,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 231 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25899,92 +25968,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 232 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var ApiUtil = __webpack_require__(233);
-	
-	module.exports = {
-	  fetchProfiles: ApiUtil.fetchProfiles,
-	  fetchProfile: ApiUtil.fetchProfile,
-	  createProfile: ApiUtil.createProfile
-	};
-
-/***/ },
 /* 233 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var ServerActions = __webpack_require__(234);
-	
-	module.exports = {
-	  fetchProfiles: function () {
-	    $.ajax({
-	      url: "api/profiles",
-	      success: function (profiles) {
-	        ServerActions.receiveProfiles(profiles);
-	      },
-	      error: function (e) {
-	        console.log(["Error", e.responseText]);
-	      }
-	    });
-	  },
-	
-	  fetchProfile: function (id) {
-	    $.ajax({
-	      url: "api/profile" + id,
-	      success: function (profile) {
-	        ServerActions.receiveProfile(profile);
-	      },
-	      error: function (e) {
-	        console.log(["Error", e.responseText]);
-	      }
-	    });
-	  },
-	
-	  createProfile: function (profileParams) {
-	    console.log("Sent profile POST request");
-	    $.ajax({
-	      method: "POST",
-	      url: "api/profiles",
-	      data: {
-	        profile: profileParams
-	      },
-	      success: function (profile) {
-	        console.log("Created new Profile");
-	        ServerActions.receiveProfile(profile);
-	      },
-	      error: function (e) {
-	        console.log(["Error", e.responseText]);
-	      }
-	    });
-	  }
-	};
-
-/***/ },
-/* 234 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(228);
-	var ProfileConstants = __webpack_require__(235);
-	
-	module.exports = {
-	  receiveProfiles: function (profiles) {
-	    AppDispatcher.dispatch({
-	      actionType: ProfileConstants.PROFILES_RECEIVED,
-	      profiles: profiles
-	    });
-	  },
-	  receiveProfile: function (profile) {
-	    console.log("Sending profile to store");
-	    AppDispatcher.dispatch({
-	      actionType: ProfileConstants.PROFILE_RECEIVED,
-	      profile: profile
-	    });
-	  }
-	};
-
-/***/ },
-/* 235 */
 /***/ function(module, exports) {
 
 	
@@ -25995,12 +25979,23 @@
 	};
 
 /***/ },
-/* 236 */
+/* 234 */
+/***/ function(module, exports) {
+
+	
+	
+	module.exports = {
+	  RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER",
+	  REMOVE_CURRENT_USER: "REMOVE_CURRENT_USER"
+	};
+
+/***/ },
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(237).Store;
-	var AppDispatcher = __webpack_require__(228);
-	var ProfileConstants = __webpack_require__(235);
+	var Store = __webpack_require__(236).Store;
+	var AppDispatcher = __webpack_require__(229);
+	var ProfileConstants = __webpack_require__(233);
 	
 	var ProfileStore = new Store(AppDispatcher);
 	
@@ -26026,6 +26021,7 @@
 	ProfileStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case ProfileConstants.PROFILES_RECEIVED:
+	      console.log("Received Profiles at store");
 	      resetProfiles(payload.profiles);
 	      ProfileStore.__emitChange();
 	      break;
@@ -26040,7 +26036,7 @@
 	module.exports = ProfileStore;
 
 /***/ },
-/* 237 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26052,15 +26048,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(238);
-	module.exports.MapStore = __webpack_require__(241);
-	module.exports.Mixin = __webpack_require__(253);
-	module.exports.ReduceStore = __webpack_require__(242);
-	module.exports.Store = __webpack_require__(243);
+	module.exports.Container = __webpack_require__(237);
+	module.exports.MapStore = __webpack_require__(240);
+	module.exports.Mixin = __webpack_require__(252);
+	module.exports.ReduceStore = __webpack_require__(241);
+	module.exports.Store = __webpack_require__(242);
 
 
 /***/ },
-/* 238 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26082,10 +26078,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(239);
+	var FluxStoreGroup = __webpack_require__(238);
 	
-	var invariant = __webpack_require__(231);
-	var shallowEqual = __webpack_require__(240);
+	var invariant = __webpack_require__(232);
+	var shallowEqual = __webpack_require__(239);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -26243,7 +26239,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 239 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26262,7 +26258,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(231);
+	var invariant = __webpack_require__(232);
 	
 	/**
 	 * FluxStoreGroup allows you to execute a callback on every dispatch after
@@ -26324,7 +26320,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 240 */
+/* 239 */
 /***/ function(module, exports) {
 
 	/**
@@ -26379,7 +26375,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 241 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26400,10 +26396,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(242);
-	var Immutable = __webpack_require__(252);
+	var FluxReduceStore = __webpack_require__(241);
+	var Immutable = __webpack_require__(251);
 	
-	var invariant = __webpack_require__(231);
+	var invariant = __webpack_require__(232);
 	
 	/**
 	 * This is a simple store. It allows caching key value pairs. An implementation
@@ -26529,7 +26525,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 242 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26550,10 +26546,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(243);
+	var FluxStore = __webpack_require__(242);
 	
-	var abstractMethod = __webpack_require__(251);
-	var invariant = __webpack_require__(231);
+	var abstractMethod = __webpack_require__(250);
+	var invariant = __webpack_require__(232);
 	
 	var FluxReduceStore = (function (_FluxStore) {
 	  _inherits(FluxReduceStore, _FluxStore);
@@ -26636,7 +26632,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 243 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26655,11 +26651,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(244);
+	var _require = __webpack_require__(243);
 	
 	var EventEmitter = _require.EventEmitter;
 	
-	var invariant = __webpack_require__(231);
+	var invariant = __webpack_require__(232);
 	
 	/**
 	 * This class should be extended by the stores in your application, like so:
@@ -26819,7 +26815,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 244 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26832,14 +26828,14 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(245)
+	  EventEmitter: __webpack_require__(244)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 245 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26858,11 +26854,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(246);
-	var EventSubscriptionVendor = __webpack_require__(248);
+	var EmitterSubscription = __webpack_require__(245);
+	var EventSubscriptionVendor = __webpack_require__(247);
 	
-	var emptyFunction = __webpack_require__(250);
-	var invariant = __webpack_require__(249);
+	var emptyFunction = __webpack_require__(249);
+	var invariant = __webpack_require__(248);
 	
 	/**
 	 * @class BaseEventEmitter
@@ -27036,7 +27032,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 246 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -27057,7 +27053,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(247);
+	var EventSubscription = __webpack_require__(246);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -27089,7 +27085,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 247 */
+/* 246 */
 /***/ function(module, exports) {
 
 	/**
@@ -27143,7 +27139,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 248 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27162,7 +27158,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(249);
+	var invariant = __webpack_require__(248);
 	
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -27252,7 +27248,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 249 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27307,7 +27303,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 250 */
+/* 249 */
 /***/ function(module, exports) {
 
 	/**
@@ -27349,7 +27345,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 251 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -27366,7 +27362,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(231);
+	var invariant = __webpack_require__(232);
 	
 	function abstractMethod(className, methodName) {
 	   true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Subclasses of %s must override %s() with their own implementation.', className, methodName) : invariant(false) : undefined;
@@ -27376,7 +27372,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 252 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32360,7 +32356,7 @@
 	}));
 
 /***/ },
-/* 253 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -32377,9 +32373,9 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(239);
+	var FluxStoreGroup = __webpack_require__(238);
 	
-	var invariant = __webpack_require__(231);
+	var invariant = __webpack_require__(232);
 	
 	/**
 	 * `FluxContainer` should be preferred over this mixin, but it requires using
@@ -32481,6 +32477,186 @@
 	
 	module.exports = FluxMixinLegacy;
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var CurrentUserStateMixin = __webpack_require__(255);
+	
+	var ClientActions = __webpack_require__(225);
+	var UserStore = __webpack_require__(254);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  mixins: [CurrentUserStateMixin],
+	
+	  getInitialState: function () {
+	    return {
+	      showSignUpModal: false,
+	      showLoginModal: false
+	    };
+	  },
+	
+	  openSignUpModal: function () {
+	    this.setSate({ showSignUpModal: true });
+	  },
+	
+	  closeSignUpModal: function () {
+	    this.setSate({ showSignUpModal: false });
+	  },
+	
+	  openLoginModal: function () {
+	    this.setSate({ showLoginModal: true });
+	  },
+	
+	  closeLoginModal: function () {
+	    this.setSate({ showLoginModal: false });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      Navbar,
+	      null,
+	      React.createElement(
+	        Navbar.Header,
+	        null,
+	        React.createElement(
+	          Navbar.Brand,
+	          null,
+	          React.createElement(
+	            'a',
+	            { href: '#' },
+	            'React-Bootstrap'
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        Nav,
+	        null,
+	        React.createElement(
+	          NavItem,
+	          { eventKey: 1, href: '#' },
+	          'Link'
+	        ),
+	        React.createElement(
+	          NavItem,
+	          { eventKey: 2, href: '#' },
+	          'Link'
+	        ),
+	        React.createElement(
+	          NavDropdown,
+	          { eventKey: 3, title: 'Dropdown', id: 'basic-nav-dropdown' },
+	          React.createElement(
+	            MenuItem,
+	            { eventKey: 3.1 },
+	            'Action'
+	          ),
+	          React.createElement(
+	            MenuItem,
+	            { eventKey: 3.2 },
+	            'Another action'
+	          ),
+	          React.createElement(
+	            MenuItem,
+	            { eventKey: 3.3 },
+	            'Something else here'
+	          ),
+	          React.createElement(MenuItem, { divider: true }),
+	          React.createElement(
+	            MenuItem,
+	            { eventKey: 3.3 },
+	            'Separated link'
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(229);
+	var UserConstants = __webpack_require__(234);
+	var Store = __webpack_require__(236).Store;
+	
+	var UserStore = new Store(AppDispatcher);
+	var _currentUser = {};
+	var _authErrors = [];
+	
+	var setCurrentUser = function (user) {
+	  console.log("5 Set currentUser");
+	  _currentUser = user;
+	};
+	
+	var deleteCurrentUser = function () {
+	  _currentUser = {};
+	};
+	
+	UserStore.currentUser = function () {
+	  return _currentUser;
+	};
+	
+	UserStore.authErrors = function () {
+	  return _authErrors;
+	};
+	
+	UserStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case UserConstants.RECEIVE_CURRENT_USER:
+	      console.log("4 Received currentUser");
+	      setCurrentUser(payload.currentUser);
+	      UserStore.__emitChange();
+	      break;
+	    case UserConstants.REMOVE_CURRENT_USER:
+	      deleteCurrentUser();
+	      UserStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = UserStore;
+
+/***/ },
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ClientActions = __webpack_require__(225);
+	var UserStore = __webpack_require__(254);
+	
+	// We can add this mixin to any component by requiring it and adding it under the property mixins like so:
+	//
+	// var Component = React.createClass({
+	//     mixins: [CurrentUserStateMixin],
+	//     //other methods go here
+	// })
+	
+	module.exports = {
+	  getInitialState: function () {
+	    this.setState({
+	      currentUser: UserStore.currentUser(),
+	      authErrors: UserStore.authErrors()
+	    });
+	  },
+	
+	  componentDidMount: function () {
+	    UserStore.addListener(updateUser);
+	    if (!UserStore.currentUser()) {
+	      ClientActions.fetchCurrentUser();
+	    }
+	  },
+	
+	  updateUser: function () {
+	    this.setState({
+	      currentUser: UserStore.currentUser(),
+	      authErrors: UserStore.authErrors()
+	    });
+	  }
+	};
 
 /***/ }
 /******/ ]);
