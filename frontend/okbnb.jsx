@@ -28,7 +28,12 @@ var App = React.createClass({
 
 var Router = (
   <Router history={hashHistory}>
-    <Route path="/" component={App} />
+    <Route path="/" component={App}>
+      // <IndexRoute component={LandingPage}>
+      // <Route path="profiles" component={ProfilesIndex}>
+      //   <Route path="profiles/:id" component={ProfileDetail}/>
+      // </Route>
+    </Route>
   </Router>
 );
 
