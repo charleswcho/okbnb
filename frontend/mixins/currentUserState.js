@@ -17,7 +17,7 @@ module.exports = {
   },
 
   componentDidMount: function () {
-    UserStore.addListener(updateUser);
+    UserStore.addListener(this.updateUser);
     if (!UserStore.currentUser()) {
       ClientActions.fetchCurrentUser()
     }

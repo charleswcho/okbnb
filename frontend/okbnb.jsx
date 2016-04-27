@@ -22,8 +22,7 @@ var App = React.createClass({
   render: function(){
     return (
         <div>
-          <NavBar/>
-          <header><h1>OKBnB</h1></header>
+          <header><NavBar/></header>
           {this.props.children}
         </div>
     );
