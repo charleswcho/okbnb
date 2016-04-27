@@ -3,6 +3,7 @@ var ServerActions = require('../actions/serverActions');
 module.exports = {
   create: function (credentials) {
     console.log("1 Sent Create request");
+    console.log(credentials)
     $.ajax({
       method: "POST",
       url: "api/user",
@@ -31,7 +32,7 @@ module.exports = {
   //   });
   // }
 
-  login: function (credentials) {
+  signIn: function (credentials) {
     $.ajax({
       method: "POST",
       url: "api/session",
@@ -45,7 +46,7 @@ module.exports = {
     });
   },
 
-  logout: function () {
+  signOut: function () {
     $.ajax({
       method: "DELETE",
       url: "api/session",

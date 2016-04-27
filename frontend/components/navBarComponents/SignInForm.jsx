@@ -26,17 +26,17 @@ module.exports = React.createClass({
 
   handleSubmit: function(e) {
     e.preventDefault();
-    this.props.closeLoginModal()
-    ClientActions.login({
+    this.props.closeSignInModal()
+    ClientActions.signIn({
       username: this.state.username,
       password: this.state.password
     });
   },
 
-  demoLogin: function (e) {
+  demoSignIn: function (e) {
     e.preventDefault();
-    this.props.closeLoginModal()
-    ClientActions.login({
+    this.props.closeSignInModal()
+    ClientActions.signIn({
       username: "Guest",
       password: "1234567"
     });
@@ -48,14 +48,14 @@ module.exports = React.createClass({
 
     return (
       <form className='auth-form' onSubmit={this.handleSubmit}>
-        <h1 className-'signup-header'>Login</h1>
-        <input className='auth-input' type='text' value={username} p
-               laceholder='Username' onInput={this.usernameChanged} />
+        <h2 className='auth-header'>Sign In</h2>
+        <input className='auth-input' type='text' value={username}
+               placeholder='Username' onInput={this.usernameChanged} />
 
         <input className='auth-input' type='password' value={password}
                placeholder='Password' onInput={this.passwordChanged} />
-        <a className='demo-link' onClick={demoLogin}>demo account</a>
-        <button className='auth-submit' type='submit'>Login</button>
+             <a className='demo-link' onClick={this.demoSignIn}>demo account</a>
+        <button className='auth-submit' type='submit'>Sign In</button>
       </form>
     )
   }

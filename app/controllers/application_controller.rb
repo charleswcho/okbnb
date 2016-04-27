@@ -12,20 +12,20 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find_by_session_token(session[:session_token])
   end
 
-  def logged_in?
+  def signed_in?
     !current_user.nil?
   end
 
-  def login_user!(user)
+  def sign_in_user!(user)
     session[:session_token] = user.reset_session_token!
   end
 
-  def logout_user!
+  def sign_out_user!
     current_user.reset_session_token!
     session[:session_token] = nil
   end
 
   def require_user!
-    render json: ["Login Required"] unless logged_in?
+    render json: ["Sign in required"] unless logged_in?
   end
 end
