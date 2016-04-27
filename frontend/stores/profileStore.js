@@ -1,6 +1,6 @@
 var Store = require('flux/utils').Store;
 var AppDispatcher = require('../dispatcher/dispatcher');
-var BenchConstants = require('../constants/profileConstants');
+var ProfileConstants = require('../constants/profileConstants');
 
 var ProfileStore = new Store(AppDispatcher);
 
@@ -11,6 +11,7 @@ function resetProfiles (profiles) {
 };
 
 function addProfile (profile) {
+  console.log("Added Profile to store");
   _profiles[profile.id] = profile;
 };
 
@@ -29,10 +30,11 @@ ProfileStore.__onDispatch = function (payload) {
       ProfileStore.__emitChange();
       break;
     case ProfileConstants.PROFILE_RECEIVED:
+      console.log("Received Profile at store");
       addProfile(payload.profile);
       ProfileStore.__emitChange();
       break;
   }
 };
 
-module.exports = BenchStore;
+module.exports = ProfileStore;

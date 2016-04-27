@@ -17,10 +17,10 @@
 #
 
 class Profile < ActiveRecord::Base
-  validates :profilePicURL, :name, :description,
-            :location, :smoker, :pet, :budget, presence: true
+  validates :user_id, :profilePicURL, :name, :description,
+            :location, :pet, :budget, presence: true
   validates :smoker, inclusion: { in: [true, false] }
-  validates :pet, inclusion: { in: %w(Cat, Dog, Bird, Fish) }
+  validates :pet, inclusion: { in: ["Cat", "Dog", "Bird", "Fish"] }
 
   belongs_to :user
 end

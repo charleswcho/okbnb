@@ -1,6 +1,6 @@
-var ApiUtil = require('../util/apiUtil');
+var ApiUtil = require('../util/apiUtils');
 
-modules.exports = {
+module.exports = {
   fetchProfiles: ApiUtil.fetchProfiles,
   fetchProfile: ApiUtil.fetchProfile,
   createProfile: ApiUtil.createProfile,

@@ -9,6 +9,7 @@ module.exports = {
     });
   },
   receiveProfile: function(profile){
+    console.log("Sending profile to store");
     AppDispatcher.dispatch({
       actionType: ProfileConstants.PROFILE_RECEIVED,
       profile: profile

@@ -10,6 +10,11 @@ var hashHistory = ReactRouter.hashHistory;
 var UserActions = require('./actions/userActions');
 window.UserActions = UserActions;
 
+var ClientActions = require('./actions/clientActions');
+window.ClientActions = ClientActions;
+var ProfileStore = require('./stores/profileStore');
+window.ProfileStore = ProfileStore;
+
 var App = React.createClass({
   render: function(){
     return (
