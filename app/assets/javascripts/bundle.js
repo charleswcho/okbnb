@@ -56,6 +56,8 @@
 	var NavBar = __webpack_require__(225);
 	var SplashScreen = __webpack_require__(524);
 	
+	var Index = __webpack_require__(527);
+	
 	// These are for testing
 	
 	var ClientActions = __webpack_require__(492);
@@ -77,7 +79,6 @@
 	      'div',
 	      null,
 	      React.createElement(NavBar, null),
-	      React.createElement(SplashScreen, null),
 	      this.props.children
 	    );
 	  }
@@ -86,7 +87,12 @@
 	var Router = React.createElement(
 	  Router,
 	  { history: hashHistory },
-	  React.createElement(Route, { path: '/', component: App })
+	  React.createElement(
+	    Route,
+	    { path: '/', component: App },
+	    React.createElement(IndexRoute, { component: SplashScreen }),
+	    React.createElement(Route, { path: '/search/:loc', component: Index })
+	  )
 	);
 	
 	document.addEventListener('DOMContentLoaded', function () {
@@ -51996,6 +52002,79 @@
 
 	var React = __webpack_require__(1);
 	
+	var SearchBar = __webpack_require__(526);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  getInitialState: function () {
+	    return {};
+	  },
+	
+	  render: function () {
+	    return React.createElement(SearchBar, null);
+	  }
+	});
+
+/***/ },
+/* 525 */,
+/* 526 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var hashHistory = __webpack_require__(166).hashHistory;
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	
+	  getInitialState: function () {
+	    return {
+	      location: '',
+	      placeholder: 'Where to?'
+	    };
+	  },
+	
+	  locationChanged: function (e) {
+	    e.preventDefault();
+	    this.setState({
+	      location: e.target.value
+	    });
+	  },
+	
+	  handleSearch: function (e) {
+	    e.preventDefault();
+	    if (this.state.location === '') {
+	      this.setState({ placeholder: 'Please enter a location' });
+	    } else {
+	      var loc = this.state.location.replace(/\W+/g, "-");
+	      hashHistory.push({ pathname: 'search/' + loc });
+	    }
+	  },
+	
+	  render: function () {
+	    var location = this.state.location;
+	
+	    return React.createElement(
+	      'form',
+	      { className: 'search-form', onSubmit: this.handleSearch },
+	      React.createElement('input', { className: 'search-input', type: 'text', value: location,
+	        placeholder: this.state.placeholder, onInput: this.locationChanged }),
+	      React.createElement(
+	        'button',
+	        { className: 'search-submit', type: 'submit' },
+	        'Search'
+	      )
+	    );
+	  }
+	});
+
+/***/ },
+/* 527 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
 	module.exports = React.createClass({
 	  displayName: 'exports',
 	
@@ -52007,7 +52086,7 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      'This is a picture'
+	      'This is a list of Profiles'
 	    );
 	  }
 	});

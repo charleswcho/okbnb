@@ -1,7 +1,5 @@
 var React = require('react');
 
-var SearchBar = require('./splashScreenComponents/searchBar');
-
 module.exports = React.createClass({
   getInitialState: function () {
     return {};
@@ -9,7 +7,7 @@ module.exports = React.createClass({
 
   render: function () {
     return (
-      <SearchBar/>
+      <div>This is a list of Profiles</div>
     );
   }
 });

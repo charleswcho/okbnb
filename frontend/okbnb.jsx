@@ -10,6 +10,8 @@ var hashHistory = ReactRouter.hashHistory;
 var NavBar = require('./components/navBar');
 var SplashScreen = require('./components/splashScreen');
 
+var Index = require('./components/index');
+
 // These are for testing
 
 var ClientActions = require('./actions/clientActions');
@@ -28,7 +30,6 @@ var App = React.createClass({
     return (
       <div>
         <NavBar/>
-        <SplashScreen/>
         {this.props.children}
       </div>
     );
@@ -37,8 +38,9 @@ var App = React.createClass({
 
 var Router = (
   <Router history={hashHistory}>
-    <Route path="/" component={App}>
-
+    <Route path='/' component={App}>
+      <IndexRoute component={SplashScreen}/>
+      <Route path='/search/:loc' component={Index}/>
     </Route>
   </Router>
 );
