@@ -28,6 +28,7 @@ module.exports = {
 
   // Profile methods
   receiveProfiles: function(profiles){
+    console.log("Sending Profiles to store")
     AppDispatcher.dispatch({
       actionType: ProfileConstants.PROFILES_RECEIVED,
       profiles: profiles

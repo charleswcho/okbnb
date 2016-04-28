@@ -10,7 +10,7 @@ var hashHistory = ReactRouter.hashHistory;
 var NavBar = require('./components/navBar');
 var SplashScreen = require('./components/splashScreen');
 
-var Index = require('./components/searchPageComponents/index');
+var Search = require('./components/search');
 
 // These are for testing
 
@@ -40,7 +40,7 @@ var Router = (
   <Router history={hashHistory}>
     <Route path='/' component={App}>
       <IndexRoute component={SplashScreen}/>
-      <Route path='/search/:loc' component={Index}/>
+      <Route path='/search/:loc' component={Search}/>
     </Route>
   </Router>
 );

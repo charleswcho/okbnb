@@ -14,6 +14,7 @@
 #  budget        :integer          not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  age           :string           not null
 #
 
 class Profile < ActiveRecord::Base

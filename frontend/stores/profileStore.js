@@ -7,6 +7,7 @@ var ProfileStore = new Store(AppDispatcher);
 var _profiles = {};
 
 function resetProfiles (profiles) {
+  console.log("Set Profiles into Store")
   _profiles = profiles;
 };
 

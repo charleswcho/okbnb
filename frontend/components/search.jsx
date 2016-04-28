@@ -1,11 +1,11 @@
 var React = require('react');
 var hashHistory = require('react-router').hashHistory;
 
-var ProfileStore = require('../stores/bench');
-var ClientActions = require('../actions/client_actions');
+var ProfileStore = require('../stores/profileStore');
+var ClientActions = require('../actions/clientActions');
 
 // var FilterParamsStore = require('../stores/filter_params');
-// var Filters = require('./Filters');
+var Filters = require('./searchPageComponents/filters');
 
 var Index = require('./searchPageComponents/index');
 // var Map = require('./Map');
@@ -15,11 +15,11 @@ module.exports = React.createClass({
     this.setState({profiles: ProfileStore.all()});
   },
 
-  _filtersChanged: function () {
-    // var newParams = FilterParamsStore.params();
-    // this.setState({ filterParams: newParams });
-    ClientActions.fetchProfiles();
-  },
+  // _filtersChanged: function () {
+  //   // var newParams = FilterParamsStore.params();
+  //   // this.setState({ filterParams: newParams });
+  //   ClientActions.fetchProfiles(newParams);
+  // },
 
   getInitialState: function () {
     return {
@@ -33,6 +33,7 @@ module.exports = React.createClass({
     // this.filterListener = FilterParamsStore.addListener(this._filtersChanged);
     // var filterParams = FilterParamsStore.params();
     ClientActions.fetchProfiles();
+    console.log("Client requested Profiles")
   },
   componentWillUnmount: function () {
     this.profileListener.remove();
@@ -42,7 +43,7 @@ module.exports = React.createClass({
     return(
       <div>
         <div className="half">
-          <Filters/>
+          <Filters />
           <Index profiles={this.state.profiles}/>
         </div>
       </div>

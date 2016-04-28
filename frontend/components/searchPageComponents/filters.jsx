@@ -3,7 +3,7 @@ var React = require('react');
 module.exports = React.createClass({
   render: function () {
     return (
-      <div>Filter Component</div>
+      <div className='filters'>Filter Component</div>
     );
   }
 });

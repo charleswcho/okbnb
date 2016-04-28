@@ -56,7 +56,7 @@
 	var NavBar = __webpack_require__(225);
 	var SplashScreen = __webpack_require__(522);
 	
-	var Index = __webpack_require__(527);
+	var Search = __webpack_require__(524);
 	
 	// These are for testing
 	
@@ -91,7 +91,7 @@
 	    Route,
 	    { path: '/', component: App },
 	    React.createElement(IndexRoute, { component: SplashScreen }),
-	    React.createElement(Route, { path: '/search/:loc', component: Index })
+	    React.createElement(Route, { path: '/search/:loc', component: Search })
 	  )
 	);
 	
@@ -44928,6 +44928,7 @@
 	
 	  // Profile methods
 	  receiveProfiles: function (profiles) {
+	    console.log("Sending Profiles to store");
 	    AppDispatcher.dispatch({
 	      actionType: ProfileConstants.PROFILES_RECEIVED,
 	      profiles: profiles
@@ -45288,9 +45289,11 @@
 	
 	module.exports = {
 	  fetchProfiles: function () {
+	    console.log("Set Profiles request");
 	    $.ajax({
 	      url: "api/profiles",
 	      success: function (profiles) {
+	        console.log("Received Profiles");
 	        ServerActions.receiveProfiles(profiles);
 	      },
 	      error: function (e) {
@@ -52048,7 +52051,67 @@
 	});
 
 /***/ },
-/* 524 */,
+/* 524 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var hashHistory = __webpack_require__(166).hashHistory;
+	
+	var ProfileStore = __webpack_require__(525);
+	var ClientActions = __webpack_require__(492);
+	
+	// var FilterParamsStore = require('../stores/filter_params');
+	var Filters = __webpack_require__(526);
+	
+	var Index = __webpack_require__(527);
+	// var Map = require('./Map');
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  _profilesChanged: function () {
+	    this.setState({ profiles: ProfileStore.all() });
+	  },
+	
+	  // _filtersChanged: function () {
+	  //   // var newParams = FilterParamsStore.params();
+	  //   // this.setState({ filterParams: newParams });
+	  //   ClientActions.fetchProfiles(newParams);
+	  // },
+	
+	  getInitialState: function () {
+	    return {
+	      profiles: ProfileStore.all(),
+	      // filterParams: FilterParamsStore.params(),
+	      clickedLoc: null
+	    };
+	  },
+	  componentDidMount: function () {
+	    this.profileListener = ProfileStore.addListener(this._profilesChanged);
+	    // this.filterListener = FilterParamsStore.addListener(this._filtersChanged);
+	    // var filterParams = FilterParamsStore.params();
+	    ClientActions.fetchProfiles();
+	    console.log("Client requested Profiles");
+	  },
+	  componentWillUnmount: function () {
+	    this.profileListener.remove();
+	    // this.filterListener.remove();
+	  },
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'div',
+	        { className: 'half' },
+	        React.createElement(Filters, null),
+	        React.createElement(Index, { profiles: this.state.profiles })
+	      )
+	    );
+	  }
+	});
+
+/***/ },
 /* 525 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -52061,6 +52124,7 @@
 	var _profiles = {};
 	
 	function resetProfiles(profiles) {
+	  console.log("Set Profiles into Store");
 	  _profiles = profiles;
 	};
 	
@@ -52095,7 +52159,24 @@
 	module.exports = ProfileStore;
 
 /***/ },
-/* 526 */,
+/* 526 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'filters' },
+	      'Filter Component'
+	    );
+	  }
+	});
+
+/***/ },
 /* 527 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -52107,11 +52188,15 @@
 	  displayName: 'exports',
 	
 	  render: function () {
+	    var profiles = this.props.profiles;
+	
+	    var profileKeys = Object.keys(profiles);
 	    return React.createElement(
 	      'div',
-	      null,
-	      'This is the top of the Index',
-	      React.createElement(IndexItem, null)
+	      { className: 'profiles-index' },
+	      profileKeys.map(function (id) {
+	        return React.createElement(IndexItem, { key: id, profile: profiles[id] });
+	      })
 	    );
 	  }
 	});
@@ -52126,10 +52211,27 @@
 	  displayName: 'exports',
 	
 	  render: function () {
+	    var profile = this.props.profile;
 	    return React.createElement(
 	      'div',
-	      null,
-	      'This is a Profile'
+	      { className: 'index-item' },
+	      React.createElement(
+	        'div',
+	        null,
+	        profile.profilePicURL
+	      ),
+	      React.createElement(
+	        'div',
+	        null,
+	        profile.name
+	      ),
+	      React.createElement(
+	        'div',
+	        null,
+	        profile.age,
+	        ' | ',
+	        profile.location
+	      )
 	    );
 	  }
 	});

@@ -3,6 +3,7 @@ json.array! @profiles do |profile|
   json.user_id profile.user_id
   json.profilePicURL profile.profilePicURL
   json.name profile.name
+  json.age profile.age
   json.description profile.description
   json.location profile.location
   json.diet profile.diet
