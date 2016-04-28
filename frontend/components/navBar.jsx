@@ -70,11 +70,13 @@ module.exports = React.createClass({
     return (
       <div className='navBar'>
         <Modal show={this.state.showSignUpModal} onHide={this.closeSignUpModal}>
-          <SignUpForm closeSignUpModal={this.closeSignUpModal}/>
+          <SignUpForm closeSignUpModal={this.closeSignUpModal}
+                      errors={this.state.authErrors}/>
         </Modal>
 
         <Modal show={this.state.showSignInModal} onHide={this.closeSignInModal}>
-          <SignInForm closeSignInModal={this.closeSignInModal}/>
+          <SignInForm closeSignInModal={this.closeSignInModal}
+                      errors={this.state.authErrors}/>
         </Modal>
 
         <Navbar>

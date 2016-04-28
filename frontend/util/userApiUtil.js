@@ -13,6 +13,7 @@ module.exports = {
         ServerActions.receiveCurrentUser(currentUser);
       },
       error: function (e) {
+        ServerActions.handleError(e)
         console.log(["Error", e.responseText]);
       }
     });
@@ -41,6 +42,7 @@ module.exports = {
         ServerActions.receiveCurrentUser(currentUser);
       },
       error: function (e) {
+        ServerActions.handleError(e)
         console.log(["Error", e.responseText]);
       }
     });
@@ -54,6 +56,7 @@ module.exports = {
         ServerActions.removeCurrentUser(currentUser);
       },
       error: function (e) {
+        ServerActions.handleError(e)
         console.log(["Error", e.responseText]);
       }
     });
@@ -66,6 +69,7 @@ module.exports = {
         ServerActions.receiveCurrentUser(currentUser);
       },
       error: function (e) {
+        ServerActions.handleError(e)
         console.log(["Error", e.responseText]);
       }
     });

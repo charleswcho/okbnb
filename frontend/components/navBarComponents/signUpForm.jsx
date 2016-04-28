@@ -6,7 +6,8 @@ module.exports = React.createClass({
   getInitialState: function() {
     return {
       username: '',
-      password: ''
+      password: '',
+      errors: this.props.errors
     };
   },
 

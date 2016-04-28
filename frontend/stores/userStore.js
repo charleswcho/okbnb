@@ -4,7 +4,7 @@ var Store = require('flux/utils').Store;
 
 var UserStore = new Store(AppDispatcher);
 var _currentUser = {};
-var _authErrors = [];
+var _errors = [];
 
 var setCurrentUser = function(user) {
   console.log("5 Set currentUser");
@@ -15,12 +15,16 @@ var deleteCurrentUser = function() {
   _currentUser = {};
 };
 
+setErrors = function (errors) {
+  _errors = errors;
+};
+
 UserStore.currentUser = function () {
   return _currentUser;
 };
 
-UserStore.authErrors = function () {
-  return _authErrors;
+UserStore.errors = function () {
+  return _errors;
 };
 
 UserStore.__onDispatch = function (payload) {
@@ -32,6 +36,10 @@ UserStore.__onDispatch = function (payload) {
       break;
     case UserConstants.REMOVE_CURRENT_USER:
       deleteCurrentUser();
+      UserStore.__emitChange();
+      break;
+    case UserConstants.ERROR:
+      setErrors(payload.errors);
       UserStore.__emitChange();
       break;
   }

@@ -9,7 +9,8 @@ class Api::SessionsController < ApplicationController
    )
 
    if user.nil?
-     render json: {error: "Invalid Credentials"}, status: 401
+     @errors = ['Your info was incorrect. Try again.']
+     render "api/shared/error", status: 401
    else
      sign_in_user!(user)
      render json: current_user

@@ -54,7 +54,7 @@
 	var hashHistory = ReactRouter.hashHistory;
 	
 	var NavBar = __webpack_require__(225);
-	var SplashScreen = __webpack_require__(524);
+	var SplashScreen = __webpack_require__(522);
 	
 	var Index = __webpack_require__(527);
 	
@@ -66,7 +66,7 @@
 	var UserStore = __webpack_require__(502);
 	window.UserStore = UserStore;
 	
-	var ProfileStore = __webpack_require__(522);
+	var ProfileStore = __webpack_require__(525);
 	window.ProfileStore = ProfileStore;
 	
 	// These are for testing
@@ -25484,7 +25484,7 @@
 	var UserStore = __webpack_require__(502);
 	
 	var SignUpForm = __webpack_require__(520);
-	var SignInForm = __webpack_require__(523);
+	var SignInForm = __webpack_require__(521);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -25563,12 +25563,14 @@
 	      React.createElement(
 	        Modal,
 	        { show: this.state.showSignUpModal, onHide: this.closeSignUpModal },
-	        React.createElement(SignUpForm, { closeSignUpModal: this.closeSignUpModal })
+	        React.createElement(SignUpForm, { closeSignUpModal: this.closeSignUpModal,
+	          errors: this.state.authErrors })
 	      ),
 	      React.createElement(
 	        Modal,
 	        { show: this.state.showSignInModal, onHide: this.closeSignInModal },
-	        React.createElement(SignInForm, { closeSignInModal: this.closeSignInModal })
+	        React.createElement(SignInForm, { closeSignInModal: this.closeSignInModal,
+	          errors: this.state.authErrors })
 	      ),
 	      React.createElement(
 	        Navbar,
@@ -44771,19 +44773,21 @@
 	  getInitialState: function () {
 	    this.setState({
 	      currentUser: UserStore.currentUser(),
-	      authErrors: UserStore.authErrors()
+	      authErrors: UserStore.errors()
 	    });
 	  },
 	
 	  componentDidMount: function () {
 	    UserStore.addListener(this.updateUser);
-	    ClientActions.fetchCurrentUser();
+	    if (typeof UserStore.currentUser() === 'undefined') {
+	      ClientActions.fetchCurrentUser();
+	    }
 	  },
 	
 	  updateUser: function () {
 	    this.setState({
 	      currentUser: UserStore.currentUser(),
-	      authErrors: UserStore.authErrors()
+	      authErrors: UserStore.errors()
 	    });
 	  }
 	};
@@ -44827,6 +44831,7 @@
 	        ServerActions.receiveCurrentUser(currentUser);
 	      },
 	      error: function (e) {
+	        ServerActions.handleError(e);
 	        console.log(["Error", e.responseText]);
 	      }
 	    });
@@ -44855,6 +44860,7 @@
 	        ServerActions.receiveCurrentUser(currentUser);
 	      },
 	      error: function (e) {
+	        ServerActions.handleError(e);
 	        console.log(["Error", e.responseText]);
 	      }
 	    });
@@ -44868,6 +44874,7 @@
 	        ServerActions.removeCurrentUser(currentUser);
 	      },
 	      error: function (e) {
+	        ServerActions.handleError(e);
 	        console.log(["Error", e.responseText]);
 	      }
 	    });
@@ -44880,6 +44887,7 @@
 	        ServerActions.receiveCurrentUser(currentUser);
 	      },
 	      error: function (e) {
+	        ServerActions.handleError(e);
 	        console.log(["Error", e.responseText]);
 	      }
 	    });
@@ -44908,6 +44916,13 @@
 	    AppDispatcher.dispatch({
 	      actionType: UserConstants.REMOVE_CURRENT_USER,
 	      currentUser: currentUser
+	    });
+	  },
+	
+	  handleError: function (error) {
+	    AppDispatcher.dispatch({
+	      actionType: UserConstants.ERROR,
+	      errors: error.responseJSON.errors
 	    });
 	  },
 	
@@ -45261,7 +45276,8 @@
 	
 	module.exports = {
 	  RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER",
-	  REMOVE_CURRENT_USER: "REMOVE_CURRENT_USER"
+	  REMOVE_CURRENT_USER: "REMOVE_CURRENT_USER",
+	  ERROR: "ERROR"
 	};
 
 /***/ },
@@ -45324,7 +45340,7 @@
 	
 	var UserStore = new Store(AppDispatcher);
 	var _currentUser = {};
-	var _authErrors = [];
+	var _errors = [];
 	
 	var setCurrentUser = function (user) {
 	  console.log("5 Set currentUser");
@@ -45335,12 +45351,16 @@
 	  _currentUser = {};
 	};
 	
+	setErrors = function (errors) {
+	  _errors = errors;
+	};
+	
 	UserStore.currentUser = function () {
 	  return _currentUser;
 	};
 	
-	UserStore.authErrors = function () {
-	  return _authErrors;
+	UserStore.errors = function () {
+	  return _errors;
 	};
 	
 	UserStore.__onDispatch = function (payload) {
@@ -45352,6 +45372,10 @@
 	      break;
 	    case UserConstants.REMOVE_CURRENT_USER:
 	      deleteCurrentUser();
+	      UserStore.__emitChange();
+	      break;
+	    case UserConstants.ERROR:
+	      setErrors(payload.errors);
 	      UserStore.__emitChange();
 	      break;
 	  }
@@ -51816,7 +51840,8 @@
 	  getInitialState: function () {
 	    return {
 	      username: '',
-	      password: ''
+	      password: '',
+	      errors: this.props.errors
 	    };
 	  },
 	
@@ -51870,54 +51895,7 @@
 	});
 
 /***/ },
-/* 521 */,
-/* 522 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(503).Store;
-	var AppDispatcher = __webpack_require__(495);
-	var ProfileConstants = __webpack_require__(499);
-	
-	var ProfileStore = new Store(AppDispatcher);
-	
-	var _profiles = {};
-	
-	function resetProfiles(profiles) {
-	  _profiles = profiles;
-	};
-	
-	function addProfile(profile) {
-	  console.log("Added Profile to store");
-	  _profiles[profile.id] = profile;
-	};
-	
-	ProfileStore.all = function () {
-	  return Object.assign({}, _profiles);
-	};
-	
-	ProfileStore.find = function (id) {
-	  return Object.assign({}, _profiles[id]);
-	};
-	
-	ProfileStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case ProfileConstants.PROFILES_RECEIVED:
-	      console.log("Received Profiles at store");
-	      resetProfiles(payload.profiles);
-	      ProfileStore.__emitChange();
-	      break;
-	    case ProfileConstants.PROFILE_RECEIVED:
-	      console.log("Received Profile at store");
-	      addProfile(payload.profile);
-	      ProfileStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = ProfileStore;
-
-/***/ },
-/* 523 */
+/* 521 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -51930,7 +51908,8 @@
 	  getInitialState: function () {
 	    return {
 	      username: '',
-	      password: ''
+	      password: '',
+	      errors: this.props.errors
 	    };
 	  },
 	
@@ -51997,12 +51976,12 @@
 	});
 
 /***/ },
-/* 524 */
+/* 522 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var SearchBar = __webpack_require__(526);
+	var SearchBar = __webpack_require__(523);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52017,8 +51996,7 @@
 	});
 
 /***/ },
-/* 525 */,
-/* 526 */
+/* 523 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52070,7 +52048,76 @@
 	});
 
 /***/ },
+/* 524 */,
+/* 525 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(503).Store;
+	var AppDispatcher = __webpack_require__(495);
+	var ProfileConstants = __webpack_require__(499);
+	
+	var ProfileStore = new Store(AppDispatcher);
+	
+	var _profiles = {};
+	
+	function resetProfiles(profiles) {
+	  _profiles = profiles;
+	};
+	
+	function addProfile(profile) {
+	  console.log("Added Profile to store");
+	  _profiles[profile.id] = profile;
+	};
+	
+	ProfileStore.all = function () {
+	  return Object.assign({}, _profiles);
+	};
+	
+	ProfileStore.find = function (id) {
+	  return Object.assign({}, _profiles[id]);
+	};
+	
+	ProfileStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ProfileConstants.PROFILES_RECEIVED:
+	      console.log("Received Profiles at store");
+	      resetProfiles(payload.profiles);
+	      ProfileStore.__emitChange();
+	      break;
+	    case ProfileConstants.PROFILE_RECEIVED:
+	      console.log("Received Profile at store");
+	      addProfile(payload.profile);
+	      ProfileStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = ProfileStore;
+
+/***/ },
+/* 526 */,
 /* 527 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var IndexItem = __webpack_require__(528);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      'This is the top of the Index',
+	      React.createElement(IndexItem, null)
+	    );
+	  }
+	});
+
+/***/ },
+/* 528 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52078,15 +52125,11 @@
 	module.exports = React.createClass({
 	  displayName: 'exports',
 	
-	  getInitialState: function () {
-	    return {};
-	  },
-	
 	  render: function () {
 	    return React.createElement(
 	      'div',
 	      null,
-	      'This is a list of Profiles'
+	      'This is a Profile'
 	    );
 	  }
 	});

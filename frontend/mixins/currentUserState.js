@@ -12,19 +12,21 @@ module.exports = {
   getInitialState: function () {
     this.setState({
       currentUser: UserStore.currentUser(),
-      authErrors: UserStore.authErrors()
+      authErrors: UserStore.errors()
     });
   },
 
   componentDidMount: function () {
     UserStore.addListener(this.updateUser);
-    ClientActions.fetchCurrentUser()
+		if (typeof UserStore.currentUser() === 'undefined') {
+			ClientActions.fetchCurrentUser();
+		}
   },
 
   updateUser: function () {
     this.setState({
       currentUser: UserStore.currentUser(),
-      authErrors: UserStore.authErrors()
+      authErrors: UserStore.errors()
     })
   }
 }

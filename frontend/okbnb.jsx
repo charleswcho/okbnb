@@ -10,7 +10,7 @@ var hashHistory = ReactRouter.hashHistory;
 var NavBar = require('./components/navBar');
 var SplashScreen = require('./components/splashScreen');
 
-var Index = require('./components/index');
+var Index = require('./components/searchPageComponents/index');
 
 // These are for testing
 

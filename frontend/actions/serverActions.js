@@ -19,6 +19,13 @@ module.exports = {
     });
   },
 
+  handleError: function(error) {
+		AppDispatcher.dispatch({
+			actionType: UserConstants.ERROR,
+			errors: error.responseJSON.errors
+		});
+	},
+
   // Profile methods
   receiveProfiles: function(profiles){
     AppDispatcher.dispatch({
