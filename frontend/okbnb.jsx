@@ -8,6 +8,9 @@ var IndexRoute = ReactRouter.IndexRoute;
 var hashHistory = ReactRouter.hashHistory;
 
 var NavBar = require('./components/navBar');
+var SplashScreen = require('./components/splashScreen');
+
+// These are for testing
 
 var ClientActions = require('./actions/clientActions');
 window.ClientActions = ClientActions;
@@ -18,13 +21,16 @@ window.UserStore = UserStore;
 var ProfileStore = require('./stores/profileStore');
 window.ProfileStore = ProfileStore;
 
+// These are for testing
+
 var App = React.createClass({
   render: function(){
     return (
-        <div>
-          <header><NavBar/></header>
-          {this.props.children}
-        </div>
+      <div>
+        <NavBar/>
+        <SplashScreen/>
+        {this.props.children}
+      </div>
     );
   }
 });

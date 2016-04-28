@@ -54,6 +54,9 @@
 	var hashHistory = ReactRouter.hashHistory;
 	
 	var NavBar = __webpack_require__(225);
+	var SplashScreen = __webpack_require__(524);
+	
+	// These are for testing
 	
 	var ClientActions = __webpack_require__(492);
 	window.ClientActions = ClientActions;
@@ -64,6 +67,8 @@
 	var ProfileStore = __webpack_require__(522);
 	window.ProfileStore = ProfileStore;
 	
+	// These are for testing
+	
 	var App = React.createClass({
 	  displayName: 'App',
 	
@@ -71,11 +76,8 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(
-	        'header',
-	        null,
-	        React.createElement(NavBar, null)
-	      ),
+	      React.createElement(NavBar, null),
+	      React.createElement(SplashScreen, null),
 	      this.props.children
 	    );
 	  }
@@ -25506,14 +25508,22 @@
 	    this.setState({ showSignInModal: false });
 	  },
 	
+	  signOut: function () {
+	    ClientActions.signOut();
+	    this.setState({
+	      showSignInModal: false,
+	      showSignOutModal: false
+	    });
+	  },
+	
 	  toggleNavBarRight: function () {
-	    if (this.state.currentUser) {
+	    if (this.state.currentUser && this.state.currentUser.username) {
 	      return React.createElement(
 	        Nav,
 	        { pullRight: true },
 	        React.createElement(
 	          NavItem,
-	          { className: '', eventKey: 2, href: '#' },
+	          { className: '', onClick: this.signOut },
 	          'Sign Out'
 	        )
 	      );
@@ -44761,9 +44771,7 @@
 	
 	  componentDidMount: function () {
 	    UserStore.addListener(this.updateUser);
-	    if (!UserStore.currentUser()) {
-	      ClientActions.fetchCurrentUser();
-	    }
+	    ClientActions.fetchCurrentUser();
 	  },
 	
 	  updateUser: function () {
@@ -44888,7 +44896,6 @@
 	      actionType: UserConstants.RECEIVE_CURRENT_USER,
 	      currentUser: currentUser
 	    });
-	    console.log(AppDispatcher.isDispatching());
 	  },
 	
 	  removeCurrentUser: function (currentUser) {
@@ -51979,6 +51986,28 @@
 	        { className: 'auth-submit', type: 'submit' },
 	        'Sign In'
 	      )
+	    );
+	  }
+	});
+
+/***/ },
+/* 524 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  getInitialState: function () {
+	    return {};
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      'This is a picture'
 	    );
 	  }
 	});

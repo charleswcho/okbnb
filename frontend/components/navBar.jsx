@@ -6,7 +6,6 @@ var Navbar = require('react-bootstrap').Navbar,
     Nav = require('react-bootstrap').Nav,
     NavItem = require('react-bootstrap').NavItem;
 
-
 var CurrentUserStateMixin = require('../mixins/currentUserState');
 
 var ClientActions = require('../actions/clientActions');
@@ -41,11 +40,19 @@ module.exports = React.createClass({
     this.setState({ showSignInModal: false })
   },
 
+  signOut: function () {
+    ClientActions.signOut();
+    this.setState({
+      showSignInModal: false,
+      showSignOutModal: false
+    });
+  },
+
   toggleNavBarRight: function () {
-    if (this.state.currentUser) {
+    if (this.state.currentUser && this.state.currentUser.username) {
       return (
         <Nav pullRight>
-          <NavItem className='' eventKey={2} href="#">Sign Out</NavItem>
+          <NavItem className='' onClick={this.signOut}>Sign Out</NavItem>
         </Nav>
       )
     } else {

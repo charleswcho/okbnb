@@ -10,7 +10,6 @@ module.exports = {
       actionType: UserConstants.RECEIVE_CURRENT_USER,
       currentUser: currentUser
     });
-    console.log(AppDispatcher.isDispatching())
   },
 
   removeCurrentUser: function (currentUser) {
