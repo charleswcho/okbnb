@@ -57,7 +57,7 @@
 	var SplashScreen = __webpack_require__(522);
 	
 	var Search = __webpack_require__(524);
-	
+	var Detail = __webpack_require__(529);
 	// These are for testing
 	
 	var ClientActions = __webpack_require__(492);
@@ -91,7 +91,8 @@
 	    Route,
 	    { path: '/', component: App },
 	    React.createElement(IndexRoute, { component: SplashScreen }),
-	    React.createElement(Route, { path: '/search/:loc', component: Search })
+	    React.createElement(Route, { path: '/search/:loc', component: Search }),
+	    React.createElement(Route, { path: '/profile/:id', component: Detail })
 	  )
 	);
 	
@@ -52171,7 +52172,17 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'filters' },
-	      'Filter Component'
+	      'Filter Component',
+	      React.createElement(
+	        'div',
+	        { className: 'filter-heading' },
+	        'Preferences'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'filter-heading' },
+	        'Budget'
+	      )
 	    );
 	  }
 	});
@@ -52206,31 +52217,190 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var hashHistory = __webpack_require__(166).hashHistory;
+	
+	var Image = __webpack_require__(1).Image;
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
+	
+	
+	  handleClick: function (e) {
+	    e.preventDefault();
+	    hashHistory.push({ pathname: 'profile/' + this.props.profile.id });
+	  },
 	
 	  render: function () {
 	    var profile = this.props.profile;
 	    return React.createElement(
 	      'div',
-	      { className: 'index-item' },
+	      { className: 'index-item', onClick: this.handleClick },
+	      React.createElement('img', { className: 'profile-image',
+	        src: profile.profilePicURL, alt: 'Profile Image' }),
 	      React.createElement(
 	        'div',
-	        null,
-	        profile.profilePicURL
-	      ),
+	        { className: 'index-item-info' },
+	        React.createElement(
+	          'div',
+	          { className: 'profile-name' },
+	          profile.name
+	        ),
+	        React.createElement(
+	          'div',
+	          null,
+	          profile.age,
+	          ' · ',
+	          profile.location
+	        )
+	      )
+	    );
+	  }
+	});
+
+/***/ },
+/* 529 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var ProfileStore = __webpack_require__(525);
+	var ClientActions = __webpack_require__(492);
+	
+	var Splash = __webpack_require__(530);
+	var Title = __webpack_require__(531);
+	var Description = __webpack_require__(532);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  getInitialState: function () {
+	    return {
+	      profile: ProfileStore.find(this.props.params.id)
+	    };
+	  },
+	
+	  _profileChanged: function () {
+	    this.setState({ profile: ProfileStore.find(this.props.params.id) });
+	  },
+	
+	  componentDidMount: function () {
+	    this.profileListener = ProfileStore.addListener(this._profileChanged);
+	    ClientActions.fetchProfiles();
+	  },
+	  componentWillUnmount: function () {
+	    this.profileListener.remove();
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'profile-detail' },
+	      React.createElement(Splash, { img: this.state.profile.profilePicURL }),
+	      React.createElement(Title, { profile: this.state.profile }),
+	      React.createElement(Description, { profile: this.state.profile })
+	    );
+	  }
+	});
+
+/***/ },
+/* 530 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'detail-splash' },
+	      React.createElement('img', { className: 'detail-splash-image',
+	        src: this.props.img, alt: 'Profile Image' })
+	    );
+	  }
+	});
+
+/***/ },
+/* 531 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	
+	  render: function () {
+	    var profile = this.props.profile;
+	    return React.createElement(
+	      'div',
+	      { className: 'detail-title' },
 	      React.createElement(
 	        'div',
-	        null,
+	        { className: 'detail-title-name' },
 	        profile.name
 	      ),
 	      React.createElement(
 	        'div',
-	        null,
-	        profile.age,
-	        ' | ',
+	        { className: 'detail-title-location' },
 	        profile.location
+	      )
+	    );
+	  }
+	});
+
+/***/ },
+/* 532 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	
+	  render: function () {
+	    var profile = this.props.profile;
+	    return React.createElement(
+	      'div',
+	      { className: 'detail-description' },
+	      React.createElement(
+	        'div',
+	        { className: 'description-heading' },
+	        'About',
+	        React.createElement(
+	          'div',
+	          { className: 'description-item' },
+	          profile.description
+	        )
+	      ),
+	      React.createElement('br', null),
+	      React.createElement(
+	        'div',
+	        { className: 'description-heading' },
+	        'Preferences',
+	        React.createElement(
+	          'div',
+	          { className: 'description-item' },
+	          profile.diet
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'description-item' },
+	          profile.smoker
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'description-item' },
+	          profile.pet
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'description-item' },
+	          profile.budget
+	        )
 	      )
 	    );
 	  }

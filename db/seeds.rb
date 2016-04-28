@@ -12,7 +12,7 @@ User.create(username: "Guest", password: "1234567");
   charles = User.create(username: "Charles#{i}", password: "1234567");
   Profile.create(
     user_id: i,
-    profilePicURL: "asdfs",
+    profilePicURL: '/assets/1.jpg',
     name: charles.username,
     age: i + 23,
     description: "asdfasd",
