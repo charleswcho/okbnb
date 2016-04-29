@@ -1,4 +1,5 @@
 var React = require('react');
+var hashHistory = require('react-router').hashHistory;
 var Modal = require('react-bootstrap').Modal;
 var Button = require('react-bootstrap').Button;
 
@@ -48,6 +49,10 @@ module.exports = React.createClass({
     });
   },
 
+  handleCreateProfile: function () {
+    hashHistory.push({pathname: 'profile/new'})
+  },
+
   toggleNavBarRight: function () {
     if (this.state.currentUser && this.state.currentUser.username) {
       return (
@@ -58,7 +63,8 @@ module.exports = React.createClass({
     } else {
       return (
         <Nav pullRight>
-          <NavItem id='create-profile'>Create a Profile</NavItem>
+          <NavItem id='create-profile'
+                   onClick={this.handleCreateProfile}>Create a Profile</NavItem>
           <NavItem className='' onClick={this.openSignUpModal}>Sign Up</NavItem>
           <NavItem className='' onClick={this.openSignInModal}>Sign In</NavItem>
         </Nav>

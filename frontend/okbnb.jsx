@@ -12,6 +12,7 @@ var SplashScreen = require('./components/splashScreen');
 
 var Search = require('./components/search');
 var Detail = require('./components/detail');
+var ProfileForm = require('./components/profileForm');
 // These are for testing
 
 var ClientActions = require('./actions/clientActions');
@@ -40,8 +41,9 @@ var Router = (
   <Router history={hashHistory}>
     <Route path='/' component={App}>
       <IndexRoute component={SplashScreen}/>
-      <Route path='/search/:loc' component={Search}/>
-      <Route path='/profile/:id' component={Detail}/>
+      <Route path='search/:loc' component={Search}/>
+      <Route path='profile/new' component={ProfileForm}/>
+      <Route path='profile/:id' component={Detail}/>
     </Route>
   </Router>
 );

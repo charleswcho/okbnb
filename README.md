@@ -8,11 +8,11 @@
 
 OkBnB is a web application inspired by AirBnb that will be build using Ruby on Rails and React.js.  By the end of Week 9, this app will, at a minimum, satisfy the following criteria:
 
-- [ X ] New account creation, login, and guest/demo login
+- [X] New account creation, login, and guest/demo login
 - [ ] Smooth, bug-free navigation
 - [ ] Adequate seed data to demonstrate the site's features
 - [ ] The minimally necessary features for an AirBnb-inspired site: viewing potential tenant profiles and filtering by certain parameters, offer a booking to a tenant, and create new profiles
-- [ X ] Hosting on Heroku
+- [X] Hosting on Heroku
 - [ ] CSS styling that is satisfactorily visually appealing
 
 ## Product Goals and Priorities
@@ -22,8 +22,8 @@ OkBnb will allow users to do the following:
 <!-- This is a Markdown checklist. Use it to keep track of your
 progress. Put an x between the brackets for a checkmark: [x] -->
 
-- [ X ] Create an account (MVP)
-- [ X ] Log in / Log out, including as a Guest/Demo User (MVP)
+- [X] Create an account (MVP)
+- [X] Log in / Log out, including as a Guest/Demo User (MVP)
 - [ ] View and create tenant profiles (MVP)
 - [ ] Filter through tenant profiles with parameters (MVP)
 - [ ] Contact potential tenants (MVP)
