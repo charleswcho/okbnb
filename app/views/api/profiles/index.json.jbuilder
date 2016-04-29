@@ -6,6 +6,8 @@ json.array! @profiles do |profile|
   json.age profile.age
   json.description profile.description
   json.location profile.location
+  json.lat profile.lat
+  json.lng profile.lng
   json.diet profile.diet
   json.smoker profile.smoker
   json.pet profile.pet

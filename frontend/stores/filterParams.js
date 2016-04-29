@@ -13,6 +13,10 @@ FilterParamsStore.params = function () {
 
 FilterParamsStore.__onDispatch = function (payload) {
   switch(payload.actionType){
+    case FilterConstants.UPDATE_BOUNDS:
+      _params.bounds = payload.bounds;
+      FilterParamsStore.__emitChange();
+      break;
     case FilterConstants.UPDATE_SMOKER:
       _params.smoker = payload.smoker;
       FilterParamsStore.__emitChange();

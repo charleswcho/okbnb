@@ -57,8 +57,8 @@
 	var SplashScreen = __webpack_require__(522);
 	
 	var Search = __webpack_require__(524);
-	var Detail = __webpack_require__(529);
-	var ProfileForm = __webpack_require__(533);
+	var Detail = __webpack_require__(530);
+	var ProfileForm = __webpack_require__(534);
 	// These are for testing
 	
 	var ClientActions = __webpack_require__(492);
@@ -52080,7 +52080,7 @@
 	var Filters = __webpack_require__(526);
 	
 	var Index = __webpack_require__(527);
-	// var Map = require('./Map');
+	var Map = __webpack_require__(529);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52107,7 +52107,6 @@
 	    // this.filterListener = FilterParamsStore.addListener(this._filtersChanged);
 	    // var filterParams = FilterParamsStore.params();
 	    ClientActions.fetchProfiles();
-	    console.log("Client requested Profiles");
 	  },
 	  componentWillUnmount: function () {
 	    this.profileListener.remove();
@@ -52116,13 +52115,14 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      null,
+	      { className: 'search-page' },
 	      React.createElement(
 	        'div',
-	        { className: 'half' },
+	        { className: 'half-filter-index' },
 	        React.createElement(Filters, null),
 	        React.createElement(Index, { profiles: this.state.profiles })
-	      )
+	      ),
+	      React.createElement(Map, { profiles: this.state.profiles })
 	    );
 	  }
 	});
@@ -52276,13 +52276,145 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(32);
+	var hashHistory = __webpack_require__(166).hashHistory;
+	
+	var FilterActions = __webpack_require__(538);
+	
+	function _getCoordsObj(latLng) {
+	  return {
+	    lat: latLng.lat(),
+	    lng: latLng.lng()
+	  };
+	}
+	
+	var mapOptions = {
+	  center: { lat: 37.773972, lng: -122.431297 }, //San Francisco
+	  zoom: 13
+	};
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	
+	  componentDidMount: function () {
+	    var map = ReactDOM.findDOMNode(this.refs.map);
+	    this.map = new google.maps.Map(map, mapOptions);
+	    this.markers = [];
+	    this.registerListeners();
+	  },
+	
+	  componentDidUpdate: function () {
+	    this.eachProfile(this.parseAddress);
+	    this._onChange();
+	  },
+	
+	  eachProfile: function (callback) {
+	    var profiles = this.props.profiles;
+	    var keys = Object.keys(profiles);
+	    keys.forEach(function (key) {
+	      callback(profiles[key]);
+	    });
+	  },
+	
+	  parseAddress: function (profile) {
+	    var self = this;
+	    var geocoder = new google.maps.Geocoder();
+	    geocoder.geocode({ "address": profile.location }, function (results, status) {
+	      if (status === google.maps.GeocoderStatus.OK) {
+	        var coords = {
+	          lat: results[0].geometry.location.lat(),
+	          lng: results[0].geometry.location.lng()
+	        };
+	        self.createMarkerFromProfile(profile.id, coords);
+	      } else {
+	        console.log(status);
+	      }
+	    });
+	  },
+	
+	  createMarkerFromProfile: function (id, coords) {
+	    var pos = new google.maps.LatLng(coords.lat, coords.lng);
+	    var marker = new google.maps.Marker({
+	      position: pos,
+	      map: this.map,
+	      profileId: id
+	    });
+	    marker.addListener('click', function () {
+	      hashHistory.push("profile/" + id);
+	    });
+	
+	    this.markers.push(marker);
+	  },
+	
+	  _onChange: function () {
+	    var profilesToAdd = [];
+	    var markersToRemove = [];
+	    // Collect markers to remove
+	    this.markers.forEach(function (marker) {
+	      if (!this.props.profiles.hasOwnProperty(marker.profileId)) {
+	        markersToRemove.push(marker);
+	      }
+	    }.bind(this));
+	    //Collect profiles to add
+	    var currentProfileIds = this.markers.map(function (marker) {
+	      return marker.benchId;
+	    });
+	    this.eachProfile(function (bench) {
+	      if (!currentProfileIds.includes(bench.id)) {
+	        profilesToAdd.push(bench);
+	      }
+	    });
+	    //Do the adding / removing
+	    profilesToAdd.forEach(this.createMarkerFromProfile);
+	    markersToRemove.forEach(this.removeMarker);
+	  },
+	
+	  registerListeners: function () {
+	    var self = this;
+	    google.maps.event.addListener(this.map, 'idle', function () {
+	      var bounds = self.map.getBounds();
+	      var northEast = _getCoordsObj(bounds.getNorthEast());
+	      var southWest = _getCoordsObj(bounds.getSouthWest());
+	      //actually issue the request
+	      bounds = {
+	        northEast: northEast,
+	        southWest: southWest
+	      };
+	      FilterActions.updateBounds(bounds);
+	    });
+	  },
+	
+	  removeMarker: function (marker) {
+	    for (var i = 0; i < this.markers.length; i++) {
+	      if (this.markers[i].profileId === marker.profileId) {
+	        this.markers[i].setMap(null);
+	        this.markers.splice(i, 1);
+	        break;
+	      }
+	    }
+	  },
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'half-map', ref: 'map' },
+	      'Map'
+	    );
+	  }
+	});
+
+/***/ },
+/* 530 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
 	
 	var ProfileStore = __webpack_require__(525);
 	var ClientActions = __webpack_require__(492);
 	
-	var Splash = __webpack_require__(530);
-	var Title = __webpack_require__(531);
-	var Description = __webpack_require__(532);
+	var Splash = __webpack_require__(531);
+	var Title = __webpack_require__(532);
+	var Description = __webpack_require__(533);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52317,7 +52449,7 @@
 	});
 
 /***/ },
-/* 530 */
+/* 531 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52337,7 +52469,7 @@
 	});
 
 /***/ },
-/* 531 */
+/* 532 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52366,7 +52498,7 @@
 	});
 
 /***/ },
-/* 532 */
+/* 533 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52425,13 +52557,13 @@
 	});
 
 /***/ },
-/* 533 */
+/* 534 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var Header = __webpack_require__(534);
-	var Form = __webpack_require__(535);
+	var Header = __webpack_require__(535);
+	var Form = __webpack_require__(536);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52451,7 +52583,7 @@
 	});
 
 /***/ },
-/* 534 */
+/* 535 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52478,7 +52610,7 @@
 	});
 
 /***/ },
-/* 535 */
+/* 536 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52490,6 +52622,8 @@
 	var ClientActions = __webpack_require__(492);
 	var UserStore = __webpack_require__(502);
 	var ProfileStore = __webpack_require__(525);
+	
+	var geoUtils = __webpack_require__(537);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52594,18 +52728,7 @@
 	
 	  handleSubmit: function (e) {
 	    e.preventDefault();
-	    console.log(this.state.user_id);
-	    console.log(this.state.profilePicURL);
-	    console.log(this.state.name);
-	    console.log(this.state.age);
-	    console.log(this.state.description);
-	    console.log(this.state.location);
-	    console.log(this.state.diet);
-	    console.log(this.state.smoker);
-	    console.log(this.state.pet);
-	    console.log(this.state.budget);
-	    debugger;
-	    ClientActions.createProfile({
+	    var params = {
 	      user_id: this.state.user_id,
 	      profilePicURL: this.state.profilePicURL,
 	      name: this.state.name,
@@ -52616,7 +52739,9 @@
 	      smoker: this.state.smoker,
 	      pet: this.state.pet,
 	      budget: this.state.budget
-	    });
+	    };
+	
+	    geoUtils.parseAddress(params, ClientActions.createProfile);
 	  },
 	
 	  ageFocus: function () {
@@ -52690,16 +52815,28 @@
 	        { className: 'profile-input', onClick: this.openUploadWidget },
 	        'Upload Profile Pic'
 	      ),
-	      React.createElement('input', { className: 'profile-input', type: 'text', value: name,
-	        placeholder: 'Name', onChange: this.nameChanged }),
-	      React.createElement('input', { className: 'profile-input', type: this.state.ageFocused ? 'number' : 'text',
-	        value: age, placeholder: this.state.ageFocused ? null : 'Age',
-	        onFocus: this.ageFocus, onBlur: this.ageUnfocus, onChange: this.ageChanged }),
+	      React.createElement(
+	        'div',
+	        { className: 'form-row-1' },
+	        React.createElement('input', { className: 'profile-input', type: 'text', value: name,
+	          placeholder: 'Name', onChange: this.nameChanged }),
+	        React.createElement('input', { className: 'profile-input', type: this.state.ageFocused ? 'number' : 'text',
+	          value: age, placeholder: this.state.ageFocused ? null : 'Age',
+	          onFocus: this.ageFocus, onBlur: this.ageUnfocus, onChange: this.ageChanged })
+	      ),
 	      React.createElement('textarea', { className: 'profile-input', value: description,
 	        placeholder: 'Tell everyone a little bit about yourself!',
 	        onChange: this.descriptionChanged }),
-	      React.createElement('input', { className: 'profile-input', type: 'text', value: location,
-	        placeholder: 'Address', onChange: this.locationChanged }),
+	      React.createElement(
+	        'div',
+	        { className: 'form-row-address' },
+	        React.createElement('input', { className: 'profile-input', type: 'text', value: location,
+	          placeholder: 'Address', onChange: this.locationChanged }),
+	        React.createElement('input', { className: 'profile-input', type: 'text',
+	          placeholder: 'City' }),
+	        React.createElement('input', { className: 'profile-input', type: 'text',
+	          placeholder: 'State' })
+	      ),
 	      React.createElement(
 	        'label',
 	        null,
@@ -52708,42 +52845,46 @@
 	      React.createElement('input', { className: 'profile-input', type: 'text', value: diet,
 	        placeholder: 'Diet', onChange: this.dietChanged }),
 	      React.createElement(
-	        DropdownButton,
-	        { className: 'profile-input', title: 'Smoker', onSelect: this.handleSmokerSelect },
+	        'div',
+	        { className: 'form-dropdowns' },
 	        React.createElement(
-	          MenuItem,
-	          { eventKey: '1', active: this.state.smoker },
-	          'Yes'
+	          DropdownButton,
+	          { className: 'profile-input', title: 'Smoker', onSelect: this.handleSmokerSelect },
+	          React.createElement(
+	            MenuItem,
+	            { eventKey: '1', active: this.state.smoker },
+	            'Yes'
+	          ),
+	          React.createElement(
+	            MenuItem,
+	            { eventKey: '2', active: this.state.smoker === false },
+	            'No'
+	          )
 	        ),
 	        React.createElement(
-	          MenuItem,
-	          { eventKey: '2', active: this.state.smoker === false },
-	          'No'
-	        )
-	      ),
-	      React.createElement(
-	        DropdownButton,
-	        { className: 'profile-input', title: 'Pet', onSelect: this.handlePetSelect },
-	        React.createElement(
-	          MenuItem,
-	          { eventKey: '1', active: this.state.pet === 'Dog' },
-	          'Dog'
-	        ),
-	        React.createElement(
-	          MenuItem,
-	          { eventKey: '2', active: this.state.pet === 'Cat' },
-	          'Cat'
-	        ),
-	        React.createElement(
-	          MenuItem,
-	          { eventKey: '3', active: this.state.pet === 'Bird' },
-	          'Bird'
-	        ),
-	        React.createElement(MenuItem, { divider: true }),
-	        React.createElement(
-	          MenuItem,
-	          { eventKey: '4', active: this.state.pet === 'Other' },
-	          'Other'
+	          DropdownButton,
+	          { className: 'profile-input', title: 'Pet', onSelect: this.handlePetSelect },
+	          React.createElement(
+	            MenuItem,
+	            { eventKey: '1', active: this.state.pet === 'Dog' },
+	            'Dog'
+	          ),
+	          React.createElement(
+	            MenuItem,
+	            { eventKey: '2', active: this.state.pet === 'Cat' },
+	            'Cat'
+	          ),
+	          React.createElement(
+	            MenuItem,
+	            { eventKey: '3', active: this.state.pet === 'Bird' },
+	            'Bird'
+	          ),
+	          React.createElement(MenuItem, { divider: true }),
+	          React.createElement(
+	            MenuItem,
+	            { eventKey: '4', active: this.state.pet === 'Other' },
+	            'Other'
+	          )
 	        )
 	      ),
 	      React.createElement('input', { className: 'profile-input', type: this.state.budgetFocused ? 'number' : 'text',
@@ -52757,6 +52898,85 @@
 	    );
 	  }
 	});
+
+/***/ },
+/* 537 */
+/***/ function(module, exports) {
+
+	
+	var geoUtils = {
+	
+	  parseAddress: function (params, callback) {
+	    var self = this;
+	    var geocoder = new google.maps.Geocoder();
+	    geocoder.geocode({ "address": params.location }, function (results, status) {
+	      if (status === google.maps.GeocoderStatus.OK) {
+	        params.lat = results[0].geometry.location.lat();
+	        params.lng = results[0].geometry.location.lng();
+	        debugger;
+	        callback({ profile: params });
+	      } else {
+	        console.log(status);
+	      }
+	    });
+	  }
+	};
+	
+	module.exports = geoUtils;
+
+/***/ },
+/* 538 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(495);
+	var FilterConstants = __webpack_require__(539);
+	
+	module.exports = {
+	  updateBounds: function (value) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_BOUNDS,
+	      bounds: value
+	    });
+	  },
+	  updateSmoker: function (value) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_SMOKER,
+	      smoker: value
+	    });
+	  },
+	  updatePet: function (value) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_PET,
+	      pet: value
+	    });
+	  },
+	  updateDiet: function (value) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_DIET,
+	      diet: value
+	    });
+	  },
+	  updateBudget: function (value) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_BUDGET,
+	      budget: value
+	    });
+	  }
+	};
+
+/***/ },
+/* 539 */
+/***/ function(module, exports) {
+
+	
+	
+	module.exports = {
+	  UPDATE_BOUNDS: "UPDATE_BOUNDS",
+	  UPDATE_SMOKER: "UPDATE_SMOKER",
+	  UPDATE_PET: "UPDATE_PET",
+	  UPDATE_DIET: "UPDATE_DIET",
+	  UPDATE_BUDGET: "UPDATE_BUDGET"
+	};
 
 /***/ }
 /******/ ]);

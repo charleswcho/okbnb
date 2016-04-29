@@ -8,7 +8,7 @@ var ClientActions = require('../actions/clientActions');
 var Filters = require('./searchPageComponents/filters');
 
 var Index = require('./searchPageComponents/index');
-// var Map = require('./Map');
+var Map = require('./searchPageComponents/Map');
 
 module.exports = React.createClass({
   _profilesChanged: function () {
@@ -33,7 +33,6 @@ module.exports = React.createClass({
     // this.filterListener = FilterParamsStore.addListener(this._filtersChanged);
     // var filterParams = FilterParamsStore.params();
     ClientActions.fetchProfiles();
-    console.log("Client requested Profiles")
   },
   componentWillUnmount: function () {
     this.profileListener.remove();
@@ -41,11 +40,12 @@ module.exports = React.createClass({
   },
   render: function(){
     return(
-      <div>
-        <div className="half">
+      <div className='search-page'>
+        <div className="half-filter-index">
           <Filters />
           <Index profiles={this.state.profiles}/>
         </div>
+        <Map profiles={this.state.profiles} />
       </div>
     );
   }

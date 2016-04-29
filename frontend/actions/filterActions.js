@@ -2,6 +2,12 @@ var AppDispatcher = require('../dispatcher/dispatcher');
 var FilterConstants = require('../constants/filterConstants');
 
 module.exports = {
+  updateBounds: function (value) {
+    AppDispatcher.dispatch({
+      actionType: FilterConstants.UPDATE_BOUNDS,
+      bounds: value
+    });
+  },
   updateSmoker: function (value) {
     AppDispatcher.dispatch({
       actionType: FilterConstants.UPDATE_SMOKER,

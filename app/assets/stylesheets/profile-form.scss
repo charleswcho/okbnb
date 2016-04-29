@@ -17,17 +17,45 @@
 }
 
 .profile-form {
-  // color: black;
   background: #104da1;
-  padding: 20px 200px;
+  padding: 0 250px 10px 250px;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
 }
 
 .profile-input {
-  margin: 20px 50px;
+  margin: 10px 30px;
+  width: 200px;
 }
+
+.form-row-1 {
+  width: 500px;
+
+  display: flex;
+  flex-direction: row;
+}
+
+.form-row-address {
+  width: 600px;
+
+  display: flex;
+  flex-direction: row;
+}
+
+.form-dropdowns {
+  width: 300px;
+
+  display: flex;
+  flex-direction: row;
+}
+// .dropdown.btn-group {
+//   margin: auto;
+// }
+//
+// .dropdown-toggle.profile-input {
+//   margin: 20px 0 0 0;
+// }
 
 .profile-submit {
   color: white;

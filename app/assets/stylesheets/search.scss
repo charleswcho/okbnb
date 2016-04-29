@@ -1,0 +1,21 @@
+.search-page {
+  display: flex;
+
+}
+
+.half {
+  width: 500px;
+  height: 500px;
+  float: left;
+  position: relative;
+}
+
+.half-filter-index {
+  flex: 2;
+  overflow: scroll;
+  height: 1000px;
+}
+
+.half-map {
+  flex: 1.3;
+}

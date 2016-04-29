@@ -15,6 +15,8 @@
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  age           :string           not null
+#  lat           :float            not null
+#  lng           :float            not null
 #
 
 require 'test_helper'

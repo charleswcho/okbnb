@@ -2,6 +2,10 @@ class Api::ProfilesController < ApplicationController
 
   def index
     @profiles = Profile.all
+
+    if (bounds)
+      @profiles = Profile.in_bounds(bounds)
+    end
     render :index
     # TODO: Need to create filtering logic based on parameters that are set by the user.  Have to create custom ActiveRecord queries
   end
@@ -23,6 +27,10 @@ class Api::ProfilesController < ApplicationController
 
   private
 
+  def bounds
+    params[:bounds]
+  end
+
   def profile_params
     params.require(:profile).permit(
       :user_id,
@@ -31,12 +39,12 @@ class Api::ProfilesController < ApplicationController
       :age,
       :description,
       :location,
+      :lat,
+      :lng,
       :diet,
       :smoker,
       :pet,
-      :budget
+      :budget,
     )
   end
-
-  # TODO: Private methods shoule dry out the filter logic
 end

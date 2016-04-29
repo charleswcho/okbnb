@@ -8,6 +8,8 @@ var ClientActions = require('../../actions/clientActions');
 var UserStore = require('../../stores/userStore');
 var ProfileStore = require('../../stores/profileStore');
 
+var geoUtils = require('../../util/geoUtils');
+
 module.exports = React.createClass({
   getInitialState: function () {
     return {
@@ -112,18 +114,7 @@ module.exports = React.createClass({
 
   handleSubmit: function(e) {
     e.preventDefault();
-    console.log(this.state.user_id);
-    console.log(this.state.profilePicURL);
-    console.log(this.state.name);
-    console.log(this.state.age);
-    console.log(this.state.description);
-    console.log(this.state.location);
-    console.log(this.state.diet);
-    console.log(this.state.smoker);
-    console.log(this.state.pet);
-    console.log(this.state.budget);
-    debugger;
-    ClientActions.createProfile({
+    var params = {
       user_id: this.state.user_id,
       profilePicURL: this.state.profilePicURL,
       name: this.state.name,
@@ -134,7 +125,9 @@ module.exports = React.createClass({
       smoker: this.state.smoker,
       pet: this.state.pet,
       budget: this.state.budget
-    });
+    };
+
+    geoUtils.parseAddress(params, ClientActions.createProfile)
   },
 
   ageFocus: function () {
@@ -206,38 +199,48 @@ module.exports = React.createClass({
           Upload Profile Pic
         </button>
 
-        <input className='profile-input' type='text' value={name}
-               placeholder='Name' onChange={this.nameChanged} />
+        <div className='form-row-1'>
+          <input className='profile-input' type='text' value={name}
+                 placeholder='Name' onChange={this.nameChanged} />
 
-        <input className='profile-input' type={this.state.ageFocused ? 'number' : 'text' }
-               value={age} placeholder={this.state.ageFocused ? null : 'Age' }
-               onFocus={this.ageFocus} onBlur={this.ageUnfocus} onChange={this.ageChanged} />
+          <input className='profile-input' type={this.state.ageFocused ? 'number' : 'text' }
+                 value={age} placeholder={this.state.ageFocused ? null : 'Age' }
+                 onFocus={this.ageFocus} onBlur={this.ageUnfocus} onChange={this.ageChanged} />
+        </div>
 
         <textarea className='profile-input' value={description}
                   placeholder='Tell everyone a little bit about yourself!'
                   onChange={this.descriptionChanged}>
         </textarea>
 
-        <input className='profile-input' type='text' value={location}
-               placeholder='Address' onChange={this.locationChanged} />
+        <div className='form-row-address'>
+          <input className='profile-input' type='text' value={location}
+                 placeholder='Address' onChange={this.locationChanged} />
+          <input className='profile-input' type='text'
+                 placeholder='City' />
+          <input className='profile-input' type='text'
+                 placeholder='State' />
+        </div>
 
         <label>Preferences</label>
 
         <input className='profile-input' type='text' value={diet}
                placeholder='Diet' onChange={this.dietChanged} />
 
-        <DropdownButton className='profile-input' title='Smoker' onSelect={this.handleSmokerSelect}>
-            <MenuItem eventKey="1" active={this.state.smoker}>Yes</MenuItem>
-            <MenuItem eventKey="2" active={this.state.smoker === false}>No</MenuItem>
-        </DropdownButton>
+        <div className='form-dropdowns'>
+          <DropdownButton className='profile-input' title='Smoker' onSelect={this.handleSmokerSelect}>
+              <MenuItem eventKey="1" active={this.state.smoker}>Yes</MenuItem>
+              <MenuItem eventKey="2" active={this.state.smoker === false}>No</MenuItem>
+          </DropdownButton>
 
-        <DropdownButton className='profile-input' title='Pet' onSelect={this.handlePetSelect}>
-            <MenuItem eventKey="1" active={(this.state.pet === 'Dog')}>Dog</MenuItem>
-            <MenuItem eventKey="2" active={(this.state.pet === 'Cat')}>Cat</MenuItem>
-            <MenuItem eventKey="3" active={(this.state.pet === 'Bird')}>Bird</MenuItem>
-            <MenuItem divider />
-            <MenuItem eventKey="4" active={(this.state.pet === 'Other')}>Other</MenuItem>
-        </DropdownButton>
+          <DropdownButton className='profile-input' title='Pet' onSelect={this.handlePetSelect}>
+              <MenuItem eventKey="1" active={(this.state.pet === 'Dog')}>Dog</MenuItem>
+              <MenuItem eventKey="2" active={(this.state.pet === 'Cat')}>Cat</MenuItem>
+              <MenuItem eventKey="3" active={(this.state.pet === 'Bird')}>Bird</MenuItem>
+              <MenuItem divider />
+              <MenuItem eventKey="4" active={(this.state.pet === 'Other')}>Other</MenuItem>
+          </DropdownButton>
+        </div>
 
         <input className='profile-input' type={this.state.budgetFocused ? 'number' : 'text' }
                value={budget} placeholder={this.state.budgetFocused ? null : 'Budget' }
