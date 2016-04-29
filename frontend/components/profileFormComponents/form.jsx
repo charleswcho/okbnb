@@ -1,4 +1,7 @@
 var React = require('react');
+var DropdownButton = require('react-bootstrap').DropdownButton
+var MenuItem = require('react-bootstrap').MenuItem
+
 var hashHistory = require('react-router').hashHistory;
 
 var ClientActions = require('../../actions/clientActions');
@@ -8,37 +11,60 @@ var ProfileStore = require('../../stores/profileStore');
 module.exports = React.createClass({
   getInitialState: function () {
     return {
+      ageFocused: false,
+      budgetFocused: false,
+
       user_id: UserStore.currentUser().id,
       profilePicURL: '',
       name: '',
+      age: null,
       description: '',
       location: '',
       diet: '',
       smoker: '',
       pet: '',
-      budget: '',
-      age: ''
+      budget: null
     };
   },
 
-  componentDidMount: function () {
-    if (typeof this.state.user_id === 'undefined') {
-      ClientActions.fetchCurrentUser();
-      this.setState({ user_id: UserStore.currentUser().id });
-    }
+  userChanged: function () {
+    this.setState({ user_id: UserStore.currentUser().id });
   },
 
-  profilePicURLChanged: function(e) {
+  componentDidMount: function () {
+    this.listener = UserStore.addListener(this.userChaged)
+    ClientActions.fetchCurrentUser();
+  },
+
+  componentWillUnmount: function () {
+    this.listener.remove();
+  },
+
+  openUploadWidget: function(e) {
     e.preventDefault();
-    this.setState({
-      profilePicURL: e.target.value,
-    });
+    var self = this;
+
+    cloudinary.openUploadWidget({ cloud_name: 'ddodpmqri',
+                                  upload_preset: 'jeh6p6xu'
+                                },
+      function(error, result) {
+        self.setState({ profilePicURL: result[0].url });
+      }
+    );
+
   },
 
   nameChanged: function(e) {
     e.preventDefault();
     this.setState({
       name: e.target.value
+    });
+  },
+
+  ageChanged: function(e) {
+    e.preventDefault();
+    this.setState({
+      age: e.target.value
     });
   },
 
@@ -86,7 +112,7 @@ module.exports = React.createClass({
 
   handleSubmit: function(e) {
     e.preventDefault();
-
+    console.log(this.state.user_id);
     console.log(this.state.profilePicURL);
     console.log(this.state.name);
     console.log(this.state.age);
@@ -110,6 +136,58 @@ module.exports = React.createClass({
     });
   },
 
+  ageFocus: function () {
+    this.setState({
+      ageFocused: true
+    });
+  },
+
+  ageUnfocus: function () {
+    this.setState({
+      ageFocused: false
+    });
+  },
+
+  budgetFocus: function () {
+    this.setState({
+      budgetFocused: true
+    });
+  },
+
+  budgetUnfocus: function () {
+    this.setState({
+      budgetFocused: false
+    });
+  },
+
+  handleSmokerSelect: function (eventKey, event) {
+    switch (parseInt(eventKey)) {
+      case 1:
+        this.setState({ smoker: true })
+        break;
+      case 2:
+        this.setState({ smoker: false })
+        break;
+    }
+  },
+
+  handlePetSelect: function (eventKey, event) {
+    switch (parseInt(eventKey)) {
+      case 1:
+        this.setState({ pet: 'Dog' })
+        break;
+      case 2:
+        this.setState({ pet: 'Cat' })
+        break;
+      case 3:
+        this.setState({ pet: 'Bird' })
+        break;
+      case 4:
+        this.setState({ pet: 'Other' })
+        break;
+    }
+  },
+
   render: function() {
     var profilePicURL = this.state.profilePicURL;
     var name = this.state.name;
@@ -123,14 +201,16 @@ module.exports = React.createClass({
 
     return (
       <form className='profile-form' onSubmit={this.handleSubmit}>
-        <input className='profile-input' type='text' value={profilePicURL}
-               onChange={this.profilePicURLChanged} />
+        <button className='profile-input' onClick={this.openUploadWidget}>
+          Upload Profile Pic
+        </button>
 
         <input className='profile-input' type='text' value={name}
                placeholder='Name' onChange={this.nameChanged} />
 
-        <input className='profile-input' type='number' value={age}
-               placeholder='Age' onChange={this.ageChanged} />
+        <input className='profile-input' type={this.state.ageFocused ? 'number' : 'text' }
+               value={age} placeholder={this.state.ageFocused ? null : 'Age' }
+               onFocus={this.ageFocus} onBlur={this.ageUnfocus} onChange={this.ageChanged} />
 
         <textarea className='profile-input' value={description}
                   placeholder='Tell everyone a little bit about yourself!'
@@ -144,20 +224,24 @@ module.exports = React.createClass({
 
         <input className='profile-input' type='text' value={diet}
                placeholder='Diet' onChange={this.dietChanged} />
-        <label>Smoker
-          <input className='profile-input' type='checkbox' checked={smoker}
-                 onChange={this.smokerChanged} />
-        </label>
-        <select className='profile-input' value={pet} onChange={this.petChanged} >
-          <option value="">Pet?</option>
-          <option value="">Dog</option>
-          <option value="">Cat</option>
-          <option value="">Bird</option>
-          <option value="">Other</option>
-        </select>
 
-        <input className='profile-input' type='number' value={budget}
-               onChange={this.budgetChanged} />
+        <DropdownButton className='profile-input' title='Smoker' onSelect={this.handleSmokerSelect}>
+            <MenuItem eventKey="1" active={this.state.smoker}>Yes</MenuItem>
+            <MenuItem eventKey="2" active={this.state.smoker === false}>No</MenuItem>
+        </DropdownButton>
+
+        <DropdownButton className='profile-input' title='Pet' onSelect={this.handlePetSelect}>
+            <MenuItem eventKey="1" active={(this.state.pet === 'Dog')}>Dog</MenuItem>
+            <MenuItem eventKey="2" active={(this.state.pet === 'Cat')}>Cat</MenuItem>
+            <MenuItem eventKey="3" active={(this.state.pet === 'Bird')}>Bird</MenuItem>
+            <MenuItem divider />
+            <MenuItem eventKey="4" active={(this.state.pet === 'Other')}>Other</MenuItem>
+        </DropdownButton>
+
+        <input className='profile-input' type={this.state.budgetFocused ? 'number' : 'text' }
+               value={budget} placeholder={this.state.budgetFocused ? null : 'Budget' }
+               onFocus={this.budgetFocus} onBlur={this.ageUnfocus} onChange={this.budgetChanged} />
+
         <button className='profile-submit' type='submit'>Continue</button>
       </form>
     )

@@ -44787,10 +44787,14 @@
 	  },
 	
 	  componentDidMount: function () {
-	    UserStore.addListener(this.updateUser);
+	    this.listener = UserStore.addListener(this.updateUser);
 	    if (typeof UserStore.currentUser() === 'undefined') {
 	      ClientActions.fetchCurrentUser();
 	    }
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.listener.remove();
 	  },
 	
 	  updateUser: function () {
@@ -52423,8 +52427,8 @@
 
 	var React = __webpack_require__(1);
 	
-	var Header = __webpack_require__(535);
-	var Form = __webpack_require__(534);
+	var Header = __webpack_require__(534);
+	var Form = __webpack_require__(535);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52448,6 +52452,36 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'profile-header' },
+	      React.createElement(
+	        'div',
+	        { className: 'header-main' },
+	        'Create a profile!'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'header-sub' },
+	        'Join the best free tenant finder site on Earth.'
+	      )
+	    );
+	  }
+	});
+
+/***/ },
+/* 535 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var DropdownButton = __webpack_require__(226).DropdownButton;
+	var MenuItem = __webpack_require__(226).MenuItem;
+	
 	var hashHistory = __webpack_require__(166).hashHistory;
 	
 	var ClientActions = __webpack_require__(492);
@@ -52459,30 +52493,43 @@
 	
 	  getInitialState: function () {
 	    return {
+	      ageFocused: false,
+	      budgetFocused: false,
+	
 	      user_id: UserStore.currentUser().id,
 	      profilePicURL: '',
 	      name: '',
+	      age: null,
 	      description: '',
 	      location: '',
 	      diet: '',
 	      smoker: '',
 	      pet: '',
-	      budget: '',
-	      age: ''
+	      budget: null
 	    };
 	  },
 	
-	  componentDidMount: function () {
-	    if (typeof this.state.user_id === 'undefined') {
-	      ClientActions.fetchCurrentUser();
-	      this.setState({ user_id: UserStore.currentUser().id });
-	    }
+	  userChanged: function () {
+	    this.setState({ user_id: UserStore.currentUser().id });
 	  },
 	
-	  profilePicURLChanged: function (e) {
+	  componentDidMount: function () {
+	    this.listener = UserStore.addListener(this.userChaged);
+	    ClientActions.fetchCurrentUser();
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+	
+	  openUploadWidget: function (e) {
 	    e.preventDefault();
-	    this.setState({
-	      profilePicURL: e.target.value
+	    var self = this;
+	
+	    cloudinary.openUploadWidget({ cloud_name: 'ddodpmqri',
+	      upload_preset: 'jeh6p6xu'
+	    }, function (error, result) {
+	      self.setState({ profilePicURL: result[0].url });
 	    });
 	  },
 	
@@ -52490,6 +52537,13 @@
 	    e.preventDefault();
 	    this.setState({
 	      name: e.target.value
+	    });
+	  },
+	
+	  ageChanged: function (e) {
+	    e.preventDefault();
+	    this.setState({
+	      age: e.target.value
 	    });
 	  },
 	
@@ -52537,7 +52591,7 @@
 	
 	  handleSubmit: function (e) {
 	    e.preventDefault();
-	
+	    console.log(this.state.user_id);
 	    console.log(this.state.profilePicURL);
 	    console.log(this.state.name);
 	    console.log(this.state.age);
@@ -52561,6 +52615,58 @@
 	    });
 	  },
 	
+	  ageFocus: function () {
+	    this.setState({
+	      ageFocused: true
+	    });
+	  },
+	
+	  ageUnfocus: function () {
+	    this.setState({
+	      ageFocused: false
+	    });
+	  },
+	
+	  budgetFocus: function () {
+	    this.setState({
+	      budgetFocused: true
+	    });
+	  },
+	
+	  budgetUnfocus: function () {
+	    this.setState({
+	      budgetFocused: false
+	    });
+	  },
+	
+	  handleSmokerSelect: function (eventKey, event) {
+	    switch (parseInt(eventKey)) {
+	      case 1:
+	        this.setState({ smoker: true });
+	        break;
+	      case 2:
+	        this.setState({ smoker: false });
+	        break;
+	    }
+	  },
+	
+	  handlePetSelect: function (eventKey, event) {
+	    switch (parseInt(eventKey)) {
+	      case 1:
+	        this.setState({ pet: 'Dog' });
+	        break;
+	      case 2:
+	        this.setState({ pet: 'Cat' });
+	        break;
+	      case 3:
+	        this.setState({ pet: 'Bird' });
+	        break;
+	      case 4:
+	        this.setState({ pet: 'Other' });
+	        break;
+	    }
+	  },
+	
 	  render: function () {
 	    var profilePicURL = this.state.profilePicURL;
 	    var name = this.state.name;
@@ -52575,12 +52681,16 @@
 	    return React.createElement(
 	      'form',
 	      { className: 'profile-form', onSubmit: this.handleSubmit },
-	      React.createElement('input', { className: 'profile-input', type: 'text', value: profilePicURL,
-	        onChange: this.profilePicURLChanged }),
+	      React.createElement(
+	        'button',
+	        { className: 'profile-input', onClick: this.openUploadWidget },
+	        'Upload Profile Pic'
+	      ),
 	      React.createElement('input', { className: 'profile-input', type: 'text', value: name,
 	        placeholder: 'Name', onChange: this.nameChanged }),
-	      React.createElement('input', { className: 'profile-input', type: 'number', value: age,
-	        placeholder: 'Age', onChange: this.ageChanged }),
+	      React.createElement('input', { className: 'profile-input', type: this.state.ageFocused ? 'number' : 'text',
+	        value: age, placeholder: this.state.ageFocused ? null : 'Age',
+	        onFocus: this.ageFocus, onBlur: this.ageUnfocus, onChange: this.ageChanged }),
 	      React.createElement('textarea', { className: 'profile-input', value: description,
 	        placeholder: 'Tell everyone a little bit about yourself!',
 	        onChange: this.descriptionChanged }),
@@ -52594,74 +52704,51 @@
 	      React.createElement('input', { className: 'profile-input', type: 'text', value: diet,
 	        placeholder: 'Diet', onChange: this.dietChanged }),
 	      React.createElement(
-	        'label',
-	        null,
-	        'Smoker',
-	        React.createElement('input', { className: 'profile-input', type: 'checkbox', checked: smoker,
-	          onChange: this.smokerChanged })
-	      ),
-	      React.createElement(
-	        'select',
-	        { className: 'profile-input', value: pet, onChange: this.petChanged },
+	        DropdownButton,
+	        { className: 'profile-input', title: 'Smoker', onSelect: this.handleSmokerSelect },
 	        React.createElement(
-	          'option',
-	          { value: '' },
-	          'Pet?'
+	          MenuItem,
+	          { eventKey: '1', active: this.state.smoker },
+	          'Yes'
 	        ),
 	        React.createElement(
-	          'option',
-	          { value: '' },
+	          MenuItem,
+	          { eventKey: '2', active: this.state.smoker === false },
+	          'No'
+	        )
+	      ),
+	      React.createElement(
+	        DropdownButton,
+	        { className: 'profile-input', title: 'Pet', onSelect: this.handlePetSelect },
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '1', active: this.state.pet === 'Dog' },
 	          'Dog'
 	        ),
 	        React.createElement(
-	          'option',
-	          { value: '' },
+	          MenuItem,
+	          { eventKey: '2', active: this.state.pet === 'Cat' },
 	          'Cat'
 	        ),
 	        React.createElement(
-	          'option',
-	          { value: '' },
+	          MenuItem,
+	          { eventKey: '3', active: this.state.pet === 'Bird' },
 	          'Bird'
 	        ),
+	        React.createElement(MenuItem, { divider: true }),
 	        React.createElement(
-	          'option',
-	          { value: '' },
+	          MenuItem,
+	          { eventKey: '4', active: this.state.pet === 'Other' },
 	          'Other'
 	        )
 	      ),
-	      React.createElement('input', { className: 'profile-input', type: 'number', value: budget,
-	        onChange: this.budgetChanged }),
+	      React.createElement('input', { className: 'profile-input', type: this.state.budgetFocused ? 'number' : 'text',
+	        value: budget, placeholder: this.state.budgetFocused ? null : 'Budget',
+	        onFocus: this.budgetFocus, onBlur: this.ageUnfocus, onChange: this.budgetChanged }),
 	      React.createElement(
 	        'button',
 	        { className: 'profile-submit', type: 'submit' },
 	        'Continue'
-	      )
-	    );
-	  }
-	});
-
-/***/ },
-/* 535 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	module.exports = React.createClass({
-	  displayName: 'exports',
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'profile-header' },
-	      React.createElement(
-	        'div',
-	        { className: 'header-main' },
-	        'Create a profile!'
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'header-sub' },
-	        'Join the best free tenant finder site on Earth.'
 	      )
 	    );
 	  }
