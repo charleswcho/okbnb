@@ -12,7 +12,7 @@ User.create(username: "Guest", password: "1234567");
   charles = User.create(username: "Charles#{i}", password: "1234567");
   Profile.create(
     user_id: i,
-    profilePicURL: '/assets/1.jpg',
+    profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1461952627/kwe0lerlmgdaggz8fwir.jpg',
     name: charles.username,
     age: i + 23,
     description: "asdfasd",

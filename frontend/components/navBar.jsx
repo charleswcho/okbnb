@@ -57,6 +57,8 @@ module.exports = React.createClass({
     if (this.state.currentUser && this.state.currentUser.username) {
       return (
         <Nav pullRight>
+          <NavItem id='create-profile'
+                   onClick={this.handleCreateProfile}>Create a Profile</NavItem>
           <NavItem className='' onClick={this.signOut}>Sign Out</NavItem>
         </Nav>
       )

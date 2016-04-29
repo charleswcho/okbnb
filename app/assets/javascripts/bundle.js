@@ -25537,6 +25537,12 @@
 	        { pullRight: true },
 	        React.createElement(
 	          NavItem,
+	          { id: 'create-profile',
+	            onClick: this.handleCreateProfile },
+	          'Create a Profile'
+	        ),
+	        React.createElement(
+	          NavItem,
 	          { className: '', onClick: this.signOut },
 	          'Sign Out'
 	        )
@@ -44788,9 +44794,7 @@
 	
 	  componentDidMount: function () {
 	    this.listener = UserStore.addListener(this.updateUser);
-	    if (typeof UserStore.currentUser() === 'undefined') {
-	      ClientActions.fetchCurrentUser();
-	    }
+	    ClientActions.fetchCurrentUser();
 	  },
 	
 	  componentWillUnmount: function () {
@@ -51877,7 +51881,6 @@
 	
 	  handleSubmit: function (e) {
 	    e.preventDefault();
-	    debugger;
 	    ClientActions.create({
 	      username: this.state.username,
 	      password: this.state.password
@@ -52603,6 +52606,7 @@
 	    console.log(this.state.budget);
 	    debugger;
 	    ClientActions.createProfile({
+	      user_id: this.state.user_id,
 	      profilePicURL: this.state.profilePicURL,
 	      name: this.state.name,
 	      age: this.state.age,

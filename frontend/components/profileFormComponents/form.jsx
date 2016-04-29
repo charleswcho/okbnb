@@ -124,6 +124,7 @@ module.exports = React.createClass({
     console.log(this.state.budget);
     debugger;
     ClientActions.createProfile({
+      user_id: this.state.user_id,
       profilePicURL: this.state.profilePicURL,
       name: this.state.name,
       age: this.state.age,

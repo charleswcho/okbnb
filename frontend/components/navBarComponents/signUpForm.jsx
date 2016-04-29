@@ -27,7 +27,6 @@ module.exports = React.createClass({
 
   handleSubmit: function(e) {
     e.preventDefault();
-    debugger;
     ClientActions.create({
       username: this.state.username,
       password: this.state.password

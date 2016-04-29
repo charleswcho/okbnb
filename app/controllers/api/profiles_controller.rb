@@ -1,3 +1,5 @@
+require 'byebug'
+
 class Api::ProfilesController < ApplicationController
 
   def index
@@ -12,6 +14,7 @@ class Api::ProfilesController < ApplicationController
   end
 
   def create
+    debugger;
     @profile = Profile.new(profile_params)
     if @profile.save
       render json: @profile
@@ -27,6 +30,7 @@ class Api::ProfilesController < ApplicationController
       :user_id,
       :profilePicURL,
       :name,
+      :age,
       :description,
       :location,
       :diet,
