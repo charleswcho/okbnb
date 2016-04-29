@@ -52465,7 +52465,7 @@
 	      description: '',
 	      location: '',
 	      diet: '',
-	      smoker: null,
+	      smoker: '',
 	      pet: '',
 	      budget: '',
 	      age: ''
@@ -52537,6 +52537,28 @@
 	
 	  handleSubmit: function (e) {
 	    e.preventDefault();
+	
+	    console.log(this.state.profilePicURL);
+	    console.log(this.state.name);
+	    console.log(this.state.age);
+	    console.log(this.state.description);
+	    console.log(this.state.location);
+	    console.log(this.state.diet);
+	    console.log(this.state.smoker);
+	    console.log(this.state.pet);
+	    console.log(this.state.budget);
+	    debugger;
+	    ClientActions.createProfile({
+	      profilePicURL: this.state.profilePicURL,
+	      name: this.state.name,
+	      age: this.state.age,
+	      description: this.state.description,
+	      location: this.state.location,
+	      diet: this.state.diet,
+	      smoker: this.state.smoker,
+	      pet: this.state.pet,
+	      budget: this.state.budget
+	    });
 	  },
 	
 	  render: function () {
@@ -52564,6 +52586,11 @@
 	        onChange: this.descriptionChanged }),
 	      React.createElement('input', { className: 'profile-input', type: 'text', value: location,
 	        placeholder: 'Address', onChange: this.locationChanged }),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Preferences'
+	      ),
 	      React.createElement('input', { className: 'profile-input', type: 'text', value: diet,
 	        placeholder: 'Diet', onChange: this.dietChanged }),
 	      React.createElement(
