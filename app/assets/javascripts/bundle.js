@@ -57,8 +57,8 @@
 	var SplashScreen = __webpack_require__(522);
 	
 	var Search = __webpack_require__(524);
-	var Detail = __webpack_require__(530);
-	var ProfileForm = __webpack_require__(534);
+	var Detail = __webpack_require__(535);
+	var ProfileForm = __webpack_require__(539);
 	// These are for testing
 	
 	var ClientActions = __webpack_require__(492);
@@ -52079,8 +52079,8 @@
 	// var FilterParamsStore = require('../stores/filter_params');
 	var Filters = __webpack_require__(526);
 	
-	var Index = __webpack_require__(527);
-	var Map = __webpack_require__(529);
+	var Index = __webpack_require__(532);
+	var Map = __webpack_require__(534);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52180,6 +52180,11 @@
 
 	var React = __webpack_require__(1);
 	
+	var SmokerOption = __webpack_require__(527);
+	var DietOption = __webpack_require__(530);
+	var PetOption = __webpack_require__(531);
+	// var BudgetOption = require('./filterComponents/budget');
+	
 	module.exports = React.createClass({
 	  displayName: 'exports',
 	
@@ -52191,6 +52196,17 @@
 	        'div',
 	        { className: 'filter-heading' },
 	        'Preferences'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'filter-row' },
+	        React.createElement(SmokerOption, null)
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'filter-row' },
+	        React.createElement(DietOption, null),
+	        React.createElement(PetOption, null)
 	      ),
 	      React.createElement(
 	        'div',
@@ -52206,8 +52222,250 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var FilterActions = __webpack_require__(528);
 	
-	var IndexItem = __webpack_require__(528);
+	var SmokerOption = React.createClass({
+	  displayName: 'SmokerOption',
+	
+	  getInitialState: function () {
+	    return { smoker: null };
+	  },
+	
+	  smokerChanged: function (e) {
+	    e.preventDefault();
+	    FilterActions.updateSmoker(e.target.value);
+	
+	    if (this.state.smoker === true) {
+	      this.setState({ smoker: false });
+	    } else {
+	      this.setState({ smoker: true });
+	    }
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'smoker-option' },
+	      React.createElement(
+	        'div',
+	        { className: 'checkbox-container' },
+	        React.createElement(
+	          'label',
+	          { className: 'checkbox-text' },
+	          'Smoker',
+	          React.createElement('input', { type: 'checkbox', onChange: this.smokerChanged, checked: this.state.smoker })
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = SmokerOption;
+
+/***/ },
+/* 528 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(495);
+	var FilterConstants = __webpack_require__(529);
+	
+	module.exports = {
+	  updateBounds: function (value) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_BOUNDS,
+	      bounds: value
+	    });
+	  },
+	  updateSmoker: function (value) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_SMOKER,
+	      smoker: value
+	    });
+	  },
+	  updatePet: function (value) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_PET,
+	      pet: value
+	    });
+	  },
+	  updateDiet: function (value) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_DIET,
+	      diet: value
+	    });
+	  },
+	  updateBudget: function (value) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_BUDGET,
+	      budget: value
+	    });
+	  }
+	};
+
+/***/ },
+/* 529 */
+/***/ function(module, exports) {
+
+	
+	
+	module.exports = {
+	  UPDATE_BOUNDS: "UPDATE_BOUNDS",
+	  UPDATE_SMOKER: "UPDATE_SMOKER",
+	  UPDATE_PET: "UPDATE_PET",
+	  UPDATE_DIET: "UPDATE_DIET",
+	  UPDATE_BUDGET: "UPDATE_BUDGET"
+	};
+
+/***/ },
+/* 530 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var FilterActions = __webpack_require__(528);
+	
+	var DropdownButton = __webpack_require__(226).DropdownButton;
+	var MenuItem = __webpack_require__(226).MenuItem;
+	
+	var DietOption = React.createClass({
+	  displayName: 'DietOption',
+	
+	
+	  getInitialState: function () {
+	    return { diet: '' };
+	  },
+	
+	  handlePetSelect: function (eventKey, event) {
+	    switch (parseInt(eventKey)) {
+	      case 1:
+	        this.setState({ diet: 'Vege' });
+	        break;
+	      case 2:
+	        this.setState({ diet: 'Vegan' });
+	        break;
+	      case 3:
+	        this.setState({ diet: 'Gluten' });
+	        break;
+	      case 4:
+	        this.setState({ diet: 'Other' });
+	        break;
+	    }
+	
+	    FilterActions.updateDiet(this.state.pet);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'diet-option' },
+	      React.createElement(
+	        DropdownButton,
+	        { className: 'profile-input', title: 'Diet', onSelect: this.handlePetSelect },
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '1', active: this.state.diet === 'Vege' },
+	          'Dog'
+	        ),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '2', active: this.state.diet === 'Vegan' },
+	          'Cat'
+	        ),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '3', active: this.state.diet === 'Gluten' },
+	          'Bird'
+	        ),
+	        React.createElement(MenuItem, { divider: true }),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '4', active: this.state.diet === 'Other' },
+	          'Other'
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = DietOption;
+
+/***/ },
+/* 531 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var FilterActions = __webpack_require__(528);
+	
+	var DropdownButton = __webpack_require__(226).DropdownButton;
+	var MenuItem = __webpack_require__(226).MenuItem;
+	
+	var PetOption = React.createClass({
+	  displayName: 'PetOption',
+	
+	
+	  getInitialState: function () {
+	    return { pet: '' };
+	  },
+	
+	  handlePetSelect: function (eventKey, event) {
+	    switch (parseInt(eventKey)) {
+	      case 1:
+	        this.setState({ pet: 'Dog' });
+	        break;
+	      case 2:
+	        this.setState({ pet: 'Cat' });
+	        break;
+	      case 3:
+	        this.setState({ pet: 'Bird' });
+	        break;
+	      case 4:
+	        this.setState({ pet: 'Other' });
+	        break;
+	    }
+	    FilterActions.updatePet(this.state.pet);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'diet-option' },
+	      React.createElement(
+	        DropdownButton,
+	        { className: 'profile-input', title: 'Pet', onSelect: this.handlePetSelect },
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '1', active: this.state.pet === 'Dog' },
+	          'Dog'
+	        ),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '2', active: this.state.pet === 'Cat' },
+	          'Cat'
+	        ),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '3', active: this.state.pet === 'Bird' },
+	          'Bird'
+	        ),
+	        React.createElement(MenuItem, { divider: true }),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '4', active: this.state.pet === 'Other' },
+	          'Other'
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = PetOption;
+
+/***/ },
+/* 532 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var IndexItem = __webpack_require__(533);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52227,7 +52485,7 @@
 	});
 
 /***/ },
-/* 528 */
+/* 533 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52272,14 +52530,14 @@
 	});
 
 /***/ },
-/* 529 */
+/* 534 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(32);
 	var hashHistory = __webpack_require__(166).hashHistory;
 	
-	var FilterActions = __webpack_require__(538);
+	var FilterActions = __webpack_require__(528);
 	
 	function _getCoordsObj(latLng) {
 	  return {
@@ -52404,7 +52662,7 @@
 	});
 
 /***/ },
-/* 530 */
+/* 535 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52412,9 +52670,9 @@
 	var ProfileStore = __webpack_require__(525);
 	var ClientActions = __webpack_require__(492);
 	
-	var Splash = __webpack_require__(531);
-	var Title = __webpack_require__(532);
-	var Description = __webpack_require__(533);
+	var Splash = __webpack_require__(536);
+	var Title = __webpack_require__(537);
+	var Description = __webpack_require__(538);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52449,7 +52707,7 @@
 	});
 
 /***/ },
-/* 531 */
+/* 536 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52469,7 +52727,7 @@
 	});
 
 /***/ },
-/* 532 */
+/* 537 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52498,7 +52756,7 @@
 	});
 
 /***/ },
-/* 533 */
+/* 538 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52557,13 +52815,13 @@
 	});
 
 /***/ },
-/* 534 */
+/* 539 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var Header = __webpack_require__(535);
-	var Form = __webpack_require__(536);
+	var Header = __webpack_require__(540);
+	var Form = __webpack_require__(541);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52583,7 +52841,7 @@
 	});
 
 /***/ },
-/* 535 */
+/* 540 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52610,7 +52868,7 @@
 	});
 
 /***/ },
-/* 536 */
+/* 541 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52623,7 +52881,7 @@
 	var UserStore = __webpack_require__(502);
 	var ProfileStore = __webpack_require__(525);
 	
-	var geoUtils = __webpack_require__(537);
+	var geoUtils = __webpack_require__(542);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52664,7 +52922,8 @@
 	    var self = this;
 	
 	    cloudinary.openUploadWidget({ cloud_name: 'ddodpmqri',
-	      upload_preset: 'jeh6p6xu'
+	      upload_preset: 'jeh6p6xu',
+	      theme: 'minimal'
 	    }, function (error, result) {
 	      self.setState({ profilePicURL: result[0].url });
 	    });
@@ -52900,7 +53159,7 @@
 	});
 
 /***/ },
-/* 537 */
+/* 542 */
 /***/ function(module, exports) {
 
 	
@@ -52923,60 +53182,6 @@
 	};
 	
 	module.exports = geoUtils;
-
-/***/ },
-/* 538 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(495);
-	var FilterConstants = __webpack_require__(539);
-	
-	module.exports = {
-	  updateBounds: function (value) {
-	    AppDispatcher.dispatch({
-	      actionType: FilterConstants.UPDATE_BOUNDS,
-	      bounds: value
-	    });
-	  },
-	  updateSmoker: function (value) {
-	    AppDispatcher.dispatch({
-	      actionType: FilterConstants.UPDATE_SMOKER,
-	      smoker: value
-	    });
-	  },
-	  updatePet: function (value) {
-	    AppDispatcher.dispatch({
-	      actionType: FilterConstants.UPDATE_PET,
-	      pet: value
-	    });
-	  },
-	  updateDiet: function (value) {
-	    AppDispatcher.dispatch({
-	      actionType: FilterConstants.UPDATE_DIET,
-	      diet: value
-	    });
-	  },
-	  updateBudget: function (value) {
-	    AppDispatcher.dispatch({
-	      actionType: FilterConstants.UPDATE_BUDGET,
-	      budget: value
-	    });
-	  }
-	};
-
-/***/ },
-/* 539 */
-/***/ function(module, exports) {
-
-	
-	
-	module.exports = {
-	  UPDATE_BOUNDS: "UPDATE_BOUNDS",
-	  UPDATE_SMOKER: "UPDATE_SMOKER",
-	  UPDATE_PET: "UPDATE_PET",
-	  UPDATE_DIET: "UPDATE_DIET",
-	  UPDATE_BUDGET: "UPDATE_BUDGET"
-	};
 
 /***/ }
 /******/ ]);

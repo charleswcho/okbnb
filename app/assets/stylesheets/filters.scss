@@ -1,0 +1,68 @@
+.filter-row {
+  display: flex;
+  justify-content: space-around;
+}
+
+.filter-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.room-type-row {
+  display: flex;
+  justify-content: space-around;
+}
+
+/*.room-type-title-container {
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+}
+.room-type-checkbox-container {
+  display: flex;
+  justify-content: space-around;
+}*/
+
+.smoker-option {
+  color: black;
+}
+
+
+.checkbox-container {
+  height: 29px;
+  width: 168px;
+  position: relative;
+  background-color: white;
+  font-size: 14px;
+  text-decoration: none;
+  /*vertical-align: middle;*/
+  border: 1px solid #aeaeae;
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  text-align: center;
+}
+
+.checkbox-container:hover {
+  /*background: #48AAE2;*/
+  cursor: pointer;
+}
+
+/*.checkbox-container:active {
+  border-top-color: #7d9bad;
+}*/
+
+.checkbox-text {
+  cursor: pointer;
+}
+
+.dates-title {
+  width: 75.5px;
+  float: left;
+}
+
+.dates-title label {
+  width: 100%;
+  float: left;
+}

@@ -47,7 +47,8 @@ module.exports = React.createClass({
     var self = this;
 
     cloudinary.openUploadWidget({ cloud_name: 'ddodpmqri',
-                                  upload_preset: 'jeh6p6xu'
+                                  upload_preset: 'jeh6p6xu',
+                                  theme: 'minimal'
                                 },
       function(error, result) {
         self.setState({ profilePicURL: result[0].url });
