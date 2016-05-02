@@ -52018,7 +52018,7 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'splash-page' },
-	      React.createElement('video', { src: 'http://res.cloudinary.com/ddodpmqri/video/upload/v1462158847/splash-video.mp4', width: '1280', height: '720', controls: true, loop: true }),
+	      React.createElement('video', { src: 'http://res.cloudinary.com/ddodpmqri/video/upload/v1462158847/splash-video.mp4', autoplay: true, loop: true, muted: true, controls: 'false', id: 'splash-video' }),
 	      React.createElement(SearchBar, null),
 	      React.createElement(Cities, null)
 	    );
@@ -53274,16 +53274,16 @@
 	        React.createElement(
 	          'div',
 	          { className: 'city-row-1' },
-	          React.createElement('img', { className: 'cities-icon', alt: 'san francisco',
-	            src: '/assets/san-francisco', width: '600', height: '300' })
+	          React.createElement('img', { className: 'row-1-icon', alt: 'san francisco',
+	            src: '/assets/san-francisco', width: '700', height: '350' })
 	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'city-row-2' },
-	          React.createElement('img', { className: 'cities-icon', alt: 'new york',
-	            src: '/assets/new-york', width: '260', height: '240' }),
-	          React.createElement('img', { className: 'cities-icon', alt: 'chicago',
-	            src: '/assets/chicago', width: '260', height: '240' })
+	          React.createElement('img', { className: 'row-2-icon', alt: 'new york',
+	            src: '/assets/new-york', width: '330', height: '300' }),
+	          React.createElement('img', { className: 'row-2-icon', alt: 'chicago',
+	            src: '/assets/chicago', width: '330', height: '300' })
 	        )
 	      )
 	    );
