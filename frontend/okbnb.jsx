@@ -7,12 +7,15 @@ var Route = ReactRouter.Route;
 var IndexRoute = ReactRouter.IndexRoute;
 var hashHistory = ReactRouter.hashHistory;
 
+// Components
 var NavBar = require('./components/navBar');
 var SplashScreen = require('./components/splashScreen');
 
 var Search = require('./components/search');
 var Detail = require('./components/detail');
 var ProfileForm = require('./components/profileForm');
+var Footer = require('./components/footer');
+
 // These are for testing
 
 var ClientActions = require('./actions/clientActions');
@@ -32,6 +35,7 @@ var App = React.createClass({
       <div>
         <NavBar/>
         {this.props.children}
+        <Footer/>
       </div>
     );
   }

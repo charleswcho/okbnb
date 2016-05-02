@@ -53,12 +53,15 @@
 	var IndexRoute = ReactRouter.IndexRoute;
 	var hashHistory = ReactRouter.hashHistory;
 	
+	// Components
 	var NavBar = __webpack_require__(225);
 	var SplashScreen = __webpack_require__(522);
 	
 	var Search = __webpack_require__(524);
 	var Detail = __webpack_require__(535);
 	var ProfileForm = __webpack_require__(539);
+	var Footer = __webpack_require__(543);
+	
 	// These are for testing
 	
 	var ClientActions = __webpack_require__(492);
@@ -80,7 +83,8 @@
 	      'div',
 	      null,
 	      React.createElement(NavBar, null),
-	      this.props.children
+	      this.props.children,
+	      React.createElement(Footer, null)
 	    );
 	  }
 	});
@@ -52001,6 +52005,7 @@
 	var React = __webpack_require__(1);
 	
 	var SearchBar = __webpack_require__(523);
+	var Cities = __webpack_require__(544);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52010,7 +52015,13 @@
 	  },
 	
 	  render: function () {
-	    return React.createElement(SearchBar, null);
+	    return React.createElement(
+	      'div',
+	      { className: 'splash-page' },
+	      React.createElement('video', { src: 'http://res.cloudinary.com/ddodpmqri/video/upload/v1462158847/splash-video.mp4', width: '1280', height: '720', controls: true, loop: true }),
+	      React.createElement(SearchBar, null),
+	      React.createElement(Cities, null)
+	    );
 	  }
 	});
 
@@ -53182,6 +53193,104 @@
 	};
 	
 	module.exports = geoUtils;
+
+/***/ },
+/* 543 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var Footer = React.createClass({
+	  displayName: 'Footer',
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'footer' },
+	      React.createElement(
+	        'div',
+	        { className: 'footer-header' },
+	        'Join Us On'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'footer-icons' },
+	        React.createElement(
+	          'a',
+	          { href: 'https://www.linkedin.com/in/charles-cho-44396074' },
+	          React.createElement('img', { className: 'footer-icon', alt: 'linkedin',
+	            src: '/assets/linkedin', width: '32', height: '32' })
+	        ),
+	        React.createElement(
+	          'a',
+	          { href: 'https://github.com/charleswcho' },
+	          React.createElement('img', { className: 'footer-icon', alt: 'github',
+	            src: '/assets/github', width: '32', height: '32' })
+	        ),
+	        React.createElement(
+	          'a',
+	          { href: 'https://www.instagram.com/charleswcho/' },
+	          React.createElement('img', { className: 'footer-icon', alt: 'instagram',
+	            src: '/assets/instagram', width: '32', height: '32' })
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'footer-copyright' },
+	        '© OkBnb'
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = Footer;
+
+/***/ },
+/* 544 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var Cities = React.createClass({
+	  displayName: 'Cities',
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'cities' },
+	      React.createElement(
+	        'div',
+	        { className: 'cities-header-1' },
+	        'Just for the weekend'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'cities-header-2' },
+	        'Discover new, inspiring people close to home.'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'cities-icons' },
+	        React.createElement(
+	          'div',
+	          { className: 'city-row-1' },
+	          React.createElement('img', { className: 'cities-icon', alt: 'san francisco',
+	            src: '/assets/san-francisco', width: '600', height: '300' })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'city-row-2' },
+	          React.createElement('img', { className: 'cities-icon', alt: 'new york',
+	            src: '/assets/new-york', width: '260', height: '240' }),
+	          React.createElement('img', { className: 'cities-icon', alt: 'chicago',
+	            src: '/assets/chicago', width: '260', height: '240' })
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = Cities;
 
 /***/ }
 /******/ ]);
