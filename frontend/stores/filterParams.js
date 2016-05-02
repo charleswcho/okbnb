@@ -17,6 +17,12 @@ FilterParamsStore.__onDispatch = function (payload) {
       _params.bounds = payload.bounds;
       FilterParamsStore.__emitChange();
       break;
+    case FilterConstants.UPDATE_SEARCH_STATUS:
+      console.log('3 Received Search Status at Store')
+      console.log(payload.search_status)
+      _params.search_status = payload.search_status;
+      FilterParamsStore.__emitChange();
+      break;
     case FilterConstants.UPDATE_SMOKER:
       _params.smoker = payload.smoker;
       FilterParamsStore.__emitChange();

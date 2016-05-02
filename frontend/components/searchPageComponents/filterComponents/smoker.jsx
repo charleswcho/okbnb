@@ -1,30 +1,33 @@
 var React = require('react');
 var FilterActions = require('../../../actions/filterActions');
 
+var DropdownButton = require('react-bootstrap').DropdownButton
+var MenuItem = require('react-bootstrap').MenuItem
+
 var SmokerOption = React.createClass({
   getInitialState: function () {
-    return { smoker: null };
+    return { smoker: '' };
   },
 
-  smokerChanged: function (e) {
-    e.preventDefault();
-    FilterActions.updateSmoker(e.target.value)
-
-    if (this.state.smoker === true) {
-      this.setState({ smoker: false });
-    } else {
-      this.setState({ smoker: true });
+  handleSmokerSelect: function (eventKey, event) {
+    switch (parseInt(eventKey)) {
+      case 1:
+        this.setState({ smoker: true })
+        break;
+      case 2:
+        this.setState({ smoker: false })
+        break;
     }
+    FilterActions.updateSmoker(this.state.smoker);
   },
 
   render: function() {
     return (
       <div className="smoker-option">
-        <div className="checkbox-container">
-          <label className="checkbox-text">Smoker
-            <input type="checkbox" onChange={this.smokerChanged} checked={this.state.smoker} />
-          </label>
-        </div>
+        <DropdownButton className='filter-input' title='Smoker' onSelect={this.handleSmokerSelect}>
+            <MenuItem eventKey="1" active={this.state.smoker === true}>Yes</MenuItem>
+            <MenuItem eventKey="2" active={this.state.smoker === false}>No</MenuItem>
+        </DropdownButton>
       </div>
     );
   }

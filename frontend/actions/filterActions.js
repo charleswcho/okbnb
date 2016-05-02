@@ -8,6 +8,13 @@ module.exports = {
       bounds: value
     });
   },
+  updateSearchState: function (value) {
+    console.log('2 Dispatched Search Status update to Store')
+    AppDispatcher.dispatch({
+      actionType: FilterConstants.UPDATE_SEARCH_STATUS,
+      search_status: value
+    });
+  },
   updateSmoker: function (value) {
     AppDispatcher.dispatch({
       actionType: FilterConstants.UPDATE_SMOKER,

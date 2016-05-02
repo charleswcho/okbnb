@@ -1,10 +1,11 @@
 var ServerActions = require('../actions/serverActions');
 
 module.exports = {
-  fetchProfiles: function () {
+  fetchProfiles: function (filters) {
     console.log("Set Profiles request")
     $.ajax({
       url: "api/profiles",
+      data: filters,
       success: function (profiles) {
         console.log("Received Profiles")
         ServerActions.receiveProfiles(profiles)

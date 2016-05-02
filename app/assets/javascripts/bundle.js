@@ -57,10 +57,10 @@
 	var NavBar = __webpack_require__(225);
 	var SplashScreen = __webpack_require__(522);
 	
-	var Search = __webpack_require__(524);
-	var Detail = __webpack_require__(535);
-	var ProfileForm = __webpack_require__(539);
-	var Footer = __webpack_require__(543);
+	var Search = __webpack_require__(525);
+	var Detail = __webpack_require__(536);
+	var ProfileForm = __webpack_require__(540);
+	var Footer = __webpack_require__(544);
 	
 	// These are for testing
 	
@@ -70,7 +70,7 @@
 	var UserStore = __webpack_require__(502);
 	window.UserStore = UserStore;
 	
-	var ProfileStore = __webpack_require__(525);
+	var ProfileStore = __webpack_require__(526);
 	window.ProfileStore = ProfileStore;
 	
 	// These are for testing
@@ -45309,10 +45309,11 @@
 	var ServerActions = __webpack_require__(494);
 	
 	module.exports = {
-	  fetchProfiles: function () {
+	  fetchProfiles: function (filters) {
 	    console.log("Set Profiles request");
 	    $.ajax({
 	      url: "api/profiles",
+	      data: filters,
 	      success: function (profiles) {
 	        console.log("Received Profiles");
 	        ServerActions.receiveProfiles(profiles);
@@ -52005,7 +52006,7 @@
 	var React = __webpack_require__(1);
 	
 	var SearchBar = __webpack_require__(523);
-	var Cities = __webpack_require__(544);
+	var Cities = __webpack_require__(524);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52082,16 +52083,62 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	
+	var Cities = React.createClass({
+	  displayName: 'Cities',
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'cities' },
+	      React.createElement(
+	        'div',
+	        { className: 'cities-header-1' },
+	        'Just for the weekend'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'cities-header-2' },
+	        'Discover new, inspiring people close to home.'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'cities-icons' },
+	        React.createElement(
+	          'div',
+	          { className: 'city-row-1' },
+	          React.createElement('img', { className: 'row-1-icon', alt: 'san francisco',
+	            src: '/assets/san-francisco', width: '700', height: '350' })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'city-row-2' },
+	          React.createElement('img', { className: 'row-2-icon', alt: 'new york',
+	            src: '/assets/new-york', width: '330', height: '300' }),
+	          React.createElement('img', { className: 'row-2-icon', alt: 'chicago',
+	            src: '/assets/chicago', width: '330', height: '300' })
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = Cities;
+
+/***/ },
+/* 525 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
 	var hashHistory = __webpack_require__(166).hashHistory;
 	
-	var ProfileStore = __webpack_require__(525);
 	var ClientActions = __webpack_require__(492);
+	var ProfileStore = __webpack_require__(526);
+	var FilterParamsStore = __webpack_require__(546);
 	
-	// var FilterParamsStore = require('../stores/filter_params');
-	var Filters = __webpack_require__(526);
-	
-	var Index = __webpack_require__(532);
-	var Map = __webpack_require__(534);
+	var Filters = __webpack_require__(527);
+	var Index = __webpack_require__(533);
+	var Map = __webpack_require__(535);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52100,29 +52147,34 @@
 	    this.setState({ profiles: ProfileStore.all() });
 	  },
 	
-	  // _filtersChanged: function () {
-	  //   // var newParams = FilterParamsStore.params();
-	  //   // this.setState({ filterParams: newParams });
-	  //   ClientActions.fetchProfiles(newParams);
-	  // },
+	  _filtersChanged: function () {
+	    console.log('4 Filter Store updated');
+	    var newParams = FilterParamsStore.params();
+	    this.setState({ filterParams: newParams });
+	    console.log(newParams);
+	    ClientActions.fetchProfiles(newParams);
+	    console.log('5 Sent request with filters');
+	  },
 	
 	  getInitialState: function () {
 	    return {
 	      profiles: ProfileStore.all(),
-	      // filterParams: FilterParamsStore.params(),
-	      clickedLoc: null
+	      filterParams: FilterParamsStore.params()
 	    };
 	  },
+	
 	  componentDidMount: function () {
 	    this.profileListener = ProfileStore.addListener(this._profilesChanged);
-	    // this.filterListener = FilterParamsStore.addListener(this._filtersChanged);
-	    // var filterParams = FilterParamsStore.params();
+	    this.filterListener = FilterParamsStore.addListener(this._filtersChanged);
+	    var filterParams = FilterParamsStore.params();
 	    ClientActions.fetchProfiles();
 	  },
+	
 	  componentWillUnmount: function () {
 	    this.profileListener.remove();
-	    // this.filterListener.remove();
+	    this.filterListener.remove();
 	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'div',
@@ -52139,7 +52191,7 @@
 	});
 
 /***/ },
-/* 525 */
+/* 526 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(503).Store;
@@ -52186,18 +52238,19 @@
 	module.exports = ProfileStore;
 
 /***/ },
-/* 526 */
+/* 527 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var SmokerOption = __webpack_require__(527);
-	var DietOption = __webpack_require__(530);
-	var PetOption = __webpack_require__(531);
+	var SearchStatusOption = __webpack_require__(545);
+	var SmokerOption = __webpack_require__(528);
+	var DietOption = __webpack_require__(531);
+	var PetOption = __webpack_require__(532);
 	// var BudgetOption = require('./filterComponents/budget');
 	
-	module.exports = React.createClass({
-	  displayName: 'exports',
+	var Filters = React.createClass({
+	  displayName: 'Filters',
 	
 	  render: function () {
 	    return React.createElement(
@@ -52205,52 +52258,67 @@
 	      { className: 'filters' },
 	      React.createElement(
 	        'div',
-	        { className: 'filter-heading' },
-	        'Preferences'
+	        { className: 'filter-preferences' },
+	        React.createElement(
+	          'div',
+	          { className: 'filter-heading' },
+	          'Preferences'
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'filter-row' },
+	          React.createElement(SearchStatusOption, null),
+	          React.createElement(SmokerOption, null)
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'filter-row' },
+	          React.createElement(DietOption, null),
+	          React.createElement(PetOption, null)
+	        )
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: 'filter-row' },
-	        React.createElement(SmokerOption, null)
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'filter-row' },
-	        React.createElement(DietOption, null),
-	        React.createElement(PetOption, null)
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'filter-heading' },
-	        'Budget'
+	        { className: 'filter-budget' },
+	        React.createElement(
+	          'div',
+	          { className: 'filter-heading' },
+	          'Budget'
+	        )
 	      )
 	    );
 	  }
 	});
+	
+	module.exports = Filters;
 
 /***/ },
-/* 527 */
+/* 528 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var FilterActions = __webpack_require__(528);
+	var FilterActions = __webpack_require__(529);
+	
+	var DropdownButton = __webpack_require__(226).DropdownButton;
+	var MenuItem = __webpack_require__(226).MenuItem;
 	
 	var SmokerOption = React.createClass({
 	  displayName: 'SmokerOption',
 	
 	  getInitialState: function () {
-	    return { smoker: null };
+	    return { smoker: '' };
 	  },
 	
-	  smokerChanged: function (e) {
-	    e.preventDefault();
-	    FilterActions.updateSmoker(e.target.value);
-	
-	    if (this.state.smoker === true) {
-	      this.setState({ smoker: false });
-	    } else {
-	      this.setState({ smoker: true });
+	  handleSmokerSelect: function (eventKey, event) {
+	    switch (parseInt(eventKey)) {
+	      case 1:
+	        this.setState({ smoker: true });
+	        break;
+	      case 2:
+	        this.setState({ smoker: false });
+	        break;
 	    }
+	    FilterActions.updateSmoker(this.state.smoker);
 	  },
 	
 	  render: function () {
@@ -52258,13 +52326,17 @@
 	      'div',
 	      { className: 'smoker-option' },
 	      React.createElement(
-	        'div',
-	        { className: 'checkbox-container' },
+	        DropdownButton,
+	        { className: 'filter-input', title: 'Smoker', onSelect: this.handleSmokerSelect },
 	        React.createElement(
-	          'label',
-	          { className: 'checkbox-text' },
-	          'Smoker',
-	          React.createElement('input', { type: 'checkbox', onChange: this.smokerChanged, checked: this.state.smoker })
+	          MenuItem,
+	          { eventKey: '1', active: this.state.smoker === true },
+	          'Yes'
+	        ),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '2', active: this.state.smoker === false },
+	          'No'
 	        )
 	      )
 	    );
@@ -52274,17 +52346,24 @@
 	module.exports = SmokerOption;
 
 /***/ },
-/* 528 */
+/* 529 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(495);
-	var FilterConstants = __webpack_require__(529);
+	var FilterConstants = __webpack_require__(530);
 	
 	module.exports = {
 	  updateBounds: function (value) {
 	    AppDispatcher.dispatch({
 	      actionType: FilterConstants.UPDATE_BOUNDS,
 	      bounds: value
+	    });
+	  },
+	  updateSearchState: function (value) {
+	    console.log('2 Dispatched Search Status update to Store');
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_SEARCH_STATUS,
+	      search_status: value
 	    });
 	  },
 	  updateSmoker: function (value) {
@@ -52314,13 +52393,14 @@
 	};
 
 /***/ },
-/* 529 */
+/* 530 */
 /***/ function(module, exports) {
 
 	
 	
 	module.exports = {
 	  UPDATE_BOUNDS: "UPDATE_BOUNDS",
+	  UPDATE_SEARCH_STATUS: "UPDATE_SEARCH_STATUS",
 	  UPDATE_SMOKER: "UPDATE_SMOKER",
 	  UPDATE_PET: "UPDATE_PET",
 	  UPDATE_DIET: "UPDATE_DIET",
@@ -52328,11 +52408,11 @@
 	};
 
 /***/ },
-/* 530 */
+/* 531 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var FilterActions = __webpack_require__(528);
+	var FilterActions = __webpack_require__(529);
 	
 	var DropdownButton = __webpack_require__(226).DropdownButton;
 	var MenuItem = __webpack_require__(226).MenuItem;
@@ -52361,7 +52441,7 @@
 	        break;
 	    }
 	
-	    FilterActions.updateDiet(this.state.pet);
+	    FilterActions.updateDiet(this.state.diet);
 	  },
 	
 	  render: function () {
@@ -52370,7 +52450,7 @@
 	      { className: 'diet-option' },
 	      React.createElement(
 	        DropdownButton,
-	        { className: 'profile-input', title: 'Diet', onSelect: this.handlePetSelect },
+	        { className: 'filter-input', title: 'Diet', onSelect: this.handlePetSelect },
 	        React.createElement(
 	          MenuItem,
 	          { eventKey: '1', active: this.state.diet === 'Vege' },
@@ -52400,11 +52480,11 @@
 	module.exports = DietOption;
 
 /***/ },
-/* 531 */
+/* 532 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var FilterActions = __webpack_require__(528);
+	var FilterActions = __webpack_require__(529);
 	
 	var DropdownButton = __webpack_require__(226).DropdownButton;
 	var MenuItem = __webpack_require__(226).MenuItem;
@@ -52441,7 +52521,7 @@
 	      { className: 'diet-option' },
 	      React.createElement(
 	        DropdownButton,
-	        { className: 'profile-input', title: 'Pet', onSelect: this.handlePetSelect },
+	        { className: 'filter-input', title: 'Pet', onSelect: this.handlePetSelect },
 	        React.createElement(
 	          MenuItem,
 	          { eventKey: '1', active: this.state.pet === 'Dog' },
@@ -52471,12 +52551,12 @@
 	module.exports = PetOption;
 
 /***/ },
-/* 532 */
+/* 533 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var IndexItem = __webpack_require__(533);
+	var IndexItem = __webpack_require__(534);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52496,7 +52576,7 @@
 	});
 
 /***/ },
-/* 533 */
+/* 534 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52541,14 +52621,14 @@
 	});
 
 /***/ },
-/* 534 */
+/* 535 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(32);
 	var hashHistory = __webpack_require__(166).hashHistory;
 	
-	var FilterActions = __webpack_require__(528);
+	var FilterActions = __webpack_require__(529);
 	
 	function _getCoordsObj(latLng) {
 	  return {
@@ -52673,17 +52753,17 @@
 	});
 
 /***/ },
-/* 535 */
+/* 536 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var ProfileStore = __webpack_require__(525);
+	var ProfileStore = __webpack_require__(526);
 	var ClientActions = __webpack_require__(492);
 	
-	var Splash = __webpack_require__(536);
-	var Title = __webpack_require__(537);
-	var Description = __webpack_require__(538);
+	var Splash = __webpack_require__(537);
+	var Title = __webpack_require__(538);
+	var Description = __webpack_require__(539);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52718,7 +52798,7 @@
 	});
 
 /***/ },
-/* 536 */
+/* 537 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52738,7 +52818,7 @@
 	});
 
 /***/ },
-/* 537 */
+/* 538 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52767,7 +52847,7 @@
 	});
 
 /***/ },
-/* 538 */
+/* 539 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52826,13 +52906,13 @@
 	});
 
 /***/ },
-/* 539 */
+/* 540 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var Header = __webpack_require__(540);
-	var Form = __webpack_require__(541);
+	var Header = __webpack_require__(541);
+	var Form = __webpack_require__(542);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52852,7 +52932,7 @@
 	});
 
 /***/ },
-/* 540 */
+/* 541 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52879,7 +52959,7 @@
 	});
 
 /***/ },
-/* 541 */
+/* 542 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52890,9 +52970,9 @@
 	
 	var ClientActions = __webpack_require__(492);
 	var UserStore = __webpack_require__(502);
-	var ProfileStore = __webpack_require__(525);
+	var ProfileStore = __webpack_require__(526);
 	
-	var geoUtils = __webpack_require__(542);
+	var geoUtils = __webpack_require__(543);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52908,6 +52988,7 @@
 	      age: null,
 	      description: '',
 	      location: '',
+	      search_status: '',
 	      diet: '',
 	      smoker: '',
 	      pet: '',
@@ -53170,7 +53251,7 @@
 	});
 
 /***/ },
-/* 542 */
+/* 543 */
 /***/ function(module, exports) {
 
 	
@@ -53195,7 +53276,7 @@
 	module.exports = geoUtils;
 
 /***/ },
-/* 543 */
+/* 544 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -53246,51 +53327,118 @@
 	module.exports = Footer;
 
 /***/ },
-/* 544 */
+/* 545 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var FilterActions = __webpack_require__(529);
 	
-	var Cities = React.createClass({
-	  displayName: 'Cities',
+	var DropdownButton = __webpack_require__(226).DropdownButton;
+	var MenuItem = __webpack_require__(226).MenuItem;
+	
+	var SearchStatusOption = React.createClass({
+	  displayName: 'SearchStatusOption',
+	
+	  getInitialState: function () {
+	    return { search_status: '' };
+	  },
+	
+	  handleSearchStatusSelect: function (eventKey, event) {
+	    var statuses = ['Active', 'Passive', "Don't contact"];
+	    eventKey = parseInt(eventKey);
+	    switch (eventKey) {
+	      case 0:
+	        this.setState({ search_status: statuses[0] });
+	        break;
+	      case 1:
+	        this.setState({ search_status: statuses[1] });
+	        break;
+	      case 2:
+	        this.setState({ search_status: statuses[2] });
+	        break;
+	    }
+	    console.log('1 Triggered Filter Action - updateSearchState');
+	    FilterActions.updateSearchState(statuses[eventKey]);
+	  },
 	
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { className: 'cities' },
+	      { className: 'search_status-option' },
 	      React.createElement(
-	        'div',
-	        { className: 'cities-header-1' },
-	        'Just for the weekend'
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'cities-header-2' },
-	        'Discover new, inspiring people close to home.'
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'cities-icons' },
+	        DropdownButton,
+	        { className: 'filter-input', title: 'Search Status', onSelect: this.handleSearchStatusSelect },
 	        React.createElement(
-	          'div',
-	          { className: 'city-row-1' },
-	          React.createElement('img', { className: 'row-1-icon', alt: 'san francisco',
-	            src: '/assets/san-francisco', width: '700', height: '350' })
+	          MenuItem,
+	          { eventKey: '0', active: this.state.search_status === 'Active' },
+	          'Active'
 	        ),
 	        React.createElement(
-	          'div',
-	          { className: 'city-row-2' },
-	          React.createElement('img', { className: 'row-2-icon', alt: 'new york',
-	            src: '/assets/new-york', width: '330', height: '300' }),
-	          React.createElement('img', { className: 'row-2-icon', alt: 'chicago',
-	            src: '/assets/chicago', width: '330', height: '300' })
+	          MenuItem,
+	          { eventKey: '1', active: this.state.search_status === 'Passive' },
+	          'Passive'
+	        ),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '2', active: this.state.search_status === "Don't contact" },
+	          'Don\'t contact'
 	        )
 	      )
 	    );
 	  }
 	});
 	
-	module.exports = Cities;
+	module.exports = SearchStatusOption;
+
+/***/ },
+/* 546 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(495);
+	var Store = __webpack_require__(503).Store;
+	
+	var _params = { budget: 0 };
+	
+	var FilterConstants = __webpack_require__(530);
+	
+	var FilterParamsStore = new Store(AppDispatcher);
+	
+	FilterParamsStore.params = function () {
+	  return Object.assign({}, _params);
+	};
+	
+	FilterParamsStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case FilterConstants.UPDATE_BOUNDS:
+	      _params.bounds = payload.bounds;
+	      FilterParamsStore.__emitChange();
+	      break;
+	    case FilterConstants.UPDATE_SEARCH_STATUS:
+	      console.log('3 Received Search Status at Store');
+	      console.log(payload.search_status);
+	      _params.search_status = payload.search_status;
+	      FilterParamsStore.__emitChange();
+	      break;
+	    case FilterConstants.UPDATE_SMOKER:
+	      _params.smoker = payload.smoker;
+	      FilterParamsStore.__emitChange();
+	      break;
+	    case FilterConstants.UPDATE_PET:
+	      _params.pet = payload.pet;
+	      FilterParamsStore.__emitChange();
+	      break;
+	    case FilterConstants.UPDATE_DIET:
+	      _params.diet = payload.diet;
+	      FilterParamsStore.__emitChange();
+	      break;
+	    case FilterConstants.UPDATE_BUDGET:
+	      _params.budget = payload.budget;
+	      FilterParamsStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = FilterParamsStore;
 
 /***/ }
 /******/ ]);

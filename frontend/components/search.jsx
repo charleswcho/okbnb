@@ -1,12 +1,11 @@
 var React = require('react');
 var hashHistory = require('react-router').hashHistory;
 
-var ProfileStore = require('../stores/profileStore');
 var ClientActions = require('../actions/clientActions');
+var ProfileStore = require('../stores/profileStore');
+var FilterParamsStore = require('../stores/filterParams');
 
-// var FilterParamsStore = require('../stores/filter_params');
 var Filters = require('./searchPageComponents/filters');
-
 var Index = require('./searchPageComponents/index');
 var Map = require('./searchPageComponents/Map');
 
@@ -15,29 +14,34 @@ module.exports = React.createClass({
     this.setState({profiles: ProfileStore.all()});
   },
 
-  // _filtersChanged: function () {
-  //   // var newParams = FilterParamsStore.params();
-  //   // this.setState({ filterParams: newParams });
-  //   ClientActions.fetchProfiles(newParams);
-  // },
+  _filtersChanged: function () {
+    console.log('4 Filter Store updated');
+    var newParams = FilterParamsStore.params();
+    this.setState({ filterParams: newParams });
+    console.log(newParams);
+    ClientActions.fetchProfiles(newParams);
+    console.log('5 Sent request with filters');
+  },
 
   getInitialState: function () {
     return {
       profiles: ProfileStore.all(),
-      // filterParams: FilterParamsStore.params(),
-      clickedLoc: null,
+      filterParams: FilterParamsStore.params()
     };
   },
+
   componentDidMount: function () {
     this.profileListener = ProfileStore.addListener(this._profilesChanged);
-    // this.filterListener = FilterParamsStore.addListener(this._filtersChanged);
-    // var filterParams = FilterParamsStore.params();
+    this.filterListener = FilterParamsStore.addListener(this._filtersChanged);
+    var filterParams = FilterParamsStore.params();
     ClientActions.fetchProfiles();
   },
+
   componentWillUnmount: function () {
     this.profileListener.remove();
-    // this.filterListener.remove();
+    this.filterListener.remove();
   },
+
   render: function(){
     return(
       <div className='search-page'>

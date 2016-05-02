@@ -31,7 +31,7 @@ var PetOption = React.createClass({
   render: function() {
     return (
       <div className="diet-option">
-        <DropdownButton className='profile-input' title='Pet' onSelect={this.handlePetSelect}>
+        <DropdownButton className='filter-input' title='Pet' onSelect={this.handlePetSelect}>
             <MenuItem eventKey="1" active={(this.state.pet === 'Dog')}>Dog</MenuItem>
             <MenuItem eventKey="2" active={(this.state.pet === 'Cat')}>Cat</MenuItem>
             <MenuItem eventKey="3" active={(this.state.pet === 'Bird')}>Bird</MenuItem>

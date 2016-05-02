@@ -26,13 +26,13 @@ var DietOption = React.createClass({
         break;
     }
 
-    FilterActions.updateDiet(this.state.pet);
+    FilterActions.updateDiet(this.state.diet);
   },
 
   render: function() {
     return (
       <div className="diet-option">
-        <DropdownButton className='profile-input' title='Diet' onSelect={this.handlePetSelect}>
+        <DropdownButton className='filter-input' title='Diet' onSelect={this.handlePetSelect}>
             <MenuItem eventKey="1" active={(this.state.diet === 'Vege')}>Dog</MenuItem>
             <MenuItem eventKey="2" active={(this.state.diet === 'Vegan')}>Cat</MenuItem>
             <MenuItem eventKey="3" active={(this.state.diet === 'Gluten')}>Bird</MenuItem>

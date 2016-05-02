@@ -19,9 +19,10 @@ User.create(username: "Guest", password: "1234567");
     location: "1#{i}0 Spear Street, San Francisco, CA",
     lat: 37.791039,
     lng: -122.394853,
-    diet: "asdfasdf",
+    search_status: "Active",
     smoker: false,
     pet: "Dog",
+    diet: "asdfasdf",
     budget: 9001
   )
 end

@@ -22,6 +22,7 @@ module.exports = React.createClass({
       age: null,
       description: '',
       location: '',
+      search_status: '',
       diet: '',
       smoker: '',
       pet: '',

@@ -17,6 +17,7 @@
 #  age           :string           not null
 #  lat           :float            not null
 #  lng           :float            not null
+#  search_status :string           not null
 #
 
 require 'test_helper'

@@ -17,11 +17,14 @@
 #  age           :string           not null
 #  lat           :float            not null
 #  lng           :float            not null
+#  search_status :string           not null
 #
 
 class Profile < ActiveRecord::Base
   validates :user_id, :profilePicURL, :name, :description,
-            :location, :lat, :lng, :pet, :budget, presence: true
+            :location, :lat, :lng, :search_status, :pet, :budget, presence: true
+  validates :search_status, inclusion: { in: ["Active", "Passive", "Don't contact"] }
+
   validates :smoker, inclusion: { in: [true, false] }
   validates :pet, inclusion: { in: ["Cat", "Dog", "Bird", "Fish"] }
 
