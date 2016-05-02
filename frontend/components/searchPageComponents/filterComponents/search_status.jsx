@@ -6,7 +6,7 @@ var MenuItem = require('react-bootstrap').MenuItem
 
 var SearchStatusOption = React.createClass({
   getInitialState: function () {
-    return { search_status: '' };
+    return { search_status: null };
   },
 
   handleSearchStatusSelect: function (eventKey, event) {

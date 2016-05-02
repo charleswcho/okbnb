@@ -52108,15 +52108,15 @@
 	          'div',
 	          { className: 'city-row-1' },
 	          React.createElement('img', { className: 'row-1-icon', alt: 'san francisco',
-	            src: '/assets/san-francisco', width: '700', height: '350' })
+	            src: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462225559/san-francisco_cakqie.jpg', width: '700', height: '350' })
 	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'city-row-2' },
 	          React.createElement('img', { className: 'row-2-icon', alt: 'new york',
-	            src: '/assets/new-york', width: '330', height: '300' }),
+	            src: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462225560/new-york_pzmhue.jpg', width: '330', height: '300' }),
 	          React.createElement('img', { className: 'row-2-icon', alt: 'chicago',
-	            src: '/assets/chicago', width: '330', height: '300' })
+	            src: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462225559/chicago_fiyzcd.jpg', width: '330', height: '300' })
 	        )
 	      )
 	    );
@@ -52148,10 +52148,8 @@
 	  },
 	
 	  _filtersChanged: function () {
-	    console.log('4 Filter Store updated');
 	    var newParams = FilterParamsStore.params();
 	    this.setState({ filterParams: newParams });
-	    console.log(newParams);
 	    ClientActions.fetchProfiles(newParams);
 	    console.log('5 Sent request with filters');
 	  },
@@ -52203,8 +52201,11 @@
 	var _profiles = {};
 	
 	function resetProfiles(profiles) {
+	  _profiles = {};
 	  console.log("Set Profiles into Store");
-	  _profiles = profiles;
+	  profiles.forEach(function (profile) {
+	    _profiles[profile.id] = profile;
+	  });
 	};
 	
 	function addProfile(profile) {
@@ -52306,19 +52307,21 @@
 	  displayName: 'SmokerOption',
 	
 	  getInitialState: function () {
-	    return { smoker: '' };
+	    return { smoker: null };
 	  },
 	
 	  handleSmokerSelect: function (eventKey, event) {
-	    switch (parseInt(eventKey)) {
-	      case 1:
+	    var smoker = [true, false];
+	    eventKey = parseInt(eventKey);
+	    switch (eventKey) {
+	      case 0:
 	        this.setState({ smoker: true });
 	        break;
-	      case 2:
+	      case 1:
 	        this.setState({ smoker: false });
 	        break;
 	    }
-	    FilterActions.updateSmoker(this.state.smoker);
+	    FilterActions.updateSmoker(smoker[eventKey]);
 	  },
 	
 	  render: function () {
@@ -52330,12 +52333,12 @@
 	        { className: 'filter-input', title: 'Smoker', onSelect: this.handleSmokerSelect },
 	        React.createElement(
 	          MenuItem,
-	          { eventKey: '1', active: this.state.smoker === true },
+	          { eventKey: '0', active: this.state.smoker === true },
 	          'Yes'
 	        ),
 	        React.createElement(
 	          MenuItem,
-	          { eventKey: '2', active: this.state.smoker === false },
+	          { eventKey: '1', active: this.state.smoker === false },
 	          'No'
 	        )
 	      )
@@ -52360,7 +52363,6 @@
 	    });
 	  },
 	  updateSearchState: function (value) {
-	    console.log('2 Dispatched Search Status update to Store');
 	    AppDispatcher.dispatch({
 	      actionType: FilterConstants.UPDATE_SEARCH_STATUS,
 	      search_status: value
@@ -52422,26 +52424,28 @@
 	
 	
 	  getInitialState: function () {
-	    return { diet: '' };
+	    return { diet: null };
 	  },
 	
 	  handlePetSelect: function (eventKey, event) {
-	    switch (parseInt(eventKey)) {
-	      case 1:
+	    var diets = ['Vege', 'Vegan', 'Gluten', 'Other'];
+	    eventKey = parseInt(eventKey);
+	    switch (eventKey) {
+	      case 0:
 	        this.setState({ diet: 'Vege' });
 	        break;
-	      case 2:
+	      case 1:
 	        this.setState({ diet: 'Vegan' });
 	        break;
-	      case 3:
+	      case 2:
 	        this.setState({ diet: 'Gluten' });
 	        break;
-	      case 4:
+	      case 3:
 	        this.setState({ diet: 'Other' });
 	        break;
 	    }
 	
-	    FilterActions.updateDiet(this.state.diet);
+	    FilterActions.updateDiet(diets[eventKey]);
 	  },
 	
 	  render: function () {
@@ -52453,23 +52457,23 @@
 	        { className: 'filter-input', title: 'Diet', onSelect: this.handlePetSelect },
 	        React.createElement(
 	          MenuItem,
-	          { eventKey: '1', active: this.state.diet === 'Vege' },
-	          'Dog'
+	          { eventKey: '0', active: this.state.diet === 'Vege' },
+	          'Vege'
 	        ),
 	        React.createElement(
 	          MenuItem,
-	          { eventKey: '2', active: this.state.diet === 'Vegan' },
-	          'Cat'
+	          { eventKey: '1', active: this.state.diet === 'Vegan' },
+	          'Vegan'
 	        ),
 	        React.createElement(
 	          MenuItem,
-	          { eventKey: '3', active: this.state.diet === 'Gluten' },
-	          'Bird'
+	          { eventKey: '2', active: this.state.diet === 'Gluten' },
+	          'Gluten'
 	        ),
 	        React.createElement(MenuItem, { divider: true }),
 	        React.createElement(
 	          MenuItem,
-	          { eventKey: '4', active: this.state.diet === 'Other' },
+	          { eventKey: '3', active: this.state.diet === 'Other' },
 	          'Other'
 	        )
 	      )
@@ -52494,53 +52498,55 @@
 	
 	
 	  getInitialState: function () {
-	    return { pet: '' };
+	    return { pet: null };
 	  },
 	
 	  handlePetSelect: function (eventKey, event) {
-	    switch (parseInt(eventKey)) {
-	      case 1:
+	    var pets = ['Dog', 'Cat', 'Bird', 'Other'];
+	    eventKey = parseInt(eventKey);
+	    switch (eventKey) {
+	      case 0:
 	        this.setState({ pet: 'Dog' });
 	        break;
-	      case 2:
+	      case 1:
 	        this.setState({ pet: 'Cat' });
 	        break;
-	      case 3:
+	      case 2:
 	        this.setState({ pet: 'Bird' });
 	        break;
-	      case 4:
+	      case 3:
 	        this.setState({ pet: 'Other' });
 	        break;
 	    }
-	    FilterActions.updatePet(this.state.pet);
+	    FilterActions.updatePet(pets[eventKey]);
 	  },
 	
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { className: 'diet-option' },
+	      { className: 'pet-option' },
 	      React.createElement(
 	        DropdownButton,
 	        { className: 'filter-input', title: 'Pet', onSelect: this.handlePetSelect },
 	        React.createElement(
 	          MenuItem,
-	          { eventKey: '1', active: this.state.pet === 'Dog' },
+	          { eventKey: '0', active: this.state.pet === 'Dog' },
 	          'Dog'
 	        ),
 	        React.createElement(
 	          MenuItem,
-	          { eventKey: '2', active: this.state.pet === 'Cat' },
+	          { eventKey: '1', active: this.state.pet === 'Cat' },
 	          'Cat'
 	        ),
 	        React.createElement(
 	          MenuItem,
-	          { eventKey: '3', active: this.state.pet === 'Bird' },
+	          { eventKey: '2', active: this.state.pet === 'Bird' },
 	          'Bird'
 	        ),
 	        React.createElement(MenuItem, { divider: true }),
 	        React.createElement(
 	          MenuItem,
-	          { eventKey: '4', active: this.state.pet === 'Other' },
+	          { eventKey: '3', active: this.state.pet === 'Other' },
 	          'Other'
 	        )
 	      )
@@ -52654,7 +52660,7 @@
 	  },
 	
 	  componentDidUpdate: function () {
-	    this.eachProfile(this.parseAddress);
+	    this.eachProfile(this.createMarkerFromProfile);
 	    this._onChange();
 	  },
 	
@@ -52666,31 +52672,16 @@
 	    });
 	  },
 	
-	  parseAddress: function (profile) {
-	    var self = this;
-	    var geocoder = new google.maps.Geocoder();
-	    geocoder.geocode({ "address": profile.location }, function (results, status) {
-	      if (status === google.maps.GeocoderStatus.OK) {
-	        var coords = {
-	          lat: results[0].geometry.location.lat(),
-	          lng: results[0].geometry.location.lng()
-	        };
-	        self.createMarkerFromProfile(profile.id, coords);
-	      } else {
-	        console.log(status);
-	      }
-	    });
-	  },
-	
-	  createMarkerFromProfile: function (id, coords) {
-	    var pos = new google.maps.LatLng(coords.lat, coords.lng);
+	  createMarkerFromProfile: function (profile) {
+	    var pos = new google.maps.LatLng(profile.lat, profile.lng);
 	    var marker = new google.maps.Marker({
 	      position: pos,
 	      map: this.map,
-	      profileId: id
+	      profileId: profile.id
 	    });
+	    // debugger;
 	    marker.addListener('click', function () {
-	      hashHistory.push("profile/" + id);
+	      hashHistory.push("profile/" + profile.id);
 	    });
 	
 	    this.markers.push(marker);
@@ -52707,11 +52698,11 @@
 	    }.bind(this));
 	    //Collect profiles to add
 	    var currentProfileIds = this.markers.map(function (marker) {
-	      return marker.benchId;
+	      return marker.profileId;
 	    });
-	    this.eachProfile(function (bench) {
-	      if (!currentProfileIds.includes(bench.id)) {
-	        profilesToAdd.push(bench);
+	    this.eachProfile(function (profile) {
+	      if (!currentProfileIds.includes(profile.id)) {
+	        profilesToAdd.push(profile);
 	      }
 	    });
 	    //Do the adding / removing
@@ -53256,7 +53247,6 @@
 
 	
 	var geoUtils = {
-	
 	  parseAddress: function (params, callback) {
 	    var self = this;
 	    var geocoder = new google.maps.Geocoder();
@@ -53300,19 +53290,19 @@
 	          'a',
 	          { href: 'https://www.linkedin.com/in/charles-cho-44396074' },
 	          React.createElement('img', { className: 'footer-icon', alt: 'linkedin',
-	            src: '/assets/linkedin', width: '32', height: '32' })
+	            src: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462225559/linkedin_n0quzo.png', width: '32', height: '32' })
 	        ),
 	        React.createElement(
 	          'a',
 	          { href: 'https://github.com/charleswcho' },
 	          React.createElement('img', { className: 'footer-icon', alt: 'github',
-	            src: '/assets/github', width: '32', height: '32' })
+	            src: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462225559/github_lerkgi.png', width: '32', height: '32' })
 	        ),
 	        React.createElement(
 	          'a',
 	          { href: 'https://www.instagram.com/charleswcho/' },
 	          React.createElement('img', { className: 'footer-icon', alt: 'instagram',
-	            src: '/assets/instagram', width: '32', height: '32' })
+	            src: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462225559/instagram_ppxb8f.png', width: '32', height: '32' })
 	        )
 	      ),
 	      React.createElement(
@@ -53340,7 +53330,7 @@
 	  displayName: 'SearchStatusOption',
 	
 	  getInitialState: function () {
-	    return { search_status: '' };
+	    return { search_status: null };
 	  },
 	
 	  handleSearchStatusSelect: function (eventKey, event) {
@@ -53414,8 +53404,7 @@
 	      FilterParamsStore.__emitChange();
 	      break;
 	    case FilterConstants.UPDATE_SEARCH_STATUS:
-	      console.log('3 Received Search Status at Store');
-	      console.log(payload.search_status);
+	
 	      _params.search_status = payload.search_status;
 	      FilterParamsStore.__emitChange();
 	      break;

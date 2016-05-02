@@ -7,36 +7,38 @@ var MenuItem = require('react-bootstrap').MenuItem
 var PetOption = React.createClass({
 
   getInitialState: function () {
-    return { pet: '' };
+    return { pet: null };
   },
 
   handlePetSelect: function (eventKey, event) {
-    switch (parseInt(eventKey)) {
-      case 1:
+    var pets = ['Dog', 'Cat', 'Bird', 'Other']
+    eventKey = parseInt(eventKey);
+    switch (eventKey) {
+      case 0:
         this.setState({ pet: 'Dog' })
         break;
-      case 2:
+      case 1:
         this.setState({ pet: 'Cat' })
         break;
-      case 3:
+      case 2:
         this.setState({ pet: 'Bird' })
         break;
-      case 4:
+      case 3:
         this.setState({ pet: 'Other' })
         break;
     }
-    FilterActions.updatePet(this.state.pet);
+    FilterActions.updatePet(pets[eventKey]);
   },
 
   render: function() {
     return (
-      <div className="diet-option">
+      <div className="pet-option">
         <DropdownButton className='filter-input' title='Pet' onSelect={this.handlePetSelect}>
-            <MenuItem eventKey="1" active={(this.state.pet === 'Dog')}>Dog</MenuItem>
-            <MenuItem eventKey="2" active={(this.state.pet === 'Cat')}>Cat</MenuItem>
-            <MenuItem eventKey="3" active={(this.state.pet === 'Bird')}>Bird</MenuItem>
+            <MenuItem eventKey="0" active={(this.state.pet === 'Dog')}>Dog</MenuItem>
+            <MenuItem eventKey="1" active={(this.state.pet === 'Cat')}>Cat</MenuItem>
+            <MenuItem eventKey="2" active={(this.state.pet === 'Bird')}>Bird</MenuItem>
             <MenuItem divider />
-            <MenuItem eventKey="4" active={(this.state.pet === 'Other')}>Other</MenuItem>
+            <MenuItem eventKey="3" active={(this.state.pet === 'Other')}>Other</MenuItem>
         </DropdownButton>
       </div>
     );

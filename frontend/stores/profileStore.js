@@ -7,8 +7,11 @@ var ProfileStore = new Store(AppDispatcher);
 var _profiles = {};
 
 function resetProfiles (profiles) {
+  _profiles = {};
   console.log("Set Profiles into Store")
-  _profiles = profiles;
+  profiles.forEach(function (profile) {
+    _profiles[profile.id] = profile;
+  });
 };
 
 function addProfile (profile) {

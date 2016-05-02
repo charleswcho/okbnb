@@ -9,13 +9,13 @@ var Cities = React.createClass({
         <div className='cities-icons'>
           <div className='city-row-1'>
             <img className='row-1-icon' alt="san francisco"
-                 src="/assets/san-francisco" width="700" height="350"/>
+                 src="http://res.cloudinary.com/ddodpmqri/image/upload/v1462225559/san-francisco_cakqie.jpg" width="700" height="350"/>
           </div>
           <div className='city-row-2'>
             <img className='row-2-icon' alt="new york"
-                 src="/assets/new-york" width="330" height="300"/>
+                 src="http://res.cloudinary.com/ddodpmqri/image/upload/v1462225560/new-york_pzmhue.jpg" width="330" height="300"/>
             <img className='row-2-icon' alt="chicago"
-                 src="/assets/chicago" width="330" height="300"/>
+                 src="http://res.cloudinary.com/ddodpmqri/image/upload/v1462225559/chicago_fiyzcd.jpg" width="330" height="300"/>
           </div>
         </div>
       </div>

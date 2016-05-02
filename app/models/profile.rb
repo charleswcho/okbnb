@@ -22,18 +22,34 @@
 
 class Profile < ActiveRecord::Base
   validates :user_id, :profilePicURL, :name, :description,
-            :location, :lat, :lng, :search_status, :pet, :budget, presence: true
+            :location, :lat, :lng, :search_status, :diet, :pet, :budget, presence: true
   validates :search_status, inclusion: { in: ["Active", "Passive", "Don't contact"] }
-
   validates :smoker, inclusion: { in: [true, false] }
-  validates :pet, inclusion: { in: ["Cat", "Dog", "Bird", "Fish"] }
+  validates :diet, inclusion: { in: ["Vege", "Vegan", "Gluten", "Other"] }
+  validates :pet, inclusion: { in: ["Cat", "Dog", "Bird", "Other"] }
 
   belongs_to :user
 
   def self.in_bounds(bounds)
-   self.where("lat < ?", bounds[:northEast][:lat])
-       .where("lat > ?", bounds[:southWest][:lat])
-       .where("lng > ?", bounds[:southWest][:lng])
-       .where("lng < ?", bounds[:northEast][:lng])
- end
+    self.where("lat < ?", bounds[:northEast][:lat])
+        .where("lat > ?", bounds[:southWest][:lat])
+        .where("lng > ?", bounds[:southWest][:lng])
+        .where("lng < ?", bounds[:northEast][:lng])
+  end
+
+  def self.search_status(search_status)
+    self.where(search_status: search_status)
+  end
+
+  def self.smoker(smoker)
+    self.where(smoker: smoker)
+  end
+
+  def self.diet(diet)
+    self.where(diet: diet)
+  end
+
+  def self.pet(pet)
+    self.where(pet: pet)
+  end
 end

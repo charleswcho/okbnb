@@ -6,27 +6,29 @@ var MenuItem = require('react-bootstrap').MenuItem
 
 var SmokerOption = React.createClass({
   getInitialState: function () {
-    return { smoker: '' };
+    return { smoker: null };
   },
 
   handleSmokerSelect: function (eventKey, event) {
-    switch (parseInt(eventKey)) {
-      case 1:
+    var smoker = [true, false]
+    eventKey = parseInt(eventKey)
+    switch (eventKey) {
+      case 0:
         this.setState({ smoker: true })
         break;
-      case 2:
+      case 1:
         this.setState({ smoker: false })
         break;
     }
-    FilterActions.updateSmoker(this.state.smoker);
+    FilterActions.updateSmoker(smoker[eventKey]);
   },
 
   render: function() {
     return (
       <div className="smoker-option">
         <DropdownButton className='filter-input' title='Smoker' onSelect={this.handleSmokerSelect}>
-            <MenuItem eventKey="1" active={this.state.smoker === true}>Yes</MenuItem>
-            <MenuItem eventKey="2" active={this.state.smoker === false}>No</MenuItem>
+            <MenuItem eventKey="0" active={this.state.smoker === true}>Yes</MenuItem>
+            <MenuItem eventKey="1" active={this.state.smoker === false}>No</MenuItem>
         </DropdownButton>
       </div>
     );

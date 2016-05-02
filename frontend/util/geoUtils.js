@@ -1,6 +1,5 @@
 
 var geoUtils = {
-
   parseAddress: function (params, callback) {
     var self = this;
     var geocoder = new google.maps.Geocoder()

@@ -1,13 +1,31 @@
+require 'byebug'
+
 class Api::ProfilesController < ApplicationController
 
   def index
     @profiles = Profile.all
 
     if (bounds)
-      @profiles = Profile.in_bounds(bounds)
+      @profiles = @profiles.in_bounds(bounds)
     end
+
+    if (search_status)
+      @profiles = @profiles.search_status(search_status)
+    end
+
+    if !(smoker.nil?)
+      @profiles = @profiles.smoker(smoker)
+    end
+
+    if (diet)
+      @profiles = @profiles.diet(diet)
+    end
+
+    if (pet)
+      @profiles = @profiles.pet(pet)
+    end
+
     render :index
-    # TODO: Need to create filtering logic based on parameters that are set by the user.  Have to create custom ActiveRecord queries
   end
 
   def show
@@ -31,6 +49,22 @@ class Api::ProfilesController < ApplicationController
     params[:bounds]
   end
 
+  def search_status
+    params[:search_status]
+  end
+
+  def smoker
+    params.key?(:smoker)
+  end
+
+  def diet
+    params[:diet]
+  end
+
+  def pet
+    params[:pet]
+  end
+
   def profile_params
     params.require(:profile).permit(
       :user_id,
@@ -42,6 +76,7 @@ class Api::ProfilesController < ApplicationController
       :lat,
       :lng,
       :diet,
+      :search_status,
       :smoker,
       :pet,
       :budget,

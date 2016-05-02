@@ -9,7 +9,6 @@ module.exports = {
     });
   },
   updateSearchState: function (value) {
-    console.log('2 Dispatched Search Status update to Store')
     AppDispatcher.dispatch({
       actionType: FilterConstants.UPDATE_SEARCH_STATUS,
       search_status: value

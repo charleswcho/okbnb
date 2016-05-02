@@ -15,10 +15,8 @@ module.exports = React.createClass({
   },
 
   _filtersChanged: function () {
-    console.log('4 Filter Store updated');
     var newParams = FilterParamsStore.params();
     this.setState({ filterParams: newParams });
-    console.log(newParams);
     ClientActions.fetchProfiles(newParams);
     console.log('5 Sent request with filters');
   },

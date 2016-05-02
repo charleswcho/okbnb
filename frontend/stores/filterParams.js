@@ -18,8 +18,7 @@ FilterParamsStore.__onDispatch = function (payload) {
       FilterParamsStore.__emitChange();
       break;
     case FilterConstants.UPDATE_SEARCH_STATUS:
-      console.log('3 Received Search Status at Store')
-      console.log(payload.search_status)
+
       _params.search_status = payload.search_status;
       FilterParamsStore.__emitChange();
       break;

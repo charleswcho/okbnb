@@ -26,7 +26,7 @@ module.exports = React.createClass({
   },
 
   componentDidUpdate: function () {
-    this.eachProfile(this.parseAddress)
+    this.eachProfile(this.createMarkerFromProfile)
     this._onChange();
   },
 
@@ -38,31 +38,16 @@ module.exports = React.createClass({
     });
   },
 
-  parseAddress: function (profile) {
-    var self = this;
-    var geocoder = new google.maps.Geocoder()
-    geocoder.geocode({"address": profile.location}, function(results, status){
-      if (status === google.maps.GeocoderStatus.OK) {
-        var coords = {
-          lat: results[0].geometry.location.lat(),
-          lng: results[0].geometry.location.lng()
-        };
-        self.createMarkerFromProfile(profile.id, coords)
-      } else {
-        console.log(status)
-      }
-    });
-   },
-
-  createMarkerFromProfile: function (id, coords) {
-    var pos = new google.maps.LatLng(coords.lat, coords.lng);
+  createMarkerFromProfile: function (profile) {
+    var pos = new google.maps.LatLng(profile.lat, profile.lng);
     var marker = new google.maps.Marker({
       position: pos,
       map: this.map,
-      profileId: id
+      profileId: profile.id
     });
+    // debugger;
     marker.addListener('click', function () {
-      hashHistory.push("profile/" + id );
+      hashHistory.push("profile/" + profile.id );
     });
 
     this.markers.push(marker);
@@ -79,11 +64,11 @@ module.exports = React.createClass({
     }.bind(this));
     //Collect profiles to add
     var currentProfileIds = this.markers.map(function(marker){
-      return marker.benchId;
+      return marker.profileId;
     });
-    this.eachProfile(function(bench){
-      if (!currentProfileIds.includes(bench.id)){
-        profilesToAdd.push(bench);
+    this.eachProfile(function(profile){
+      if (!currentProfileIds.includes(profile.id)){
+        profilesToAdd.push(profile);
       }
     });
     //Do the adding / removing
