@@ -4,7 +4,7 @@ var SearchStatusOption = require('./filterComponents/search_status');
 var SmokerOption = require('./filterComponents/smoker');
 var DietOption = require('./filterComponents/diet');
 var PetOption = require('./filterComponents/pet');
-// var BudgetOption = require('./filterComponents/budget');
+var BudgetOption = require('./filterComponents/budget');
 
 var Filters = React.createClass({
   render: function () {
@@ -23,6 +23,7 @@ var Filters = React.createClass({
         </div>
         <div className='filter-budget'>
           <div className='filter-heading'>Budget</div>
+          <BudgetOption/>
         </div>
       </div>
     );

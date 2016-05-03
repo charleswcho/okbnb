@@ -13,6 +13,12 @@ module.exports = React.createClass({
       <div className='new-profile-page'>
         <Header/>
         <Form/>
+        <div className='key-features'>
+          <div className='key-feature'>You can do this
+          </div>
+          <div className='key-feature'>You can do that</div>
+          <div className='key-feature'>You can even do this</div>
+        </div>
       </div>
     );
   }

@@ -12,58 +12,55 @@
   font-size: 36px;
 }
 
-.header-sub {
-
-}
-
 .profile-form {
   background: #104da1;
-  padding: 0 250px 10px 250px;
+  padding: 0 250px 50px 250px;
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
+}
+
+.form-header {
+  color: white;
+  font-size: 18px;
 }
 
 .profile-input {
-  margin: 10px 30px;
-  width: 200px;
+  margin-right: 10px;
+  width: 150px;
+  border: 1px solid #9dbaf2;
 }
 
-.form-row-1 {
-  width: 500px;
+#upload {
+  background-color: white;
+}
 
+.form-row {
   display: flex;
   flex-direction: row;
+  justify-content: flex-start;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
-
-.form-row-address {
-  width: 600px;
-
-  display: flex;
-  flex-direction: row;
-}
-
-.form-dropdowns {
-  width: 300px;
-
-  display: flex;
-  flex-direction: row;
-}
-// .dropdown.btn-group {
-//   margin: auto;
-// }
-//
-// .dropdown-toggle.profile-input {
-//   margin: 20px 0 0 0;
-// }
 
 .profile-submit {
   color: white;
   background: #00d280;
-  margin-left: auto;
-  margin-right: auto;
   width: 165px;
   height: 55px;
   border: none;
   border-radius: 2px;
+  margin-top: 20px;
+}
+
+.key-features {
+  height: 300px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+}
+
+.key-feature {
+  font-size: 32px;
+  padding: 80px 40px 80px 40px;
 }

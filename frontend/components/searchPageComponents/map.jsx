@@ -11,18 +11,18 @@ function _getCoordsObj(latLng) {
   };
 }
 
-var mapOptions = {
-  center: {lat: 37.773972, lng: -122.431297}, //San Francisco
-  zoom: 13
-};
-
 module.exports = React.createClass({
-
   componentDidMount: function(){
     var map = ReactDOM.findDOMNode(this.refs.map);
-    this.map = new google.maps.Map(map, mapOptions);
+    this.map = new google.maps.Map(map, this.props.mapOptions);
     this.markers = [];
     this.registerListeners();
+  },
+
+  componentWillReceiveProps: function () {
+    var center = this.props.mapOptions.center;
+    center = new google.maps.LatLng(center);
+    this.map.panTo(center);
   },
 
   componentDidUpdate: function () {

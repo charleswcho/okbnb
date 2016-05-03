@@ -1,7 +1,7 @@
 var AppDispatcher = require('../dispatcher/dispatcher');
 var Store = require('flux/utils').Store;
 
-var _params = { budget: 0 };
+var _params = { budget: { min: 0 } };
 
 var FilterConstants = require('../constants/filterConstants');
 
@@ -18,7 +18,6 @@ FilterParamsStore.__onDispatch = function (payload) {
       FilterParamsStore.__emitChange();
       break;
     case FilterConstants.UPDATE_SEARCH_STATUS:
-
       _params.search_status = payload.search_status;
       FilterParamsStore.__emitChange();
       break;
@@ -34,8 +33,12 @@ FilterParamsStore.__onDispatch = function (payload) {
       _params.diet = payload.diet;
       FilterParamsStore.__emitChange();
       break;
-    case FilterConstants.UPDATE_BUDGET:
-      _params.budget = payload.budget;
+    case FilterConstants.UPDATE_MIN:
+      _params.budget.min = payload.min;
+      FilterParamsStore.__emitChange();
+      break;
+    case FilterConstants.UPDATE_MAX:
+      _params.budget.max = payload.max;
       FilterParamsStore.__emitChange();
       break;
   }

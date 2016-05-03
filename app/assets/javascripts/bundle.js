@@ -58,9 +58,9 @@
 	var SplashScreen = __webpack_require__(522);
 	
 	var Search = __webpack_require__(525);
-	var Detail = __webpack_require__(536);
-	var ProfileForm = __webpack_require__(540);
-	var Footer = __webpack_require__(544);
+	var Detail = __webpack_require__(540);
+	var ProfileForm = __webpack_require__(544);
+	var Footer = __webpack_require__(547);
 	
 	// These are for testing
 	
@@ -52019,8 +52019,25 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'splash-page' },
-	      React.createElement('video', { src: 'http://res.cloudinary.com/ddodpmqri/video/upload/v1462158847/splash-video.mp4', autoplay: true, loop: true, muted: true, controls: 'false', id: 'splash-video' }),
-	      React.createElement(SearchBar, null),
+	      React.createElement(
+	        'div',
+	        { className: 'splash-image-container' },
+	        React.createElement(
+	          'div',
+	          { className: 'splash-image' },
+	          React.createElement(
+	            'div',
+	            { id: 'splash-image-title' },
+	            'MEET HERE'
+	          ),
+	          React.createElement(
+	            'div',
+	            { id: 'splash-image-subtitle' },
+	            'Find tenants from 191+ countries and experience diversity in a whole new way.'
+	          ),
+	          React.createElement(SearchBar, null)
+	        )
+	      ),
 	      React.createElement(Cities, null)
 	    );
 	  }
@@ -52084,6 +52101,8 @@
 
 	var React = __webpack_require__(1);
 	
+	var hashHistory = __webpack_require__(166).hashHistory;
+	
 	var Cities = React.createClass({
 	  displayName: 'Cities',
 	
@@ -52107,16 +52126,37 @@
 	        React.createElement(
 	          'div',
 	          { className: 'city-row-1' },
-	          React.createElement('img', { className: 'row-1-icon', alt: 'san francisco',
-	            src: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462225559/san-francisco_cakqie.jpg', width: '700', height: '350' })
+	          React.createElement(
+	            'a',
+	            { href: '#/search/san-francisco', className: 'row-1-icon', alt: 'san francisco', id: 'cr1i1' },
+	            React.createElement(
+	              'div',
+	              { className: 'icon-title-w' },
+	              'San Francisco'
+	            )
+	          )
 	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'city-row-2' },
-	          React.createElement('img', { className: 'row-2-icon', alt: 'new york',
-	            src: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462225560/new-york_pzmhue.jpg', width: '330', height: '300' }),
-	          React.createElement('img', { className: 'row-2-icon', alt: 'chicago',
-	            src: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462225559/chicago_fiyzcd.jpg', width: '330', height: '300' })
+	          React.createElement(
+	            'a',
+	            { href: '#/search/new-york', className: 'row-2-icon', alt: 'new york', id: 'cr2i1' },
+	            React.createElement(
+	              'div',
+	              { className: 'icon-title' },
+	              'New York'
+	            )
+	          ),
+	          React.createElement(
+	            'a',
+	            { href: '#/search/chicago', className: 'row-2-icon', alt: 'chicago', id: 'cr2i2' },
+	            React.createElement(
+	              'div',
+	              { className: 'icon-title' },
+	              'Chicago'
+	            )
+	          )
 	        )
 	      )
 	    );
@@ -52134,11 +52174,13 @@
 	
 	var ClientActions = __webpack_require__(492);
 	var ProfileStore = __webpack_require__(526);
-	var FilterParamsStore = __webpack_require__(546);
+	var FilterParamsStore = __webpack_require__(527);
 	
-	var Filters = __webpack_require__(527);
-	var Index = __webpack_require__(533);
-	var Map = __webpack_require__(535);
+	var Filters = __webpack_require__(529);
+	var Index = __webpack_require__(536);
+	var Map = __webpack_require__(538);
+	
+	var GeoUtils = __webpack_require__(539);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52151,17 +52193,25 @@
 	    var newParams = FilterParamsStore.params();
 	    this.setState({ filterParams: newParams });
 	    ClientActions.fetchProfiles(newParams);
-	    console.log('5 Sent request with filters');
+	    console.log(newParams);
 	  },
 	
 	  getInitialState: function () {
 	    return {
 	      profiles: ProfileStore.all(),
-	      filterParams: FilterParamsStore.params()
+	      filterParams: FilterParamsStore.params(),
+	      mapOptions: {
+	        center: { lat: 37.773972, lng: -122.431297 }, //San Francisco
+	        zoom: 13
+	      }
 	    };
 	  },
 	
 	  componentDidMount: function () {
+	    // Start parse request
+	    var loc = this.props.params.loc;
+	    GeoUtils.parseLoc(loc, this.locationChanged);
+	
 	    this.profileListener = ProfileStore.addListener(this._profilesChanged);
 	    this.filterListener = FilterParamsStore.addListener(this._filtersChanged);
 	    var filterParams = FilterParamsStore.params();
@@ -52171,6 +52221,19 @@
 	  componentWillUnmount: function () {
 	    this.profileListener.remove();
 	    this.filterListener.remove();
+	  },
+	
+	  // Callback that is called after the location has been parsed
+	  locationChanged: function (coords) {
+	    var newMapOptions = {
+	      center: coords,
+	      zoom: 13
+	    };
+	
+	    this.setState({
+	      // setting new mapOptions - should trigger a componentWillReceiveProps in maps and reload the map
+	      mapOptions: newMapOptions
+	    });
 	  },
 	
 	  render: function () {
@@ -52183,7 +52246,8 @@
 	        React.createElement(Filters, null),
 	        React.createElement(Index, { profiles: this.state.profiles })
 	      ),
-	      React.createElement(Map, { profiles: this.state.profiles })
+	      React.createElement(Map, { profiles: this.state.profiles,
+	        mapOptions: this.state.mapOptions })
 	    );
 	  }
 	});
@@ -52242,13 +52306,81 @@
 /* 527 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var AppDispatcher = __webpack_require__(495);
+	var Store = __webpack_require__(503).Store;
+	
+	var _params = { budget: { min: 0 } };
+	
+	var FilterConstants = __webpack_require__(528);
+	
+	var FilterParamsStore = new Store(AppDispatcher);
+	
+	FilterParamsStore.params = function () {
+	  return Object.assign({}, _params);
+	};
+	
+	FilterParamsStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case FilterConstants.UPDATE_BOUNDS:
+	      _params.bounds = payload.bounds;
+	      FilterParamsStore.__emitChange();
+	      break;
+	    case FilterConstants.UPDATE_SEARCH_STATUS:
+	      _params.search_status = payload.search_status;
+	      FilterParamsStore.__emitChange();
+	      break;
+	    case FilterConstants.UPDATE_SMOKER:
+	      _params.smoker = payload.smoker;
+	      FilterParamsStore.__emitChange();
+	      break;
+	    case FilterConstants.UPDATE_PET:
+	      _params.pet = payload.pet;
+	      FilterParamsStore.__emitChange();
+	      break;
+	    case FilterConstants.UPDATE_DIET:
+	      _params.diet = payload.diet;
+	      FilterParamsStore.__emitChange();
+	      break;
+	    case FilterConstants.UPDATE_MIN:
+	      _params.budget.min = payload.min;
+	      FilterParamsStore.__emitChange();
+	      break;
+	    case FilterConstants.UPDATE_MAX:
+	      _params.budget.max = payload.max;
+	      FilterParamsStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = FilterParamsStore;
+
+/***/ },
+/* 528 */
+/***/ function(module, exports) {
+
+	
+	
+	module.exports = {
+	  UPDATE_BOUNDS: "UPDATE_BOUNDS",
+	  UPDATE_SEARCH_STATUS: "UPDATE_SEARCH_STATUS",
+	  UPDATE_SMOKER: "UPDATE_SMOKER",
+	  UPDATE_PET: "UPDATE_PET",
+	  UPDATE_DIET: "UPDATE_DIET",
+	  UPDATE_MIN: "UPDATE_MIN",
+	  UPDATE_MAX: "UPDATE_MAX"
+	};
+
+/***/ },
+/* 529 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1);
 	
-	var SearchStatusOption = __webpack_require__(545);
-	var SmokerOption = __webpack_require__(528);
-	var DietOption = __webpack_require__(531);
-	var PetOption = __webpack_require__(532);
-	// var BudgetOption = require('./filterComponents/budget');
+	var SearchStatusOption = __webpack_require__(530);
+	var SmokerOption = __webpack_require__(532);
+	var DietOption = __webpack_require__(533);
+	var PetOption = __webpack_require__(534);
+	var BudgetOption = __webpack_require__(535);
 	
 	var Filters = React.createClass({
 	  displayName: 'Filters',
@@ -52285,7 +52417,8 @@
 	          'div',
 	          { className: 'filter-heading' },
 	          'Budget'
-	        )
+	        ),
+	        React.createElement(BudgetOption, null)
 	      )
 	    );
 	  }
@@ -52294,11 +52427,127 @@
 	module.exports = Filters;
 
 /***/ },
-/* 528 */
+/* 530 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var FilterActions = __webpack_require__(529);
+	var FilterActions = __webpack_require__(531);
+	
+	var DropdownButton = __webpack_require__(226).DropdownButton;
+	var MenuItem = __webpack_require__(226).MenuItem;
+	
+	var SearchStatusOption = React.createClass({
+	  displayName: 'SearchStatusOption',
+	
+	  getInitialState: function () {
+	    return { search_status: null };
+	  },
+	
+	  handleSearchStatusSelect: function (eventKey, event) {
+	    var statuses = ['Active', 'Passive', "Don't contact"];
+	    eventKey = parseInt(eventKey);
+	    switch (eventKey) {
+	      case 0:
+	        this.setState({ search_status: statuses[0] });
+	        break;
+	      case 1:
+	        this.setState({ search_status: statuses[1] });
+	        break;
+	      case 2:
+	        this.setState({ search_status: statuses[2] });
+	        break;
+	    }
+	    console.log('1 Triggered Filter Action - updateSearchState');
+	    FilterActions.updateSearchState(statuses[eventKey]);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'search_status-option' },
+	      React.createElement(
+	        DropdownButton,
+	        { className: 'filter-input', title: 'Search Status', onSelect: this.handleSearchStatusSelect },
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '0', active: this.state.search_status === 'Active' },
+	          'Active'
+	        ),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '1', active: this.state.search_status === 'Passive' },
+	          'Passive'
+	        ),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '2', active: this.state.search_status === "Don't contact" },
+	          'Don\'t contact'
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = SearchStatusOption;
+
+/***/ },
+/* 531 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(495);
+	var FilterConstants = __webpack_require__(528);
+	
+	module.exports = {
+	  updateBounds: function (value) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_BOUNDS,
+	      bounds: value
+	    });
+	  },
+	  updateSearchState: function (value) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_SEARCH_STATUS,
+	      search_status: value
+	    });
+	  },
+	  updateSmoker: function (value) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_SMOKER,
+	      smoker: value
+	    });
+	  },
+	  updatePet: function (value) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_PET,
+	      pet: value
+	    });
+	  },
+	  updateDiet: function (value) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_DIET,
+	      diet: value
+	    });
+	  },
+	  updateMin: function (value) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_MIN,
+	      min: value
+	    });
+	  },
+	  updateMax: function (value) {
+	    AppDispatcher.dispatch({
+	      actionType: FilterConstants.UPDATE_MAX,
+	      max: value
+	    });
+	  }
+	};
+
+/***/ },
+/* 532 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var FilterActions = __webpack_require__(531);
 	
 	var DropdownButton = __webpack_require__(226).DropdownButton;
 	var MenuItem = __webpack_require__(226).MenuItem;
@@ -52349,72 +52598,11 @@
 	module.exports = SmokerOption;
 
 /***/ },
-/* 529 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(495);
-	var FilterConstants = __webpack_require__(530);
-	
-	module.exports = {
-	  updateBounds: function (value) {
-	    AppDispatcher.dispatch({
-	      actionType: FilterConstants.UPDATE_BOUNDS,
-	      bounds: value
-	    });
-	  },
-	  updateSearchState: function (value) {
-	    AppDispatcher.dispatch({
-	      actionType: FilterConstants.UPDATE_SEARCH_STATUS,
-	      search_status: value
-	    });
-	  },
-	  updateSmoker: function (value) {
-	    AppDispatcher.dispatch({
-	      actionType: FilterConstants.UPDATE_SMOKER,
-	      smoker: value
-	    });
-	  },
-	  updatePet: function (value) {
-	    AppDispatcher.dispatch({
-	      actionType: FilterConstants.UPDATE_PET,
-	      pet: value
-	    });
-	  },
-	  updateDiet: function (value) {
-	    AppDispatcher.dispatch({
-	      actionType: FilterConstants.UPDATE_DIET,
-	      diet: value
-	    });
-	  },
-	  updateBudget: function (value) {
-	    AppDispatcher.dispatch({
-	      actionType: FilterConstants.UPDATE_BUDGET,
-	      budget: value
-	    });
-	  }
-	};
-
-/***/ },
-/* 530 */
-/***/ function(module, exports) {
-
-	
-	
-	module.exports = {
-	  UPDATE_BOUNDS: "UPDATE_BOUNDS",
-	  UPDATE_SEARCH_STATUS: "UPDATE_SEARCH_STATUS",
-	  UPDATE_SMOKER: "UPDATE_SMOKER",
-	  UPDATE_PET: "UPDATE_PET",
-	  UPDATE_DIET: "UPDATE_DIET",
-	  UPDATE_BUDGET: "UPDATE_BUDGET"
-	};
-
-/***/ },
-/* 531 */
+/* 533 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var FilterActions = __webpack_require__(529);
+	var FilterActions = __webpack_require__(531);
 	
 	var DropdownButton = __webpack_require__(226).DropdownButton;
 	var MenuItem = __webpack_require__(226).MenuItem;
@@ -52484,11 +52672,11 @@
 	module.exports = DietOption;
 
 /***/ },
-/* 532 */
+/* 534 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var FilterActions = __webpack_require__(529);
+	var FilterActions = __webpack_require__(531);
 	
 	var DropdownButton = __webpack_require__(226).DropdownButton;
 	var MenuItem = __webpack_require__(226).MenuItem;
@@ -52557,12 +52745,60 @@
 	module.exports = PetOption;
 
 /***/ },
-/* 533 */
+/* 535 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var FilterActions = __webpack_require__(531);
+	
+	// var Rcslider = require('rc-slider');
+	// <Rcslider className='budget-slider' allowCross={false} range={true}/>
+	
+	var BudgetOption = React.createClass({
+	  displayName: 'BudgetOption',
+	
+	  getInitialState: function () {
+	    return {
+	      min: '',
+	      max: ''
+	    };
+	  },
+	
+	  minChanged: function (e) {
+	    e.preventDefault();
+	    this.setState({ min: e.target.value });
+	    FilterActions.updateMin(parseInt(e.target.value));
+	  },
+	
+	  maxChanged: function (e) {
+	    e.preventDefault();
+	    this.setState({ max: e.target.value });
+	    FilterActions.updateMax(parseInt(e.target.value));
+	  },
+	
+	  render: function () {
+	    var min = this.state.min;
+	    var max = this.state.max;
+	    return React.createElement(
+	      'div',
+	      { className: 'budget-option' },
+	      React.createElement('input', { className: 'budget-input', type: 'number',
+	        onChange: this.minChanged, value: min }),
+	      React.createElement('input', { className: 'budget-input', type: 'number',
+	        onChange: this.maxChanged, value: max })
+	    );
+	  }
+	});
+	
+	module.exports = BudgetOption;
+
+/***/ },
+/* 536 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var IndexItem = __webpack_require__(534);
+	var IndexItem = __webpack_require__(537);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52571,6 +52807,8 @@
 	    var profiles = this.props.profiles;
 	
 	    var profileKeys = Object.keys(profiles);
+	
+	    // if (this.props.displayResult) {
 	    return React.createElement(
 	      'div',
 	      { className: 'profiles-index' },
@@ -52578,11 +52816,14 @@
 	        return React.createElement(IndexItem, { key: id, profile: profiles[id] });
 	      })
 	    );
+	    // } else {
+	    //   return <div>Loading</div>;
+	    // }
 	  }
 	});
 
 /***/ },
-/* 534 */
+/* 537 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52627,14 +52868,14 @@
 	});
 
 /***/ },
-/* 535 */
+/* 538 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(32);
 	var hashHistory = __webpack_require__(166).hashHistory;
 	
-	var FilterActions = __webpack_require__(529);
+	var FilterActions = __webpack_require__(531);
 	
 	function _getCoordsObj(latLng) {
 	  return {
@@ -52643,20 +52884,20 @@
 	  };
 	}
 	
-	var mapOptions = {
-	  center: { lat: 37.773972, lng: -122.431297 }, //San Francisco
-	  zoom: 13
-	};
-	
 	module.exports = React.createClass({
 	  displayName: 'exports',
 	
-	
 	  componentDidMount: function () {
 	    var map = ReactDOM.findDOMNode(this.refs.map);
-	    this.map = new google.maps.Map(map, mapOptions);
+	    this.map = new google.maps.Map(map, this.props.mapOptions);
 	    this.markers = [];
 	    this.registerListeners();
+	  },
+	
+	  componentWillReceiveProps: function () {
+	    var center = this.props.mapOptions.center;
+	    center = new google.maps.LatLng(center);
+	    this.map.panTo(center);
 	  },
 	
 	  componentDidUpdate: function () {
@@ -52744,7 +52985,44 @@
 	});
 
 /***/ },
-/* 536 */
+/* 539 */
+/***/ function(module, exports) {
+
+	
+	var geoUtils = {
+	  parseAddress: function (params, callback) {
+	    var self = this;
+	    var geocoder = new google.maps.Geocoder();
+	    geocoder.geocode({ "address": params.location }, function (results, status) {
+	      if (status === google.maps.GeocoderStatus.OK) {
+	        params.lat = results[0].geometry.location.lat();
+	        params.lng = results[0].geometry.location.lng();
+	        debugger;
+	        callback({ profile: params });
+	      } else {
+	        console.log(status);
+	      }
+	    });
+	  },
+	
+	  parseLoc: function (loc, callback) {
+	    this.geocoder = new google.maps.Geocoder();
+	    this.geocoder.geocode({ "address": loc }, function (results, status) {
+	      if (status === google.maps.GeocoderStatus.OK) {
+	        var coords = {
+	          lat: results[0].geometry.location.lat(),
+	          lng: results[0].geometry.location.lng()
+	        };
+	        callback(coords);
+	      }
+	    });
+	  }
+	};
+	
+	module.exports = geoUtils;
+
+/***/ },
+/* 540 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52752,9 +53030,9 @@
 	var ProfileStore = __webpack_require__(526);
 	var ClientActions = __webpack_require__(492);
 	
-	var Splash = __webpack_require__(537);
-	var Title = __webpack_require__(538);
-	var Description = __webpack_require__(539);
+	var Splash = __webpack_require__(541);
+	var Title = __webpack_require__(542);
+	var Description = __webpack_require__(543);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52789,7 +53067,7 @@
 	});
 
 /***/ },
-/* 537 */
+/* 541 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52809,7 +53087,7 @@
 	});
 
 /***/ },
-/* 538 */
+/* 542 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52838,7 +53116,7 @@
 	});
 
 /***/ },
-/* 539 */
+/* 543 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52897,13 +53175,13 @@
 	});
 
 /***/ },
-/* 540 */
+/* 544 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var Header = __webpack_require__(541);
-	var Form = __webpack_require__(542);
+	var Header = __webpack_require__(545);
+	var Form = __webpack_require__(546);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52917,13 +53195,32 @@
 	      'div',
 	      { className: 'new-profile-page' },
 	      React.createElement(Header, null),
-	      React.createElement(Form, null)
+	      React.createElement(Form, null),
+	      React.createElement(
+	        'div',
+	        { className: 'key-features' },
+	        React.createElement(
+	          'div',
+	          { className: 'key-feature' },
+	          'You can do this'
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'key-feature' },
+	          'You can do that'
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'key-feature' },
+	          'You can even do this'
+	        )
+	      )
 	    );
 	  }
 	});
 
 /***/ },
-/* 541 */
+/* 545 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52950,7 +53247,7 @@
 	});
 
 /***/ },
-/* 542 */
+/* 546 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52963,10 +53260,16 @@
 	var UserStore = __webpack_require__(502);
 	var ProfileStore = __webpack_require__(526);
 	
-	var geoUtils = __webpack_require__(543);
+	var GeoUtils = __webpack_require__(539);
 	
-	module.exports = React.createClass({
-	  displayName: 'exports',
+	// Components
+	var SearchStatus = __webpack_require__(530);
+	var Smoker = __webpack_require__(532);
+	var Diet = __webpack_require__(533);
+	var Pet = __webpack_require__(534);
+	
+	var Form = React.createClass({
+	  displayName: 'Form',
 	
 	  getInitialState: function () {
 	    return {
@@ -52979,10 +53282,6 @@
 	      age: null,
 	      description: '',
 	      location: '',
-	      search_status: '',
-	      diet: '',
-	      smoker: '',
-	      pet: '',
 	      budget: null
 	    };
 	  },
@@ -53040,27 +53339,6 @@
 	    });
 	  },
 	
-	  dietChanged: function (e) {
-	    e.preventDefault();
-	    this.setState({
-	      diet: e.target.value
-	    });
-	  },
-	
-	  smokerChanged: function (e) {
-	    e.preventDefault();
-	    this.setState({
-	      smoker: e.target.value
-	    });
-	  },
-	
-	  petChanged: function (e) {
-	    e.preventDefault();
-	    this.setState({
-	      pet: e.target.value
-	    });
-	  },
-	
 	  budgetChanged: function (e) {
 	    e.preventDefault();
 	    this.setState({
@@ -53083,7 +53361,7 @@
 	      budget: this.state.budget
 	    };
 	
-	    geoUtils.parseAddress(params, ClientActions.createProfile);
+	    GeoUtils.parseAddress(params, ClientActions.createProfile);
 	  },
 	
 	  ageFocus: function () {
@@ -53110,43 +53388,12 @@
 	    });
 	  },
 	
-	  handleSmokerSelect: function (eventKey, event) {
-	    switch (parseInt(eventKey)) {
-	      case 1:
-	        this.setState({ smoker: true });
-	        break;
-	      case 2:
-	        this.setState({ smoker: false });
-	        break;
-	    }
-	  },
-	
-	  handlePetSelect: function (eventKey, event) {
-	    switch (parseInt(eventKey)) {
-	      case 1:
-	        this.setState({ pet: 'Dog' });
-	        break;
-	      case 2:
-	        this.setState({ pet: 'Cat' });
-	        break;
-	      case 3:
-	        this.setState({ pet: 'Bird' });
-	        break;
-	      case 4:
-	        this.setState({ pet: 'Other' });
-	        break;
-	    }
-	  },
-	
 	  render: function () {
 	    var profilePicURL = this.state.profilePicURL;
 	    var name = this.state.name;
 	    var age = this.state.age;
 	    var description = this.state.description;
 	    var location = this.state.location;
-	    var diet = this.state.diet;
-	    var smoker = this.state.smoker;
-	    var pet = this.state.pet;
 	    var budget = this.state.budget;
 	
 	    return React.createElement(
@@ -53154,24 +53401,29 @@
 	      { className: 'profile-form', onSubmit: this.handleSubmit },
 	      React.createElement(
 	        'button',
-	        { className: 'profile-input', onClick: this.openUploadWidget },
+	        { className: 'profile-input', onClick: this.openUploadWidget,
+	          id: 'upload' },
 	        'Upload Profile Pic'
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: 'form-row-1' },
+	        { className: 'form-row' },
 	        React.createElement('input', { className: 'profile-input', type: 'text', value: name,
 	          placeholder: 'Name', onChange: this.nameChanged }),
 	        React.createElement('input', { className: 'profile-input', type: this.state.ageFocused ? 'number' : 'text',
 	          value: age, placeholder: this.state.ageFocused ? null : 'Age',
 	          onFocus: this.ageFocus, onBlur: this.ageUnfocus, onChange: this.ageChanged })
 	      ),
-	      React.createElement('textarea', { className: 'profile-input', value: description,
-	        placeholder: 'Tell everyone a little bit about yourself!',
-	        onChange: this.descriptionChanged }),
 	      React.createElement(
 	        'div',
-	        { className: 'form-row-address' },
+	        { className: 'form-row' },
+	        React.createElement('textarea', { className: 'profile-input', value: description,
+	          placeholder: 'Tell everyone a little bit about yourself!',
+	          onChange: this.descriptionChanged })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'form-row' },
 	        React.createElement('input', { className: 'profile-input', type: 'text', value: location,
 	          placeholder: 'Address', onChange: this.locationChanged }),
 	        React.createElement('input', { className: 'profile-input', type: 'text',
@@ -53181,57 +53433,28 @@
 	      ),
 	      React.createElement(
 	        'label',
-	        null,
+	        { className: 'form-header' },
 	        'Preferences'
 	      ),
-	      React.createElement('input', { className: 'profile-input', type: 'text', value: diet,
-	        placeholder: 'Diet', onChange: this.dietChanged }),
 	      React.createElement(
 	        'div',
-	        { className: 'form-dropdowns' },
-	        React.createElement(
-	          DropdownButton,
-	          { className: 'profile-input', title: 'Smoker', onSelect: this.handleSmokerSelect },
-	          React.createElement(
-	            MenuItem,
-	            { eventKey: '1', active: this.state.smoker },
-	            'Yes'
-	          ),
-	          React.createElement(
-	            MenuItem,
-	            { eventKey: '2', active: this.state.smoker === false },
-	            'No'
-	          )
-	        ),
-	        React.createElement(
-	          DropdownButton,
-	          { className: 'profile-input', title: 'Pet', onSelect: this.handlePetSelect },
-	          React.createElement(
-	            MenuItem,
-	            { eventKey: '1', active: this.state.pet === 'Dog' },
-	            'Dog'
-	          ),
-	          React.createElement(
-	            MenuItem,
-	            { eventKey: '2', active: this.state.pet === 'Cat' },
-	            'Cat'
-	          ),
-	          React.createElement(
-	            MenuItem,
-	            { eventKey: '3', active: this.state.pet === 'Bird' },
-	            'Bird'
-	          ),
-	          React.createElement(MenuItem, { divider: true }),
-	          React.createElement(
-	            MenuItem,
-	            { eventKey: '4', active: this.state.pet === 'Other' },
-	            'Other'
-	          )
-	        )
+	        { className: 'form-row' },
+	        React.createElement(SearchStatus, { className: 'profile-input' }),
+	        React.createElement(Smoker, { className: 'profile-input' })
 	      ),
-	      React.createElement('input', { className: 'profile-input', type: this.state.budgetFocused ? 'number' : 'text',
-	        value: budget, placeholder: this.state.budgetFocused ? null : 'Budget',
-	        onFocus: this.budgetFocus, onBlur: this.ageUnfocus, onChange: this.budgetChanged }),
+	      React.createElement(
+	        'div',
+	        { className: 'form-row' },
+	        React.createElement(Diet, { className: 'profile-input' }),
+	        React.createElement(Pet, { className: 'profile-input' })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'form-row' },
+	        React.createElement('input', { className: 'profile-input', type: this.state.budgetFocused ? 'number' : 'text',
+	          value: budget, placeholder: this.state.budgetFocused ? null : 'Budget',
+	          onFocus: this.budgetFocus, onBlur: this.ageUnfocus, onChange: this.budgetChanged })
+	      ),
 	      React.createElement(
 	        'button',
 	        { className: 'profile-submit', type: 'submit' },
@@ -53240,33 +53463,11 @@
 	    );
 	  }
 	});
+	
+	module.exports = Form;
 
 /***/ },
-/* 543 */
-/***/ function(module, exports) {
-
-	
-	var geoUtils = {
-	  parseAddress: function (params, callback) {
-	    var self = this;
-	    var geocoder = new google.maps.Geocoder();
-	    geocoder.geocode({ "address": params.location }, function (results, status) {
-	      if (status === google.maps.GeocoderStatus.OK) {
-	        params.lat = results[0].geometry.location.lat();
-	        params.lng = results[0].geometry.location.lng();
-	        debugger;
-	        callback({ profile: params });
-	      } else {
-	        console.log(status);
-	      }
-	    });
-	  }
-	};
-	
-	module.exports = geoUtils;
-
-/***/ },
-/* 544 */
+/* 547 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -53315,119 +53516,6 @@
 	});
 	
 	module.exports = Footer;
-
-/***/ },
-/* 545 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var FilterActions = __webpack_require__(529);
-	
-	var DropdownButton = __webpack_require__(226).DropdownButton;
-	var MenuItem = __webpack_require__(226).MenuItem;
-	
-	var SearchStatusOption = React.createClass({
-	  displayName: 'SearchStatusOption',
-	
-	  getInitialState: function () {
-	    return { search_status: null };
-	  },
-	
-	  handleSearchStatusSelect: function (eventKey, event) {
-	    var statuses = ['Active', 'Passive', "Don't contact"];
-	    eventKey = parseInt(eventKey);
-	    switch (eventKey) {
-	      case 0:
-	        this.setState({ search_status: statuses[0] });
-	        break;
-	      case 1:
-	        this.setState({ search_status: statuses[1] });
-	        break;
-	      case 2:
-	        this.setState({ search_status: statuses[2] });
-	        break;
-	    }
-	    console.log('1 Triggered Filter Action - updateSearchState');
-	    FilterActions.updateSearchState(statuses[eventKey]);
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'search_status-option' },
-	      React.createElement(
-	        DropdownButton,
-	        { className: 'filter-input', title: 'Search Status', onSelect: this.handleSearchStatusSelect },
-	        React.createElement(
-	          MenuItem,
-	          { eventKey: '0', active: this.state.search_status === 'Active' },
-	          'Active'
-	        ),
-	        React.createElement(
-	          MenuItem,
-	          { eventKey: '1', active: this.state.search_status === 'Passive' },
-	          'Passive'
-	        ),
-	        React.createElement(
-	          MenuItem,
-	          { eventKey: '2', active: this.state.search_status === "Don't contact" },
-	          'Don\'t contact'
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = SearchStatusOption;
-
-/***/ },
-/* 546 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(495);
-	var Store = __webpack_require__(503).Store;
-	
-	var _params = { budget: 0 };
-	
-	var FilterConstants = __webpack_require__(530);
-	
-	var FilterParamsStore = new Store(AppDispatcher);
-	
-	FilterParamsStore.params = function () {
-	  return Object.assign({}, _params);
-	};
-	
-	FilterParamsStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case FilterConstants.UPDATE_BOUNDS:
-	      _params.bounds = payload.bounds;
-	      FilterParamsStore.__emitChange();
-	      break;
-	    case FilterConstants.UPDATE_SEARCH_STATUS:
-	
-	      _params.search_status = payload.search_status;
-	      FilterParamsStore.__emitChange();
-	      break;
-	    case FilterConstants.UPDATE_SMOKER:
-	      _params.smoker = payload.smoker;
-	      FilterParamsStore.__emitChange();
-	      break;
-	    case FilterConstants.UPDATE_PET:
-	      _params.pet = payload.pet;
-	      FilterParamsStore.__emitChange();
-	      break;
-	    case FilterConstants.UPDATE_DIET:
-	      _params.diet = payload.diet;
-	      FilterParamsStore.__emitChange();
-	      break;
-	    case FilterConstants.UPDATE_BUDGET:
-	      _params.budget = payload.budget;
-	      FilterParamsStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = FilterParamsStore;
 
 /***/ }
 /******/ ]);

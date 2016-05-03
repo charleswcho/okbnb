@@ -13,8 +13,8 @@ class Api::ProfilesController < ApplicationController
       @profiles = @profiles.search_status(search_status)
     end
 
-    if !(smoker.nil?)
-      @profiles = @profiles.smoker(smoker)
+    if (smoker)
+      @profiles = @profiles.smoker(params[:smoker])
     end
 
     if (diet)
@@ -23,6 +23,10 @@ class Api::ProfilesController < ApplicationController
 
     if (pet)
       @profiles = @profiles.pet(pet)
+    end
+
+    if (budget)
+      @profiles = @profiles.budget(budget)
     end
 
     render :index
@@ -44,7 +48,6 @@ class Api::ProfilesController < ApplicationController
   end
 
   private
-
   def bounds
     params[:bounds]
   end
@@ -63,6 +66,10 @@ class Api::ProfilesController < ApplicationController
 
   def pet
     params[:pet]
+  end
+
+  def budget
+    params[:budget]
   end
 
   def profile_params

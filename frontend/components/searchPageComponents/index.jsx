@@ -7,14 +7,19 @@ module.exports = React.createClass({
     var profiles = this.props.profiles;
 
     var profileKeys = Object.keys(profiles);
-    return (
-      <div className='profiles-index'>
-        {
-          profileKeys.map(function(id) {
-            return (<IndexItem key={id} profile={profiles[id]}/>);
-          })
-        }
-      </div>
-    );
+
+    // if (this.props.displayResult) {
+      return (
+        <div className='profiles-index'>
+          {
+            profileKeys.map(function(id) {
+              return (<IndexItem key={id} profile={profiles[id]}/>);
+            })
+          }
+        </div>
+      );
+    // } else {
+    //   return <div>Loading</div>;
+    // }
   }
 });

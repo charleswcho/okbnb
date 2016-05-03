@@ -13,6 +13,19 @@ var geoUtils = {
         console.log(status)
       }
     });
+  },
+
+  parseLoc: function(loc, callback) {
+    this.geocoder = new google.maps.Geocoder();
+    this.geocoder.geocode({"address": loc}, function(results, status){
+      if (status === google.maps.GeocoderStatus.OK) {
+        var coords = {
+          lat: results[0].geometry.location.lat(),
+          lng: results[0].geometry.location.lng()
+        };
+        callback(coords);
+      }
+    });
   }
 }
 

@@ -32,10 +32,16 @@ module.exports = {
       diet: value,
     });
   },
-  updateBudget: function (value){
+  updateMin: function (value){
     AppDispatcher.dispatch({
-      actionType: FilterConstants.UPDATE_BUDGET,
-      budget: value,
+      actionType: FilterConstants.UPDATE_MIN,
+      min: value,
+    });
+  },
+  updateMax: function (value){
+    AppDispatcher.dispatch({
+      actionType: FilterConstants.UPDATE_MAX,
+      max: value,
     });
   }
 };

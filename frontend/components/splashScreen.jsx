@@ -11,9 +11,13 @@ module.exports = React.createClass({
   render: function () {
     return (
       <div className='splash-page'>
-        <video src="http://res.cloudinary.com/ddodpmqri/video/upload/v1462158847/splash-video.mp4" autoplay loop muted controls="false" id='splash-video'>
-        </video>
-        <SearchBar/>
+        <div className='splash-image-container'>
+          <div className='splash-image'>
+            <div id='splash-image-title'>MEET HERE</div>
+            <div id='splash-image-subtitle'>Find tenants from 191+ countries and experience diversity in a whole new way.</div>
+            <SearchBar/>
+          </div>
+        </div>
         <Cities/>
       </div>
     );

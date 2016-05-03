@@ -1,0 +1,30 @@
+.splash-image-container {
+  height: 550px;
+
+  text-align: center;
+  vertical-align: middle;
+}
+
+.splash-image {
+  background-image: url('http://res.cloudinary.com/ddodpmqri/image/upload/c_scale,w_1280/v1462301259/splashpage_mru7cm.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+#splash-image-title {
+  font-weight: bold;
+  padding-top: 150px;
+  font-size: 50px;
+  color: white;
+}
+
+#splash-image-subtitle {
+  padding-bottom: 160px;
+  font-size: 18px;
+  color: white;
+}

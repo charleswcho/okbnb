@@ -3,8 +3,8 @@
   background: #104da1;
   border-radius: 0 !important;
   border: none;
-  margin-bottom: 0;
-  border-bottom: 1px solid rgba(255,255,255,0.1)
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 0px;
 }
 
 .navbar-default .navbar-brand {
@@ -15,8 +15,6 @@
 .navbar-default .navbar-nav>li>a {
   color: white !important;
 }
-
-// TODO: Make text white
 
 // TODO: Make box around 'create profile' button
 
@@ -33,6 +31,6 @@
   margin-left: auto;
 
   width: 214px;
-  padding: 28px 48px 40px;
+  padding: 20px 35px 35px;
   text-align: center;
 }

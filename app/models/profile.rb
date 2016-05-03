@@ -52,4 +52,13 @@ class Profile < ActiveRecord::Base
   def self.pet(pet)
     self.where(pet: pet)
   end
+
+  def self.budget(budget)
+    if (budget[:max])
+      self.where("budget > ?", budget[:min])
+          .where("budget < ?", budget[:max])
+    else
+      self.where("budget > ?", budget[:min])
+    end
+  end
 end

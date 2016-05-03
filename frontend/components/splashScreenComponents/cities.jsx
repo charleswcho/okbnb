@@ -1,5 +1,7 @@
 var React = require('react');
 
+var hashHistory = require('react-router').hashHistory;
+
 var Cities = React.createClass({
   render: function () {
     return (
@@ -8,14 +10,18 @@ var Cities = React.createClass({
         <div className='cities-header-2'>Discover new, inspiring people close to home.</div>
         <div className='cities-icons'>
           <div className='city-row-1'>
-            <img className='row-1-icon' alt="san francisco"
-                 src="http://res.cloudinary.com/ddodpmqri/image/upload/v1462225559/san-francisco_cakqie.jpg" width="700" height="350"/>
+            <a href='#/search/san-francisco' className='row-1-icon' alt="san francisco" id='cr1i1'>
+              <div className='icon-title-w'>San Francisco</div>
+            </a>
           </div>
           <div className='city-row-2'>
-            <img className='row-2-icon' alt="new york"
-                 src="http://res.cloudinary.com/ddodpmqri/image/upload/v1462225560/new-york_pzmhue.jpg" width="330" height="300"/>
-            <img className='row-2-icon' alt="chicago"
-                 src="http://res.cloudinary.com/ddodpmqri/image/upload/v1462225559/chicago_fiyzcd.jpg" width="330" height="300"/>
+            <a href='#/search/new-york' className='row-2-icon' alt="new york" id='cr2i1'>
+              <div className='icon-title'>New York</div>
+            </a>
+
+            <a href='#/search/chicago' className='row-2-icon' alt="chicago" id='cr2i2'>
+              <div className='icon-title'>Chicago</div>
+            </a>
           </div>
         </div>
       </div>

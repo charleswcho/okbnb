@@ -8,9 +8,15 @@ var ClientActions = require('../../actions/clientActions');
 var UserStore = require('../../stores/userStore');
 var ProfileStore = require('../../stores/profileStore');
 
-var geoUtils = require('../../util/geoUtils');
+var GeoUtils = require('../../util/geoUtils');
 
-module.exports = React.createClass({
+// Components
+var SearchStatus = require('../searchPageComponents/filterComponents/search_status');
+var Smoker = require('../searchPageComponents/filterComponents/smoker');
+var Diet = require('../searchPageComponents/filterComponents/diet');
+var Pet = require('../searchPageComponents/filterComponents/pet');
+
+var Form = React.createClass({
   getInitialState: function () {
     return {
       ageFocused: false,
@@ -22,10 +28,6 @@ module.exports = React.createClass({
       age: null,
       description: '',
       location: '',
-      search_status: '',
-      diet: '',
-      smoker: '',
-      pet: '',
       budget: null
     };
   },
@@ -86,27 +88,6 @@ module.exports = React.createClass({
     });
   },
 
-  dietChanged: function(e) {
-    e.preventDefault();
-    this.setState({
-      diet: e.target.value
-    });
-  },
-
-  smokerChanged: function(e) {
-    e.preventDefault();
-    this.setState({
-      smoker: e.target.value
-    });
-  },
-
-  petChanged: function(e) {
-    e.preventDefault();
-    this.setState({
-      pet: e.target.value
-    });
-  },
-
   budgetChanged: function(e) {
     e.preventDefault();
     this.setState({
@@ -129,7 +110,7 @@ module.exports = React.createClass({
       budget: this.state.budget
     };
 
-    geoUtils.parseAddress(params, ClientActions.createProfile)
+    GeoUtils.parseAddress(params, ClientActions.createProfile)
   },
 
   ageFocus: function () {
@@ -156,66 +137,37 @@ module.exports = React.createClass({
     });
   },
 
-  handleSmokerSelect: function (eventKey, event) {
-    switch (parseInt(eventKey)) {
-      case 1:
-        this.setState({ smoker: true })
-        break;
-      case 2:
-        this.setState({ smoker: false })
-        break;
-    }
-  },
-
-  handlePetSelect: function (eventKey, event) {
-    switch (parseInt(eventKey)) {
-      case 1:
-        this.setState({ pet: 'Dog' })
-        break;
-      case 2:
-        this.setState({ pet: 'Cat' })
-        break;
-      case 3:
-        this.setState({ pet: 'Bird' })
-        break;
-      case 4:
-        this.setState({ pet: 'Other' })
-        break;
-    }
-  },
-
   render: function() {
     var profilePicURL = this.state.profilePicURL;
     var name = this.state.name;
     var age = this.state.age;
     var description = this.state.description;
     var location = this.state.location;
-    var diet = this.state.diet;
-    var smoker = this.state.smoker;
-    var pet = this.state.pet;
     var budget = this.state.budget;
 
     return (
       <form className='profile-form' onSubmit={this.handleSubmit}>
-        <button className='profile-input' onClick={this.openUploadWidget}>
+        <button className='profile-input' onClick={this.openUploadWidget}
+                id='upload'>
           Upload Profile Pic
         </button>
 
-        <div className='form-row-1'>
+        <div className='form-row'>
           <input className='profile-input' type='text' value={name}
-                 placeholder='Name' onChange={this.nameChanged} />
+                 placeholder='Name' onChange={this.nameChanged}/>
 
           <input className='profile-input' type={this.state.ageFocused ? 'number' : 'text' }
                  value={age} placeholder={this.state.ageFocused ? null : 'Age' }
                  onFocus={this.ageFocus} onBlur={this.ageUnfocus} onChange={this.ageChanged} />
         </div>
+        <div className='form-row'>
+          <textarea className='profile-input' value={description}
+                    placeholder='Tell everyone a little bit about yourself!'
+                    onChange={this.descriptionChanged}>
+          </textarea>
+        </div>
 
-        <textarea className='profile-input' value={description}
-                  placeholder='Tell everyone a little bit about yourself!'
-                  onChange={this.descriptionChanged}>
-        </textarea>
-
-        <div className='form-row-address'>
+        <div className='form-row'>
           <input className='profile-input' type='text' value={location}
                  placeholder='Address' onChange={this.locationChanged} />
           <input className='profile-input' type='text'
@@ -224,32 +176,28 @@ module.exports = React.createClass({
                  placeholder='State' />
         </div>
 
-        <label>Preferences</label>
+        <label className='form-header'>Preferences</label>
 
-        <input className='profile-input' type='text' value={diet}
-               placeholder='Diet' onChange={this.dietChanged} />
-
-        <div className='form-dropdowns'>
-          <DropdownButton className='profile-input' title='Smoker' onSelect={this.handleSmokerSelect}>
-              <MenuItem eventKey="1" active={this.state.smoker}>Yes</MenuItem>
-              <MenuItem eventKey="2" active={this.state.smoker === false}>No</MenuItem>
-          </DropdownButton>
-
-          <DropdownButton className='profile-input' title='Pet' onSelect={this.handlePetSelect}>
-              <MenuItem eventKey="1" active={(this.state.pet === 'Dog')}>Dog</MenuItem>
-              <MenuItem eventKey="2" active={(this.state.pet === 'Cat')}>Cat</MenuItem>
-              <MenuItem eventKey="3" active={(this.state.pet === 'Bird')}>Bird</MenuItem>
-              <MenuItem divider />
-              <MenuItem eventKey="4" active={(this.state.pet === 'Other')}>Other</MenuItem>
-          </DropdownButton>
+        <div className='form-row'>
+          <SearchStatus className='profile-input'/>
+          <Smoker className='profile-input'/>
         </div>
 
-        <input className='profile-input' type={this.state.budgetFocused ? 'number' : 'text' }
-               value={budget} placeholder={this.state.budgetFocused ? null : 'Budget' }
-               onFocus={this.budgetFocus} onBlur={this.ageUnfocus} onChange={this.budgetChanged} />
+        <div className='form-row'>
+          <Diet className='profile-input'/>
+          <Pet className='profile-input'/>
+        </div>
+
+        <div className='form-row'>
+          <input className='profile-input' type={this.state.budgetFocused ? 'number' : 'text' }
+                 value={budget} placeholder={this.state.budgetFocused ? null : 'Budget' }
+                 onFocus={this.budgetFocus} onBlur={this.ageUnfocus} onChange={this.budgetChanged} />
+        </div>
 
         <button className='profile-submit' type='submit'>Continue</button>
       </form>
     )
   }
 });
+
+module.exports = Form;

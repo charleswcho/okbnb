@@ -20,6 +20,34 @@
   height: 100px;
 }
 
+.budget-option {
+  color: grey;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.budget-input {
+  width: 40px;
+  margin-left: 20px;
+  margin-right: 20px;
+  border: 1px solid #9dbaf2;
+}
+
+// .budget-slider {
+//   color: white;
+//   height: 40px;
+//   width: 200px;
+// }
+
+// .rc-slider-track {
+//   background-color: red;
+// }
+//
+// .rc-slider-handle {
+//   color: red;
+// }
+
 .filter-row {
   display: flex;
   justify-content: center;

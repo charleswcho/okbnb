@@ -1,17 +1,25 @@
 .auth-form {
-
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.signup-header {
-
+.auth-header {
+  font-size: 16px;
+  // font-weight: lighter;
+  margin-top: 0px;
+  margin-bottom: 10px;
 }
 
 .auth-input {
-
+  padding-top: 2px;
+  padding-bottom: 2px;
+  margin-bottom: 5px;
+  border-radius: 2px inset;
 }
 
 .demo-link {
-  
+
 }
 
 .auth-submit {
