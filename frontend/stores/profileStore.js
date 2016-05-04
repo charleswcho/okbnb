@@ -5,18 +5,25 @@ var ProfileConstants = require('../constants/profileConstants');
 var ProfileStore = new Store(AppDispatcher);
 
 var _profiles = {};
+var _hoveredProfileId = null;
 
 function resetProfiles (profiles) {
   _profiles = {};
-  console.log("Set Profiles into Store")
   profiles.forEach(function (profile) {
     _profiles[profile.id] = profile;
   });
 };
 
 function addProfile (profile) {
-  console.log("Added Profile to store");
   _profiles[profile.id] = profile;
+};
+
+function updateHovered (profileId) {
+  if (_hoveredProfileId === profileId) {
+    _hoveredProfileId = null;
+  } else {
+    _hoveredProfileId = profileId;
+  }
 };
 
 ProfileStore.all = function () {
@@ -27,16 +34,22 @@ ProfileStore.find = function(id){
   return Object.assign({}, _profiles[id]);
 };
 
+ProfileStore.hovered = function () {
+  return _hoveredProfileId;
+};
+
 ProfileStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
     case ProfileConstants.PROFILES_RECEIVED:
-      console.log("Received Profiles at store");
       resetProfiles(payload.profiles);
       ProfileStore.__emitChange();
       break;
     case ProfileConstants.PROFILE_RECEIVED:
-      console.log("Received Profile at store");
       addProfile(payload.profile);
+      ProfileStore.__emitChange();
+      break;
+    case ProfileConstants.UPDATE_HOVERED:
+      updateHovered(payload.profileId);
       ProfileStore.__emitChange();
       break;
   }

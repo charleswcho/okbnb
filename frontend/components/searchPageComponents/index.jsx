@@ -2,13 +2,13 @@ var React = require('react');
 
 var IndexItem = require('./indexItem');
 
-module.exports = React.createClass({
+var Index = React.createClass({
   render: function () {
     var profiles = this.props.profiles;
 
     var profileKeys = Object.keys(profiles);
 
-    // if (this.props.displayResult) {
+    if (this.props.renderMap) {
       return (
         <div className='profiles-index'>
           {
@@ -18,8 +18,10 @@ module.exports = React.createClass({
           }
         </div>
       );
-    // } else {
-    //   return <div>Loading</div>;
-    // }
+    } else {
+      return <div>Loading</div>;
+    }
   }
 });
+
+module.exports = Index;

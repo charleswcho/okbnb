@@ -3,6 +3,7 @@ var ReactDOM = require('react-dom');
 var hashHistory = require('react-router').hashHistory;
 
 var FilterActions = require('../../actions/filterActions');
+var ProfileStore = require('../../stores/profileStore');
 
 function _getCoordsObj(latLng) {
   return {
@@ -19,15 +20,23 @@ module.exports = React.createClass({
     this.registerListeners();
   },
 
-  componentWillReceiveProps: function () {
-    var center = this.props.mapOptions.center;
-    center = new google.maps.LatLng(center);
-    this.map.panTo(center);
+  componentWillReceiveProps: function (newProps) {
+    if (this.props.mapOptions.center !== newProps.mapOptions.center) {
+      var center = this.props.mapOptions.center;
+      center = new google.maps.LatLng(center);
+      this.map.panTo(center);
+    }
   },
 
   componentDidUpdate: function () {
-    this.eachProfile(this.createMarkerFromProfile)
+    if (!this.markers){
+      this.eachProfile(this.createMarkerFromProfile) 
+    }
     this._onChange();
+  },
+
+  componentWillUnmount: function () {
+    this.profileListener.remove();
   },
 
   eachProfile: function (callback) {
@@ -45,7 +54,7 @@ module.exports = React.createClass({
       map: this.map,
       profileId: profile.id
     });
-    // debugger;
+
     marker.addListener('click', function () {
       hashHistory.push("profile/" + profile.id );
     });
@@ -76,8 +85,20 @@ module.exports = React.createClass({
     markersToRemove.forEach(this.removeMarker);
   },
 
+  updateHovered: function () {
+    var hoveredProfileId = ProfileStore.hovered();
+    this.markers.forEach(function (marker) {
+      if (marker.profileId === hoveredProfileId) {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+      } else {
+        marker.setAnimation(null);
+      }
+    });
+  },
+
   registerListeners: function(){
     var self = this;
+    this.profileListener = ProfileStore.addListener(this.updateHovered);
     google.maps.event.addListener(this.map, 'idle', function() {
       var bounds = self.map.getBounds();
       var northEast = _getCoordsObj(bounds.getNorthEast());

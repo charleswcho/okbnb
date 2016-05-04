@@ -11,7 +11,7 @@ var Map = require('./searchPageComponents/Map');
 
 var GeoUtils = require('../util/geoUtils');
 
-module.exports = React.createClass({
+var Search = React.createClass({
   _profilesChanged: function () {
     this.setState({profiles: ProfileStore.all()});
   },
@@ -27,10 +27,8 @@ module.exports = React.createClass({
     return {
       profiles: ProfileStore.all(),
       filterParams: FilterParamsStore.params(),
-      mapOptions: {
-        center: {lat: 37.773972, lng: -122.431297}, //San Francisco
-        zoom: 13
-      }
+      mapOptions: {},
+      renderMap: false
     };
   },
 
@@ -58,21 +56,35 @@ module.exports = React.createClass({
     }
 
     this.setState({
-      // setting new mapOptions - should trigger a componentWillReceiveProps in maps and reload the map
       mapOptions: newMapOptions,
+      renderMap: true
     });
+    console.log(coords)
+    console.log(this.state.renderMap)
   },
 
   render: function() {
-    return(
-      <div className='search-page'>
-        <div className="half-filter-index">
-          <Filters />
-          <Index profiles={this.state.profiles}/>
+    if (this.state.renderMap) {
+      return(
+        <div className='search-page'>
+          <div className="half-filter-index">
+            <Filters />
+            <Index profiles={this.state.profiles} renderMap={this.state.renderMap}/>
+          </div>
+          <Map profiles={this.state.profiles} mapOptions={this.state.mapOptions}
+               renderMap={this.state.renderMap}/>
         </div>
-        <Map profiles={this.state.profiles}
-             mapOptions={this.state.mapOptions}/>
-      </div>
-    );
+      );
+    } else {
+      return(
+        <div className='search-page'>
+          <div className="half-filter-index">
+            <Filters />
+          </div>
+        </div>
+      );
+    }
   }
 });
+
+module.exports = Search;

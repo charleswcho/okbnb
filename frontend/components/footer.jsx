@@ -5,8 +5,8 @@ var Footer = React.createClass({
   componentDidMount: function () {
     // Start parse request
     // debugger;
-    var loc = this.props.params.loc;
-    console.log(loc);
+    // var loc = this.props.params.loc;
+    // console.log(loc);
   },
 
   render: function () {

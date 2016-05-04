@@ -38,4 +38,10 @@ module.exports = {
       profile: profile
     });
   },
+  updateHovered: function(profileId) {
+    AppDispatcher.dispatch({
+      actionType: ProfileConstants.UPDATE_HOVERED,
+      profileId: profileId
+    });
+  }
 };
