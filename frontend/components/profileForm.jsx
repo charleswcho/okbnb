@@ -11,8 +11,10 @@ module.exports = React.createClass({
   render: function () {
     return (
       <div className='new-profile-page'>
-        <Header/>
-        <Form/>
+        <div className='profile-form-container'>
+          <Header/>
+          <Form/>
+        </div>
         <div className='key-features'>
           <div className='key-feature'>You can do this
           </div>

@@ -65,8 +65,6 @@ module.exports = React.createClass({
     } else {
       return (
         <Nav pullRight>
-          <NavItem id='create-profile'
-                   onClick={this.handleCreateProfile}>Create a Profile</NavItem>
           <NavItem className='' onClick={this.openSignUpModal}>Sign Up</NavItem>
           <NavItem className='' onClick={this.openSignInModal}>Sign In</NavItem>
         </Nav>

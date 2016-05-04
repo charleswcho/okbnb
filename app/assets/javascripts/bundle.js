@@ -73,6 +73,8 @@
 	var ProfileStore = __webpack_require__(526);
 	window.ProfileStore = ProfileStore;
 	
+	var FilterParamsStore = __webpack_require__(527);
+	window.FilterStore = FilterParamsStore;
 	// These are for testing
 	
 	var App = React.createClass({
@@ -25557,12 +25559,6 @@
 	        { pullRight: true },
 	        React.createElement(
 	          NavItem,
-	          { id: 'create-profile',
-	            onClick: this.handleCreateProfile },
-	          'Create a Profile'
-	        ),
-	        React.createElement(
-	          NavItem,
 	          { className: '', onClick: this.openSignUpModal },
 	          'Sign Up'
 	        ),
@@ -44926,7 +44922,6 @@
 	module.exports = {
 	  // User and Session methods
 	  receiveCurrentUser: function (currentUser) {
-	    console.log("3 Sending currentUser to store");
 	    AppDispatcher.dispatch({
 	      actionType: UserConstants.RECEIVE_CURRENT_USER,
 	      currentUser: currentUser
@@ -44949,14 +44944,12 @@
 	
 	  // Profile methods
 	  receiveProfiles: function (profiles) {
-	    console.log("Sending Profiles to store");
 	    AppDispatcher.dispatch({
 	      actionType: ProfileConstants.PROFILES_RECEIVED,
 	      profiles: profiles
 	    });
 	  },
 	  receiveProfile: function (profile) {
-	    console.log("Sending profile to store");
 	    AppDispatcher.dispatch({
 	      actionType: ProfileConstants.PROFILE_RECEIVED,
 	      profile: profile
@@ -45337,13 +45330,10 @@
 	  },
 	
 	  createProfile: function (profileParams) {
-	    console.log("Sent profile POST request");
 	    $.ajax({
 	      method: "POST",
 	      url: "api/profiles",
-	      data: {
-	        profile: profileParams
-	      },
+	      data: profileParams,
 	      success: function (profile) {
 	        console.log("Created new Profile");
 	        ServerActions.receiveProfile(profile);
@@ -52997,7 +52987,6 @@
 	      if (status === google.maps.GeocoderStatus.OK) {
 	        params.lat = results[0].geometry.location.lat();
 	        params.lng = results[0].geometry.location.lng();
-	        debugger;
 	        callback({ profile: params });
 	      } else {
 	        console.log(status);
@@ -53194,8 +53183,12 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'new-profile-page' },
-	      React.createElement(Header, null),
-	      React.createElement(Form, null),
+	      React.createElement(
+	        'div',
+	        { className: 'profile-form-container' },
+	        React.createElement(Header, null),
+	        React.createElement(Form, null)
+	      ),
 	      React.createElement(
 	        'div',
 	        { className: 'key-features' },
@@ -53259,6 +53252,7 @@
 	var ClientActions = __webpack_require__(492);
 	var UserStore = __webpack_require__(502);
 	var ProfileStore = __webpack_require__(526);
+	var FilterParamsStore = __webpack_require__(527);
 	
 	var GeoUtils = __webpack_require__(539);
 	
@@ -53287,6 +53281,7 @@
 	  },
 	
 	  userChanged: function () {
+	    debugger;
 	    this.setState({ user_id: UserStore.currentUser().id });
 	  },
 	
@@ -53348,6 +53343,8 @@
 	
 	  handleSubmit: function (e) {
 	    e.preventDefault();
+	
+	    var filters = FilterParamsStore.params();
 	    var params = {
 	      user_id: this.state.user_id,
 	      profilePicURL: this.state.profilePicURL,
@@ -53355,11 +53352,14 @@
 	      age: this.state.age,
 	      description: this.state.description,
 	      location: this.state.location,
-	      diet: this.state.diet,
-	      smoker: this.state.smoker,
-	      pet: this.state.pet,
+	      search_status: filters.search_status,
+	      smoker: filters.smoker,
+	      diet: filters.diet,
+	      pet: filters.pet,
 	      budget: this.state.budget
 	    };
+	
+	    console.log(params);
 	
 	    GeoUtils.parseAddress(params, ClientActions.createProfile);
 	  },

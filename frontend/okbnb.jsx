@@ -27,6 +27,8 @@ window.UserStore = UserStore;
 var ProfileStore = require('./stores/profileStore');
 window.ProfileStore = ProfileStore;
 
+var FilterParamsStore = require('./stores/filterParams');
+window.FilterStore = FilterParamsStore;
 // These are for testing
 
 var App = React.createClass({

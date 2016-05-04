@@ -7,7 +7,6 @@ var geoUtils = {
       if (status === google.maps.GeocoderStatus.OK) {
         params.lat = results[0].geometry.location.lat();
         params.lng = results[0].geometry.location.lng();
-        debugger;
         callback({ profile: params });
       } else {
         console.log(status)

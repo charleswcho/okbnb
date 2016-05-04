@@ -7,6 +7,7 @@ var hashHistory = require('react-router').hashHistory;
 var ClientActions = require('../../actions/clientActions');
 var UserStore = require('../../stores/userStore');
 var ProfileStore = require('../../stores/profileStore');
+var FilterParamsStore = require('../../stores/filterParams');
 
 var GeoUtils = require('../../util/geoUtils');
 
@@ -33,6 +34,7 @@ var Form = React.createClass({
   },
 
   userChanged: function () {
+    debugger;
     this.setState({ user_id: UserStore.currentUser().id });
   },
 
@@ -97,6 +99,8 @@ var Form = React.createClass({
 
   handleSubmit: function(e) {
     e.preventDefault();
+
+    var filters = FilterParamsStore.params();
     var params = {
       user_id: this.state.user_id,
       profilePicURL: this.state.profilePicURL,
@@ -104,11 +108,14 @@ var Form = React.createClass({
       age: this.state.age,
       description: this.state.description,
       location: this.state.location,
-      diet: this.state.diet,
-      smoker: this.state.smoker,
-      pet: this.state.pet,
+      search_status: filters.search_status,
+      smoker: filters.smoker,
+      diet: filters.diet,
+      pet: filters.pet,
       budget: this.state.budget
     };
+
+    console.log(params)
 
     GeoUtils.parseAddress(params, ClientActions.createProfile)
   },

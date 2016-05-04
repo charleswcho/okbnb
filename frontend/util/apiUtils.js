@@ -29,13 +29,10 @@ module.exports = {
   },
 
   createProfile: function (profileParams) {
-    console.log("Sent profile POST request");
     $.ajax({
       method: "POST",
       url: "api/profiles",
-      data: {
-        profile: profileParams
-      },
+      data: profileParams,
       success: function (profile) {
         console.log("Created new Profile");
         ServerActions.receiveProfile(profile)

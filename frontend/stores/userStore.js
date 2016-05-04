@@ -7,7 +7,6 @@ var _currentUser = {};
 var _errors = [];
 
 var setCurrentUser = function(user) {
-  console.log("5 Set currentUser");
   _currentUser = user;
 };
 
@@ -30,7 +29,6 @@ UserStore.errors = function () {
 UserStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
     case UserConstants.RECEIVE_CURRENT_USER:
-      console.log("4 Received currentUser");
       setCurrentUser(payload.currentUser);
       UserStore.__emitChange();
       break;
