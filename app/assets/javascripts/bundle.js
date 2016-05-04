@@ -44848,7 +44848,7 @@
 	        ServerActions.receiveCurrentUser(currentUser);
 	      },
 	      error: function (e) {
-	        debugger;
+	        //debugger;
 	        ServerActions.handleError(e);
 	        console.log(["Error", e.responseText]);
 	      }
@@ -44878,7 +44878,7 @@
 	        ServerActions.receiveCurrentUser(currentUser);
 	      },
 	      error: function (e) {
-	        debugger;
+	        //debugger;
 	        ServerActions.handleError(e);
 	        console.log(["Error", e.responseText]);
 	      }
@@ -45360,7 +45360,6 @@
 	var _errors = [];
 	
 	var setCurrentUser = function (user) {
-	  console.log("5 Set currentUser");
 	  _currentUser = user;
 	};
 	
@@ -45383,7 +45382,6 @@
 	UserStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case UserConstants.RECEIVE_CURRENT_USER:
-	      console.log("4 Received currentUser");
 	      setCurrentUser(payload.currentUser);
 	      UserStore.__emitChange();
 	      break;
@@ -53021,7 +53019,6 @@
 	var ProfileStore = __webpack_require__(526);
 	var ClientActions = __webpack_require__(492);
 	
-	var Splash = __webpack_require__(541);
 	var Title = __webpack_require__(542);
 	var Description = __webpack_require__(543);
 	
@@ -53042,6 +53039,7 @@
 	    this.profileListener = ProfileStore.addListener(this._profileChanged);
 	    ClientActions.fetchProfiles();
 	  },
+	
 	  componentWillUnmount: function () {
 	    this.profileListener.remove();
 	  },
@@ -53050,7 +53048,6 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'profile-detail' },
-	      React.createElement(Splash, { img: this.state.profile.profilePicURL }),
 	      React.createElement(Title, { profile: this.state.profile }),
 	      React.createElement(Description, { profile: this.state.profile })
 	    );
@@ -53058,26 +53055,7 @@
 	});
 
 /***/ },
-/* 541 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	module.exports = React.createClass({
-	  displayName: 'exports',
-	
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      { className: 'detail-splash' },
-	      React.createElement('img', { className: 'detail-splash-image',
-	        src: this.props.img, alt: 'Profile Image' })
-	    );
-	  }
-	});
-
-/***/ },
+/* 541 */,
 /* 542 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -53094,13 +53072,22 @@
 	      { className: 'detail-title' },
 	      React.createElement(
 	        'div',
-	        { className: 'detail-title-name' },
-	        profile.name
+	        { className: 'detail-title-pic' },
+	        React.createElement('img', { className: 'detail-profile-pic', src: profile.profilePicURL, alt: 'profile-pic', height: '180', width: '180' })
 	      ),
 	      React.createElement(
 	        'div',
-	        { className: 'detail-title-location' },
-	        profile.location
+	        { className: 'detail-title-info' },
+	        React.createElement(
+	          'div',
+	          { className: 'detail-title-name' },
+	          profile.name
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'detail-title-location' },
+	          profile.location
+	        )
 	      )
 	    );
 	  }
@@ -53124,7 +53111,7 @@
 	      React.createElement(
 	        'div',
 	        { className: 'description-heading' },
-	        'About',
+	        'My self summary',
 	        React.createElement(
 	          'div',
 	          { className: 'description-item' },
@@ -53139,25 +53126,36 @@
 	        React.createElement(
 	          'div',
 	          { className: 'description-item' },
-	          'Diet: ',
-	          profile.diet
+	          'Search Status icon: ',
+	          profile.search_status
 	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'description-item' },
-	          'Smoker: ',
+	          'Smoker icon: ',
 	          profile.smoker ? "Yes" : "No"
 	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'description-item' },
-	          'Pet: ',
-	          profile.pet
+	          'Diet icon: ',
+	          profile.diet
 	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'description-item' },
-	          'Budget: ',
+	          'Pet icon: ',
+	          profile.pet
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'description-heading' },
+	        'Budget',
+	        React.createElement(
+	          'div',
+	          { className: 'description-item' },
+	          'Budget icon: ',
 	          profile.budget
 	        )
 	      )
@@ -53197,17 +53195,32 @@
 	        React.createElement(
 	          'div',
 	          { className: 'key-feature' },
-	          'You can do this'
+	          React.createElement('img', { src: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462379822/form-1_rumhly.png', alt: 'bird', width: '100', height: '100' }),
+	          React.createElement(
+	            'div',
+	            { className: 'key-feature-description' },
+	            'Creating a profile takes 2 minutes and is totally free.'
+	          )
 	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'key-feature' },
-	          'You can do that'
+	          React.createElement('img', { src: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462379822/form-2_mikape.png', alt: 'socks', width: '100', height: '100' }),
+	          React.createElement(
+	            'div',
+	            { className: 'key-feature-description' },
+	            'We\'re 100% sure you\'ll find the perfect tenant.'
+	          )
 	        ),
 	        React.createElement(
 	          'div',
 	          { className: 'key-feature' },
-	          'You can even do this'
+	          React.createElement('img', { src: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462379824/form-3_x8eslz.png', alt: 'coffee', width: '100', height: '100' }),
+	          React.createElement(
+	            'div',
+	            { className: 'key-feature-description' },
+	            'We\'re quick and easy to use!  '
+	          )
 	        )
 	      )
 	    );
@@ -53283,7 +53296,6 @@
 	  },
 	
 	  userChanged: function () {
-	    debugger;
 	    this.setState({ user_id: UserStore.currentUser().id });
 	  },
 	
@@ -53473,9 +53485,17 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var hashHistory = __webpack_require__(166).hashHistory;
 	
 	var Footer = React.createClass({
 	  displayName: 'Footer',
+	
+	  componentDidMount: function () {
+	    // Start parse request
+	    // debugger;
+	    var loc = this.props.params.loc;
+	    console.log(loc);
+	  },
 	
 	  render: function () {
 	    return React.createElement(

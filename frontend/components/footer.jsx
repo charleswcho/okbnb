@@ -1,6 +1,14 @@
 var React = require('react');
+var hashHistory = require('react-router').hashHistory;
 
 var Footer = React.createClass({
+  componentDidMount: function () {
+    // Start parse request
+    // debugger;
+    var loc = this.props.params.loc;
+    console.log(loc);
+  },
+
   render: function () {
     return (
       <div className='footer'>

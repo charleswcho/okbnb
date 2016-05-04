@@ -3,7 +3,6 @@ var React = require('react');
 var ProfileStore = require('../stores/profileStore');
 var ClientActions = require('../actions/clientActions');
 
-var Splash = require('./detailsPageComponents/splash');
 var Title = require('./detailsPageComponents/title');
 var Description = require('./detailsPageComponents/description');
 
@@ -22,6 +21,7 @@ module.exports = React.createClass({
     this.profileListener = ProfileStore.addListener(this._profileChanged);
     ClientActions.fetchProfiles();
   },
+
   componentWillUnmount: function () {
     this.profileListener.remove();
   },
@@ -29,7 +29,6 @@ module.exports = React.createClass({
   render: function () {
     return (
       <div className='profile-detail'>
-        <Splash img={this.state.profile.profilePicURL}/>
         <Title profile={this.state.profile}/>
         <Description profile={this.state.profile}/>
       </div>
