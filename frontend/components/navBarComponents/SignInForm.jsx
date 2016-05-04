@@ -27,11 +27,11 @@ module.exports = React.createClass({
 
   handleSubmit: function(e) {
     e.preventDefault();
-    this.props.closeSignInModal()
     ClientActions.signIn({
       username: this.state.username,
       password: this.state.password
     });
+    this.props.closeSignInModal()
   },
 
   demoSignIn: function (e) {

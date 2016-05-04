@@ -34,7 +34,6 @@ var Form = React.createClass({
   },
 
   userChanged: function () {
-    debugger;
     this.setState({ user_id: UserStore.currentUser().id });
   },
 

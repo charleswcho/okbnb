@@ -13,6 +13,7 @@ module.exports = {
         ServerActions.receiveCurrentUser(currentUser);
       },
       error: function (e) {
+        //debugger;
         ServerActions.handleError(e)
         console.log(["Error", e.responseText]);
       }
@@ -42,6 +43,7 @@ module.exports = {
         ServerActions.receiveCurrentUser(currentUser);
       },
       error: function (e) {
+        //debugger;
         ServerActions.handleError(e)
         console.log(["Error", e.responseText]);
       }
