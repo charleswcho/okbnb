@@ -26,6 +26,9 @@ var DietOption = React.createClass({
       case 3:
         this.setState({ diet: 'Other' })
         break;
+      case 4:
+        this.setState({ diet: null })
+        break;
     }
 
     FilterActions.updateDiet(diets[eventKey]);
@@ -38,8 +41,9 @@ var DietOption = React.createClass({
             <MenuItem eventKey="0" active={(this.state.diet === 'Vege')}>Vege</MenuItem>
             <MenuItem eventKey="1" active={(this.state.diet === 'Vegan')}>Vegan</MenuItem>
             <MenuItem eventKey="2" active={(this.state.diet === 'Gluten')}>Gluten</MenuItem>
-            <MenuItem divider />
             <MenuItem eventKey="3" active={(this.state.diet === 'Other')}>Other</MenuItem>
+            <MenuItem divider />
+            <MenuItem eventKey="4">Clear</MenuItem>
         </DropdownButton>
       </div>
     );

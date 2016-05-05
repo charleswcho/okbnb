@@ -19,6 +19,9 @@ var SmokerOption = React.createClass({
       case 1:
         this.setState({ smoker: false })
         break;
+      case 2:
+        this.setState({ smoker: null })
+        break;
     }
     FilterActions.updateSmoker(smoker[eventKey]);
   },
@@ -29,6 +32,8 @@ var SmokerOption = React.createClass({
         <DropdownButton className='filter-input' title='Smoker' onSelect={this.handleSmokerSelect}>
             <MenuItem eventKey="0" active={this.state.smoker === true}>Yes</MenuItem>
             <MenuItem eventKey="1" active={this.state.smoker === false}>No</MenuItem>
+            <MenuItem divider />
+            <MenuItem eventKey="2">Clear</MenuItem>
         </DropdownButton>
       </div>
     );

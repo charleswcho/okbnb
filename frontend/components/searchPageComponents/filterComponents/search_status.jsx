@@ -22,6 +22,9 @@ var SearchStatusOption = React.createClass({
       case 2:
         this.setState({ search_status: statuses[2] })
         break;
+      case 3:
+        this.setState({ search_status: null })
+        break;
     }
     console.log('1 Triggered Filter Action - updateSearchState')
     FilterActions.updateSearchState(statuses[eventKey]);
@@ -37,6 +40,8 @@ var SearchStatusOption = React.createClass({
               Passive</MenuItem>
             <MenuItem eventKey="2" active={this.state.search_status === "Don't contact"}>
               Don't contact</MenuItem>
+            <MenuItem divider />
+            <MenuItem eventKey="3">Clear</MenuItem>
         </DropdownButton>
       </div>
     );

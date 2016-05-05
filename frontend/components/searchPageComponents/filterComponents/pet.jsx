@@ -26,6 +26,9 @@ var PetOption = React.createClass({
       case 3:
         this.setState({ pet: 'Other' })
         break;
+      case 4:
+        this.setState({ pet: null })
+        break;
     }
     FilterActions.updatePet(pets[eventKey]);
   },
@@ -37,8 +40,9 @@ var PetOption = React.createClass({
             <MenuItem eventKey="0" active={(this.state.pet === 'Dog')}>Dog</MenuItem>
             <MenuItem eventKey="1" active={(this.state.pet === 'Cat')}>Cat</MenuItem>
             <MenuItem eventKey="2" active={(this.state.pet === 'Bird')}>Bird</MenuItem>
-            <MenuItem divider />
             <MenuItem eventKey="3" active={(this.state.pet === 'Other')}>Other</MenuItem>
+            <MenuItem divider />
+            <MenuItem eventKey="4">Clear</MenuItem>
         </DropdownButton>
       </div>
     );

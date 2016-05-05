@@ -52350,19 +52350,27 @@
 	      FilterParamsStore.__emitChange();
 	      break;
 	    case FilterConstants.UPDATE_SEARCH_STATUS:
-	      _params.search_status = payload.search_status;
+	      if (payload.search_status !== null) {
+	        _params.search_status = payload.search_status;
+	      }
 	      FilterParamsStore.__emitChange();
 	      break;
 	    case FilterConstants.UPDATE_SMOKER:
-	      _params.smoker = payload.smoker;
+	      if (payload.smoker !== null) {
+	        _params.smoker = payload.smoker;
+	      }
 	      FilterParamsStore.__emitChange();
 	      break;
 	    case FilterConstants.UPDATE_PET:
-	      _params.pet = payload.pet;
+	      if (payload.pet !== null) {
+	        _params.pet = payload.pet;
+	      }
 	      FilterParamsStore.__emitChange();
 	      break;
 	    case FilterConstants.UPDATE_DIET:
-	      _params.diet = payload.diet;
+	      if (payload.diet !== null) {
+	        _params.diet = payload.diet;
+	      }
 	      FilterParamsStore.__emitChange();
 	      break;
 	    case FilterConstants.UPDATE_MIN:
@@ -52480,6 +52488,9 @@
 	      case 2:
 	        this.setState({ search_status: statuses[2] });
 	        break;
+	      case 3:
+	        this.setState({ search_status: null });
+	        break;
 	    }
 	    console.log('1 Triggered Filter Action - updateSearchState');
 	    FilterActions.updateSearchState(statuses[eventKey]);
@@ -52506,6 +52517,12 @@
 	          MenuItem,
 	          { eventKey: '2', active: this.state.search_status === "Don't contact" },
 	          'Don\'t contact'
+	        ),
+	        React.createElement(MenuItem, { divider: true }),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '3' },
+	          'Clear'
 	        )
 	      )
 	    );
@@ -52593,6 +52610,9 @@
 	      case 1:
 	        this.setState({ smoker: false });
 	        break;
+	      case 2:
+	        this.setState({ smoker: null });
+	        break;
 	    }
 	    FilterActions.updateSmoker(smoker[eventKey]);
 	  },
@@ -52613,6 +52633,12 @@
 	          MenuItem,
 	          { eventKey: '1', active: this.state.smoker === false },
 	          'No'
+	        ),
+	        React.createElement(MenuItem, { divider: true }),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '2' },
+	          'Clear'
 	        )
 	      )
 	    );
@@ -52655,6 +52681,9 @@
 	      case 3:
 	        this.setState({ diet: 'Other' });
 	        break;
+	      case 4:
+	        this.setState({ diet: null });
+	        break;
 	    }
 	
 	    FilterActions.updateDiet(diets[eventKey]);
@@ -52682,11 +52711,16 @@
 	          { eventKey: '2', active: this.state.diet === 'Gluten' },
 	          'Gluten'
 	        ),
-	        React.createElement(MenuItem, { divider: true }),
 	        React.createElement(
 	          MenuItem,
 	          { eventKey: '3', active: this.state.diet === 'Other' },
 	          'Other'
+	        ),
+	        React.createElement(MenuItem, { divider: true }),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '4' },
+	          'Clear'
 	        )
 	      )
 	    );
@@ -52729,6 +52763,9 @@
 	      case 3:
 	        this.setState({ pet: 'Other' });
 	        break;
+	      case 4:
+	        this.setState({ pet: null });
+	        break;
 	    }
 	    FilterActions.updatePet(pets[eventKey]);
 	  },
@@ -52755,11 +52792,16 @@
 	          { eventKey: '2', active: this.state.pet === 'Bird' },
 	          'Bird'
 	        ),
-	        React.createElement(MenuItem, { divider: true }),
 	        React.createElement(
 	          MenuItem,
 	          { eventKey: '3', active: this.state.pet === 'Other' },
 	          'Other'
+	        ),
+	        React.createElement(MenuItem, { divider: true }),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '4' },
+	          'Clear'
 	        )
 	      )
 	    );

@@ -18,19 +18,27 @@ FilterParamsStore.__onDispatch = function (payload) {
       FilterParamsStore.__emitChange();
       break;
     case FilterConstants.UPDATE_SEARCH_STATUS:
-      _params.search_status = payload.search_status;
+      if (payload.search_status !== null) {
+        _params.search_status = payload.search_status;
+      }
       FilterParamsStore.__emitChange();
       break;
     case FilterConstants.UPDATE_SMOKER:
-      _params.smoker = payload.smoker;
+      if (payload.smoker !== null) {
+        _params.smoker = payload.smoker;
+      }
       FilterParamsStore.__emitChange();
       break;
     case FilterConstants.UPDATE_PET:
-      _params.pet = payload.pet;
+      if (payload.pet !== null) {
+        _params.pet = payload.pet;
+      }
       FilterParamsStore.__emitChange();
       break;
     case FilterConstants.UPDATE_DIET:
-      _params.diet = payload.diet;
+      if (payload.diet !== null) {
+        _params.diet = payload.diet;
+      }
       FilterParamsStore.__emitChange();
       break;
     case FilterConstants.UPDATE_MIN:
