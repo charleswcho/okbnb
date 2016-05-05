@@ -5,6 +5,6 @@ Rails.application.routes.draw do
     resource :user, only: [:create]
     resource :session, only: [:create, :show, :destroy]
 
-    resources :profiles, only: [:index, :show, :create]
+    resources :profiles, only: [:index, :show, :create, :destroy, :update]
   end
 end

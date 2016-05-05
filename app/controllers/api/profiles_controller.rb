@@ -44,6 +44,24 @@ class Api::ProfilesController < ApplicationController
     end
   end
 
+  def update
+    @profile = Profile.find(params[:id])
+    if @profile.update
+      render json: @profile
+    else
+      render json: @profile.errors.full_messages, status: 400
+    end
+  end
+
+  def destroy
+    @profile = Profile.find(params[:id])
+    if @profile.destroy
+      render json: @profile
+    else
+      render json: @profile.errors.full_messages, status: 400
+    end
+  end
+
   private
   def bounds
     params[:bounds]

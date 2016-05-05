@@ -7,8 +7,9 @@ var Route = ReactRouter.Route;
 var IndexRoute = ReactRouter.IndexRoute;
 var hashHistory = ReactRouter.hashHistory;
 
+
 // Components
-var NavBar = require('./components/navBar');
+var SolidNav = require('./components/solidNav');
 var SplashScreen = require('./components/splashScreen');
 
 var Search = require('./components/search');
@@ -35,7 +36,6 @@ var App = React.createClass({
   render: function(){
     return (
       <div>
-        <NavBar/>
         {this.props.children}
         <Footer/>
       </div>
@@ -47,9 +47,11 @@ var Router = (
   <Router history={hashHistory}>
     <Route path='/' component={App}>
       <IndexRoute component={SplashScreen}/>
-      <Route path='search/:loc' component={Search}/>
-      <Route path='profile/new' component={ProfileForm}/>
-      <Route path='profile/:id' component={Detail}/>
+      <Route component={SolidNav}>
+        <Route path='search/:loc' component={Search}/>
+        <Route path='profile/new' component={ProfileForm}/>
+        <Route path='profile/:id' component={Detail}/>
+      </Route>
     </Route>
   </Router>
 );

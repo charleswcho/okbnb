@@ -11,5 +11,6 @@ module.exports = {
   // Profile methods
   fetchProfiles: ApiUtil.fetchProfiles,
   fetchProfile: ApiUtil.fetchProfile,
-  createProfile: ApiUtil.createProfile
+  createProfile: ApiUtil.createProfile,
+  deleteProfile: ApiUtil.deleteProfile
 }

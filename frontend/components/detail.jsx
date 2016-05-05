@@ -1,4 +1,5 @@
 var React = require('react');
+var hashHistory = require('react-router').hashHistory;
 
 var UserStore = require('../stores/userStore');
 var ProfileStore = require('../stores/profileStore');
@@ -23,6 +24,11 @@ var Detail = React.createClass({
     this.setState({ profile: ProfileStore.find(this.props.params.id) });
   },
 
+  _deleteProfile: function () {
+    ClientActions.deleteProfile(this.state.profile.id);
+    hashHistory.goBack();
+  },
+
   componentDidMount: function () {
     this.userListener = UserStore.addListener(this._userChanged);
     this.profileListener = ProfileStore.addListener(this._profileChanged);
@@ -36,12 +42,25 @@ var Detail = React.createClass({
   },
 
   render: function () {
-    return (
-      <div className='profile-detail'>
-        <Title profile={this.state.profile}/>
-        <Description user={this.state.user} profile={this.state.profile}/>
-      </div>
-    );
+    var currentUser = this.state.user;
+    var profile = this.state.profile;
+    if (currentUser.id === profile.user_id) {
+      return (
+        <div className='profile-detail'>
+          <Title profile={this.state.profile}/>
+          <Description user={this.state.user} profile={this.state.profile}/>
+          <button className='delete-profile-button'
+                  onClick={this._deleteProfile}>Delete</button>
+        </div>
+      );
+    } else {
+      return (
+        <div className='profile-detail'>
+          <Title profile={this.state.profile}/>
+          <Description user={this.state.user} profile={this.state.profile}/>
+        </div>
+      );
+    }
   }
 });
 

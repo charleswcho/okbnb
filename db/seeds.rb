@@ -9,6 +9,7 @@
 User.create(username: "Guest", password: "1234567");
 
 10.times do |i|
+  i = i.to_i
   charles = User.create(username: "Charles#{i}", password: "1234567");
   Profile.create!(
     user_id: i,
@@ -29,7 +30,7 @@ end
 
 wesley = User.create!(username: "Wesley", password: "1234567");
 Profile.create!(
-  user_id: wesley.id,
+  user_id: 12,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1461952627/kwe0lerlmgdaggz8fwir.jpg',
   name: wesley.username,
   age: 21,

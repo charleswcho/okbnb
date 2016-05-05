@@ -1,6 +1,6 @@
 var ServerActions = require('../actions/serverActions');
 
-module.exports = {
+var ApiUtils = {
   fetchProfiles: function (filters) {
     console.log("Set Profiles request")
     $.ajax({
@@ -18,7 +18,7 @@ module.exports = {
 
   fetchProfile: function (id) {
     $.ajax({
-      url: "api/profile" + id,
+      url: "api/profile/" + id,
       success: function (profile) {
         ServerActions.receiveProfile(profile)
       },
@@ -41,5 +41,37 @@ module.exports = {
         console.log(["Error", e.responseText]);
       },
     });
+  },
+
+  updateProfile: function (profileParams) {
+    $.ajax({
+      method: "PATCH",
+      url: "api/profiles",
+      data: profileParams,
+      success: function (profile) {
+        console.log("Updated Profile");
+        ServerActions.receiveProfile(profile)
+      },
+      error: function (e) {
+        console.log(["Error", e.responseText]);
+      },
+    });
+  },
+
+  deleteProfile: function (id) {
+    debugger;
+    $.ajax({
+      method: "DELETE",
+      url: "api/profiles/" + id,
+      success: function (profile) {
+        console.log("Deleted Profile");
+        ServerActions.deleteProfile(profile.id)
+      },
+      error: function (e) {
+        console.log(["Error", e.responseText]);
+      },
+    });
   }
  }
+
+ module.exports = ApiUtils;

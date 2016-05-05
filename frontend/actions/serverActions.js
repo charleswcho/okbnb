@@ -38,6 +38,12 @@ module.exports = {
       profile: profile
     });
   },
+  deleteProfile: function(profileId){
+    AppDispatcher.dispatch({
+      actionType: ProfileConstants.DELETE_PROFILE,
+      profileId: profileId
+    });
+  },
   updateHovered: function(profileId) {
     AppDispatcher.dispatch({
       actionType: ProfileConstants.UPDATE_HOVERED,

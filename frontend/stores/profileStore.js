@@ -18,6 +18,10 @@ function addProfile (profile) {
   _profiles[profile.id] = profile;
 };
 
+function deleteProfile (id) {
+  delete _profiles[id];
+};
+
 function updateHovered (profileId) {
   if (_hoveredProfileId === profileId) {
     _hoveredProfileId = null;
@@ -46,6 +50,10 @@ ProfileStore.__onDispatch = function (payload) {
       break;
     case ProfileConstants.PROFILE_RECEIVED:
       addProfile(payload.profile);
+      ProfileStore.__emitChange();
+      break;
+    case ProfileConstants.DELETE_PROFILE:
+      deleteProfile(payload.profileId);
       ProfileStore.__emitChange();
       break;
     case ProfileConstants.UPDATE_HOVERED:

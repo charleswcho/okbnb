@@ -1,4 +1,5 @@
 var React = require('react');
+
 var Accounting = require('accounting');
 
 module.exports = React.createClass({
