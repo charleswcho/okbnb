@@ -59,8 +59,9 @@
 	
 	var Search = __webpack_require__(526);
 	var Detail = __webpack_require__(541);
-	var ProfileForm = __webpack_require__(546);
-	var Footer = __webpack_require__(549);
+	var ProfileForm = __webpack_require__(545);
+	var ProfileEditForm = __webpack_require__(552);
+	var Footer = __webpack_require__(555);
 	
 	// These are for testing
 	
@@ -102,6 +103,7 @@
 	      { component: SolidNav },
 	      React.createElement(Route, { path: 'search/:loc', component: Search }),
 	      React.createElement(Route, { path: 'profile/new', component: ProfileForm }),
+	      React.createElement(Route, { path: 'profile/edit/:id', component: ProfileEditForm }),
 	      React.createElement(Route, { path: 'profile/:id', component: Detail })
 	    )
 	  )
@@ -44852,6 +44854,7 @@
 	  fetchProfiles: ApiUtil.fetchProfiles,
 	  fetchProfile: ApiUtil.fetchProfile,
 	  createProfile: ApiUtil.createProfile,
+	  updateProfile: ApiUtil.updateProfile,
 	  deleteProfile: ApiUtil.deleteProfile
 	};
 
@@ -44880,20 +44883,6 @@
 	      }
 	    });
 	  },
-	
-	  // TODO: SFEATURE - Delete profile
-	  // destroy: function () {
-	  //   $.ajax({
-	  //     method: "POST",
-	  //     url: "api/user",
-	  //     success: function (currentUser) {
-	  //       ServerActions.receiveCurrentUser(currentUser);
-	  //     },
-	  //     error: function (e) {
-	  //       console.log(["Error", e]);
-	  //     }
-	  //   });
-	  // }
 	
 	  signIn: function (credentials) {
 	    $.ajax({
@@ -45389,7 +45378,7 @@
 	  updateProfile: function (profileParams) {
 	    $.ajax({
 	      method: "PATCH",
-	      url: "api/profiles",
+	      url: "api/profiles/" + profileParams.profile.id,
 	      data: profileParams,
 	      success: function (profile) {
 	        console.log("Updated Profile");
@@ -45402,7 +45391,6 @@
 	  },
 	
 	  deleteProfile: function (id) {
-	    debugger;
 	    $.ajax({
 	      method: "DELETE",
 	      url: "api/profiles/" + id,
@@ -51921,8 +51909,8 @@
 	
 	var ClientActions = __webpack_require__(493);
 	
-	module.exports = React.createClass({
-	  displayName: 'exports',
+	var SignUpForm = React.createClass({
+	  displayName: 'SignUpForm',
 	
 	  getInitialState: function () {
 	    return {
@@ -51979,6 +51967,8 @@
 	    );
 	  }
 	});
+	
+	module.exports = SignUpForm;
 
 /***/ },
 /* 522 */
@@ -51988,8 +51978,8 @@
 	
 	var ClientActions = __webpack_require__(493);
 	
-	module.exports = React.createClass({
-	  displayName: 'exports',
+	var SignInForm = React.createClass({
+	  displayName: 'SignInForm',
 	
 	  getInitialState: function () {
 	    return {
@@ -52002,14 +51992,14 @@
 	  usernameChanged: function (e) {
 	    e.preventDefault();
 	    this.setState({
-	      username: e.target.username
+	      username: e.target.value
 	    });
 	  },
 	
 	  passwordChanged: function (e) {
 	    e.preventDefault();
 	    this.setState({
-	      password: e.target.password
+	      password: e.target.value
 	    });
 	  },
 	
@@ -52060,6 +52050,8 @@
 	    );
 	  }
 	});
+	
+	module.exports = SignInForm;
 
 /***/ },
 /* 523 */
@@ -52289,7 +52281,8 @@
 	  locationChanged: function (coords) {
 	    var newMapOptions = {
 	      center: coords,
-	      zoom: 13
+	      zoom: 12,
+	      scrollwheel: false
 	    };
 	
 	    this.setState({
@@ -52740,7 +52733,7 @@
 	    return { diet: null };
 	  },
 	
-	  handlePetSelect: function (eventKey, event) {
+	  handleDietSelect: function (eventKey, event) {
 	    var diets = ['Vege', 'Vegan', 'Gluten', 'Other'];
 	    eventKey = parseInt(eventKey);
 	    switch (eventKey) {
@@ -52770,7 +52763,7 @@
 	      { className: 'diet-option' },
 	      React.createElement(
 	        DropdownButton,
-	        { className: 'filter-input', title: 'Diet', onSelect: this.handlePetSelect },
+	        { className: 'filter-input', title: 'Diet', onSelect: this.handleDietSelect },
 	        React.createElement(
 	          MenuItem,
 	          { eventKey: '0', active: this.state.diet === 'Vege' },
@@ -53226,6 +53219,18 @@
 	    };
 	  },
 	
+	  componentDidMount: function () {
+	    this.userListener = UserStore.addListener(this._userChanged);
+	    this.profileListener = ProfileStore.addListener(this._profileChanged);
+	    ClientActions.fetchCurrentUser();
+	    ClientActions.fetchProfile(this.props.params.id);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.userListener.remove();
+	    this.profileListener.remove();
+	  },
+	
 	  _userChanged: function () {
 	    this.setState({ user: UserStore.currentUser() });
 	  },
@@ -53239,42 +53244,28 @@
 	    hashHistory.goBack();
 	  },
 	
-	  componentDidMount: function () {
-	    this.userListener = UserStore.addListener(this._userChanged);
-	    this.profileListener = ProfileStore.addListener(this._profileChanged);
-	    ClientActions.fetchCurrentUser();
-	    ClientActions.fetchProfiles();
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.userListener.remove();
-	    this.profileListener.remove();
+	  _editProfile: function (e) {
+	    e.preventDefault();
+	    hashHistory.push({ pathname: 'profile/edit/' + this.state.profile.id });
 	  },
 	
 	  render: function () {
 	    var currentUser = this.state.user;
 	    var profile = this.state.profile;
+	    var showEditDelete = false;
 	    if (currentUser.id === profile.user_id) {
-	      return React.createElement(
-	        'div',
-	        { className: 'profile-detail' },
-	        React.createElement(Title, { profile: this.state.profile }),
-	        React.createElement(Description, { user: this.state.user, profile: this.state.profile }),
-	        React.createElement(
-	          'button',
-	          { className: 'delete-profile-button',
-	            onClick: this._deleteProfile },
-	          'Delete'
-	        )
-	      );
-	    } else {
-	      return React.createElement(
-	        'div',
-	        { className: 'profile-detail' },
-	        React.createElement(Title, { profile: this.state.profile }),
-	        React.createElement(Description, { user: this.state.user, profile: this.state.profile })
-	      );
+	      showEditDelete = true;
 	    }
+	
+	    return React.createElement(
+	      'div',
+	      { className: 'profile-detail' },
+	      React.createElement(Title, { profile: this.state.profile }),
+	      React.createElement(Description, { user: this.state.user, profile: this.state.profile,
+	        showEditDelete: showEditDelete,
+	        editProfile: this._editProfile,
+	        deleteProfile: this._deleteProfile })
+	    );
 	  }
 	});
 	
@@ -53324,7 +53315,7 @@
 
 	var React = __webpack_require__(1);
 	
-	var Accounting = __webpack_require__(545);
+	var Accounting = __webpack_require__(544);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -53332,6 +53323,22 @@
 	
 	  render: function () {
 	    var profile = this.props.profile;
+	    var Edit, Delete;
+	    if (this.props.showEditDelete) {
+	      Edit = React.createElement(
+	        'button',
+	        { className: 'edit-profile-button',
+	          onClick: this.props.editProfile },
+	        'Edit'
+	      );
+	      Delete = React.createElement(
+	        'button',
+	        { className: 'delete-profile-button',
+	          onClick: this.props.deleteProfile },
+	        'Delete'
+	      );
+	    }
+	
 	    return React.createElement(
 	      'div',
 	      { className: 'detail-description' },
@@ -53340,7 +53347,7 @@
 	        { className: 'description-heading' },
 	        'My self summary',
 	        React.createElement(
-	          'div',
+	          'p',
 	          { className: 'description-body' },
 	          profile.description
 	        )
@@ -53393,14 +53400,19 @@
 	            Accounting.formatMoney(profile.budget)
 	          )
 	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'detail-edit-delete' },
+	        Edit,
+	        Delete
 	      )
 	    );
 	  }
 	});
 
 /***/ },
-/* 544 */,
-/* 545 */
+/* 544 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -53819,20 +53831,16 @@
 
 
 /***/ },
-/* 546 */
+/* 545 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var Header = __webpack_require__(547);
-	var Form = __webpack_require__(548);
+	var Header = __webpack_require__(546);
+	var Form = __webpack_require__(547);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
-	
-	  getInitialState: function () {
-	    return {};
-	  },
 	
 	  render: function () {
 	    return React.createElement(
@@ -53883,7 +53891,7 @@
 	});
 
 /***/ },
-/* 547 */
+/* 546 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -53910,7 +53918,7 @@
 	});
 
 /***/ },
-/* 548 */
+/* 547 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -53927,10 +53935,10 @@
 	var GeoUtils = __webpack_require__(540);
 	
 	// Components
-	var SearchStatus = __webpack_require__(531);
-	var Smoker = __webpack_require__(533);
-	var Diet = __webpack_require__(534);
-	var Pet = __webpack_require__(535);
+	var SearchStatus = __webpack_require__(548);
+	var Smoker = __webpack_require__(549);
+	var Diet = __webpack_require__(550);
+	var Pet = __webpack_require__(551);
 	
 	var Form = React.createClass({
 	  displayName: 'Form',
@@ -53946,6 +53954,10 @@
 	      age: null,
 	      description: '',
 	      location: '',
+	      search_status: null,
+	      smoker: null,
+	      diet: null,
+	      pet: null,
 	      budget: null
 	    };
 	  },
@@ -54003,6 +54015,26 @@
 	    });
 	  },
 	
+	  updateSearchStatus: function (search_status) {
+	    this.setState({ search_status: search_status });
+	  },
+	
+	  updateSmoker: function (smoker) {
+	    this.setState({ smoker: smoker });
+	  },
+	
+	  updateDiet: function (diet) {
+	    this.setState({ diet: diet });
+	  },
+	
+	  updatePet: function (pet) {
+	    this.setState({ pet: pet });
+	  },
+	
+	  updateBudget: function (budget) {
+	    this.setState({ budget: budget });
+	  },
+	
 	  budgetChanged: function (e) {
 	    e.preventDefault();
 	    this.setState({
@@ -54013,7 +54045,6 @@
 	  handleSubmit: function (e) {
 	    e.preventDefault();
 	
-	    var filters = FilterParamsStore.params();
 	    var params = {
 	      user_id: this.state.user_id,
 	      profilePicURL: this.state.profilePicURL,
@@ -54021,10 +54052,10 @@
 	      age: this.state.age,
 	      description: this.state.description,
 	      location: this.state.location,
-	      search_status: filters.search_status,
-	      smoker: filters.smoker,
-	      diet: filters.diet,
-	      pet: filters.pet,
+	      search_status: this.state.search_status,
+	      smoker: this.state.smoker,
+	      diet: this.state.diet,
+	      pet: this.state.pet,
 	      budget: this.state.budget
 	    };
 	
@@ -54058,7 +54089,10 @@
 	  },
 	
 	  render: function () {
-	    var profilePicURL = this.state.profilePicURL;
+	    var profilePicURL = 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif';
+	    if (this.state.profilePicURL) {
+	      profilePicURL = this.state.profilePicURL;
+	    }
 	    var name = this.state.name;
 	    var age = this.state.age;
 	    var description = this.state.description;
@@ -54069,10 +54103,16 @@
 	      'form',
 	      { className: 'profile-form', onSubmit: this.handleSubmit },
 	      React.createElement(
-	        'button',
-	        { className: 'profile-input', onClick: this.openUploadWidget,
-	          id: 'upload' },
-	        'Upload Profile Pic'
+	        'div',
+	        { className: 'form-row' },
+	        React.createElement('img', { className: 'profile-form-pic', src: profilePicURL,
+	          alt: 'search-status' }),
+	        React.createElement(
+	          'button',
+	          { className: 'profile-input', onClick: this.openUploadWidget,
+	            id: 'upload' },
+	          'Upload Profile Pic'
+	        )
 	      ),
 	      React.createElement(
 	        'div',
@@ -54108,14 +54148,15 @@
 	      React.createElement(
 	        'div',
 	        { className: 'form-row' },
-	        React.createElement(SearchStatus, { className: 'profile-input' }),
-	        React.createElement(Smoker, { className: 'profile-input' })
+	        React.createElement(SearchStatus, { className: 'profile-input',
+	          updateSearchStatus: this.updateSearchStatus }),
+	        React.createElement(Smoker, { className: 'profile-input', updateSmoker: this.updateSmoker })
 	      ),
 	      React.createElement(
 	        'div',
 	        { className: 'form-row' },
-	        React.createElement(Diet, { className: 'profile-input' }),
-	        React.createElement(Pet, { className: 'profile-input' })
+	        React.createElement(Diet, { className: 'profile-input', updateDiet: this.updateDiet }),
+	        React.createElement(Pet, { className: 'profile-input', updatePet: this.updatePet })
 	      ),
 	      React.createElement(
 	        'div',
@@ -54136,7 +54177,627 @@
 	module.exports = Form;
 
 /***/ },
+/* 548 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var DropdownButton = __webpack_require__(227).DropdownButton;
+	var MenuItem = __webpack_require__(227).MenuItem;
+	
+	var SearchStatus = React.createClass({
+	  displayName: 'SearchStatus',
+	
+	  getInitialState: function () {
+	    return { search_status: this.props.searchStatus };
+	  },
+	
+	  handleSearchStatusSelect: function (eventKey, event) {
+	    var statuses = ['Active', 'Passive', "Don't contact"];
+	    eventKey = parseInt(eventKey);
+	    switch (eventKey) {
+	      case 0:
+	        this.setState({ search_status: statuses[0] });
+	        break;
+	      case 1:
+	        this.setState({ search_status: statuses[1] });
+	        break;
+	      case 2:
+	        this.setState({ search_status: statuses[2] });
+	        break;
+	    }
+	    this.props.updateSearchStatus(statuses[eventKey]);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'search_status-option' },
+	      React.createElement(
+	        DropdownButton,
+	        { className: 'filter-input', title: 'Search Status', onSelect: this.handleSearchStatusSelect },
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '0', active: this.state.search_status === 'Active' },
+	          'Active'
+	        ),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '1', active: this.state.search_status === 'Passive' },
+	          'Passive'
+	        ),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '2', active: this.state.search_status === "Don't contact" },
+	          'Don\'t contact'
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = SearchStatus;
+
+/***/ },
 /* 549 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var DropdownButton = __webpack_require__(227).DropdownButton;
+	var MenuItem = __webpack_require__(227).MenuItem;
+	
+	var Smoker = React.createClass({
+	  displayName: 'Smoker',
+	
+	  getInitialState: function () {
+	    return { smoker: this.props.smoker };
+	  },
+	
+	  handleSmokerSelect: function (eventKey, event) {
+	    var smoker = [true, false];
+	    eventKey = parseInt(eventKey);
+	    switch (eventKey) {
+	      case 0:
+	        this.setState({ smoker: true });
+	        break;
+	      case 1:
+	        this.setState({ smoker: false });
+	        break;
+	    }
+	
+	    this.props.updateSmoker(smoker[eventKey]);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'smoker-option' },
+	      React.createElement(
+	        DropdownButton,
+	        { className: 'filter-input', title: 'Smoker', onSelect: this.handleSmokerSelect },
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '0', active: this.state.smoker === true },
+	          'Yes'
+	        ),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '1', active: this.state.smoker === false },
+	          'No'
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = Smoker;
+
+/***/ },
+/* 550 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var DropdownButton = __webpack_require__(227).DropdownButton;
+	var MenuItem = __webpack_require__(227).MenuItem;
+	
+	var Diet = React.createClass({
+	  displayName: 'Diet',
+	
+	
+	  getInitialState: function () {
+	    return { diet: this.props.diet };
+	  },
+	
+	  handleDietSelect: function (eventKey, event) {
+	    var diets = ['Vege', 'Vegan', 'Gluten', 'Other'];
+	    eventKey = parseInt(eventKey);
+	    switch (eventKey) {
+	      case 0:
+	        this.setState({ diet: 'Vege' });
+	        break;
+	      case 1:
+	        this.setState({ diet: 'Vegan' });
+	        break;
+	      case 2:
+	        this.setState({ diet: 'Gluten' });
+	        break;
+	      case 3:
+	        this.setState({ diet: 'Other' });
+	        break;
+	    }
+	    this.props.updateDiet(diets[eventKey]);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'diet-option' },
+	      React.createElement(
+	        DropdownButton,
+	        { className: 'filter-input', title: 'Diet', onSelect: this.handleDietSelect },
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '0', active: this.state.diet === 'Vege' },
+	          'Vege'
+	        ),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '1', active: this.state.diet === 'Vegan' },
+	          'Vegan'
+	        ),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '2', active: this.state.diet === 'Gluten' },
+	          'Gluten'
+	        ),
+	        React.createElement(MenuItem, { divider: true }),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '3', active: this.state.diet === 'Other' },
+	          'Other'
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = Diet;
+
+/***/ },
+/* 551 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var DropdownButton = __webpack_require__(227).DropdownButton;
+	var MenuItem = __webpack_require__(227).MenuItem;
+	
+	var Pet = React.createClass({
+	  displayName: 'Pet',
+	
+	
+	  getInitialState: function () {
+	    return { pet: this.props.pet };
+	  },
+	
+	  handlePetSelect: function (eventKey, event) {
+	    var pets = ['Dog', 'Cat', 'Bird', 'Other'];
+	    eventKey = parseInt(eventKey);
+	    switch (eventKey) {
+	      case 0:
+	        this.setState({ pet: 'Dog' });
+	        break;
+	      case 1:
+	        this.setState({ pet: 'Cat' });
+	        break;
+	      case 2:
+	        this.setState({ pet: 'Bird' });
+	        break;
+	      case 3:
+	        this.setState({ pet: 'Other' });
+	        break;
+	    }
+	    this.props.updatePet(pets[eventKey]);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'pet-option' },
+	      React.createElement(
+	        DropdownButton,
+	        { className: 'filter-input', title: 'Pet', onSelect: this.handlePetSelect },
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '0', active: this.state.pet === 'Dog' },
+	          'Dog'
+	        ),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '1', active: this.state.pet === 'Cat' },
+	          'Cat'
+	        ),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '2', active: this.state.pet === 'Bird' },
+	          'Bird'
+	        ),
+	        React.createElement(MenuItem, { divider: true }),
+	        React.createElement(
+	          MenuItem,
+	          { eventKey: '3', active: this.state.pet === 'Other' },
+	          'Other'
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = Pet;
+
+/***/ },
+/* 552 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var hashHistory = __webpack_require__(166).hashHistory;
+	
+	var UserStore = __webpack_require__(503);
+	var ProfileStore = __webpack_require__(527);
+	var ClientActions = __webpack_require__(493);
+	
+	var Header = __webpack_require__(553);
+	var EditForm = __webpack_require__(554);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  getInitialState: function () {
+	    return {
+	      user: UserStore.currentUser(),
+	      profile: ProfileStore.find(this.props.params.id)
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.userListener = UserStore.addListener(this._userChanged);
+	    this.profileListener = ProfileStore.addListener(this._profileChanged);
+	    ClientActions.fetchCurrentUser();
+	    ClientActions.fetchProfile(this.props.params.id);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.userListener.remove();
+	    this.profileListener.remove();
+	  },
+	
+	  _userChanged: function () {
+	    this.setState({ user: UserStore.currentUser() });
+	  },
+	
+	  _profileChanged: function () {
+	    this.setState({ profile: ProfileStore.find(this.props.params.id) });
+	  },
+	
+	  _updatedProfile: function () {
+	    hashHistory.push({ pathname: 'profile/' + this.state.profile.id });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'new-profile-page' },
+	      React.createElement(
+	        'div',
+	        { className: 'profile-form-container' },
+	        React.createElement(Header, null),
+	        React.createElement(EditForm, { user: this.state.user, profile: this.state.profile,
+	          updatedProfile: this._updatedProfile })
+	      )
+	    );
+	  }
+	});
+
+/***/ },
+/* 553 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	module.exports = React.createClass({
+	  displayName: 'exports',
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'profile-header' },
+	      React.createElement(
+	        'div',
+	        { className: 'header-main' },
+	        'Edit your profile!'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'header-sub' },
+	        'Spice up your profile with some exciting new information.'
+	      )
+	    );
+	  }
+	});
+
+/***/ },
+/* 554 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var DropdownButton = __webpack_require__(227).DropdownButton;
+	var MenuItem = __webpack_require__(227).MenuItem;
+	
+	var hashHistory = __webpack_require__(166).hashHistory;
+	
+	var ClientActions = __webpack_require__(493);
+	var UserStore = __webpack_require__(503);
+	var ProfileStore = __webpack_require__(527);
+	var FilterParamsStore = __webpack_require__(528);
+	
+	var GeoUtils = __webpack_require__(540);
+	
+	// Components
+	var SearchStatus = __webpack_require__(548);
+	var Smoker = __webpack_require__(549);
+	var Diet = __webpack_require__(550);
+	var Pet = __webpack_require__(551);
+	
+	var Form = React.createClass({
+	  displayName: 'Form',
+	
+	  getInitialState: function () {
+	    var user = this.props.user;
+	    var profile = this.props.profile;
+	    return {
+	      ageFocused: false,
+	      budgetFocused: false,
+	
+	      user_id: user.id,
+	      profilePicURL: profile.profilePicURL,
+	      name: profile.name,
+	      age: profile.age,
+	      description: profile.description,
+	      location: profile.location,
+	      search_status: profile.search_status,
+	      smoker: profile.smoker,
+	      diet: profile.diet,
+	      pet: profile.pet,
+	      budget: profile.budget
+	    };
+	  },
+	
+	  userChanged: function () {
+	    this.setState({ user_id: UserStore.currentUser().id });
+	  },
+	
+	  componentDidMount: function () {
+	    this.listener = UserStore.addListener(this.userChaged);
+	    ClientActions.fetchCurrentUser();
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.listener.remove();
+	  },
+	
+	  openUploadWidget: function (e) {
+	    e.preventDefault();
+	    var self = this;
+	
+	    cloudinary.openUploadWidget({ cloud_name: 'ddodpmqri',
+	      upload_preset: 'jeh6p6xu',
+	      theme: 'minimal'
+	    }, function (error, result) {
+	      self.setState({ profilePicURL: result[0].url });
+	    });
+	  },
+	
+	  nameChanged: function (e) {
+	    e.preventDefault();
+	    this.setState({
+	      name: e.target.value
+	    });
+	  },
+	
+	  ageChanged: function (e) {
+	    e.preventDefault();
+	    this.setState({
+	      age: e.target.value
+	    });
+	  },
+	
+	  descriptionChanged: function (e) {
+	    e.preventDefault();
+	    this.setState({
+	      description: e.target.value
+	    });
+	  },
+	
+	  locationChanged: function (e) {
+	    e.preventDefault();
+	    this.setState({
+	      location: e.target.value
+	    });
+	  },
+	
+	  updateSearchStatus: function (search_status) {
+	    this.setState({ search_status: search_status });
+	  },
+	
+	  updateDiet: function (diet) {
+	    this.setState({ diet: diet });
+	  },
+	
+	  updateSmoker: function (smoker) {
+	    this.setState({ smoker: smoker });
+	  },
+	
+	  updatePet: function (pet) {
+	    this.setState({ pet: pet });
+	  },
+	
+	  updateBudget: function (budget) {
+	    this.setState({ budget: budget });
+	  },
+	
+	  budgetChanged: function (e) {
+	    e.preventDefault();
+	    this.setState({
+	      budget: e.target.value
+	    });
+	  },
+	
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	
+	    var params = {
+	      id: this.props.profile.id,
+	      user_id: this.state.user_id,
+	      profilePicURL: this.state.profilePicURL,
+	      name: this.state.name,
+	      age: this.state.age,
+	      description: this.state.description,
+	      location: this.state.location,
+	      search_status: this.state.search_status,
+	      smoker: this.state.smoker,
+	      diet: this.state.diet,
+	      pet: this.state.pet,
+	      budget: this.state.budget
+	    };
+	
+	    console.log(params);
+	
+	    GeoUtils.parseAddress(params, ClientActions.updateProfile);
+	    this.props.updatedProfile();
+	  },
+	
+	  ageFocus: function () {
+	    this.setState({
+	      ageFocused: true
+	    });
+	  },
+	
+	  ageUnfocus: function () {
+	    this.setState({
+	      ageFocused: false
+	    });
+	  },
+	
+	  budgetFocus: function () {
+	    this.setState({
+	      budgetFocused: true
+	    });
+	  },
+	
+	  budgetUnfocus: function () {
+	    this.setState({
+	      budgetFocused: false
+	    });
+	  },
+	
+	  render: function () {
+	    var profilePicURL = 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif';
+	    if (this.state.profilePicURL) {
+	      profilePicURL = this.state.profilePicURL;
+	    }
+	    var name = this.state.name;
+	    var age = this.state.age;
+	    var description = this.state.description;
+	    var location = this.state.location;
+	    var search_status = this.state.search_status;
+	    var smoker = this.state.smoker;
+	    var diet = this.state.diet;
+	    var pet = this.state.pet;
+	    var budget = this.state.budget;
+	
+	    return React.createElement(
+	      'form',
+	      { className: 'profile-form', onSubmit: this.handleSubmit },
+	      React.createElement(
+	        'div',
+	        { className: 'form-row' },
+	        React.createElement('img', { className: 'profile-form-pic', src: profilePicURL,
+	          alt: 'search-status' }),
+	        React.createElement(
+	          'button',
+	          { className: 'profile-input', onClick: this.openUploadWidget,
+	            id: 'upload' },
+	          'Upload Profile Pic'
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'form-row' },
+	        React.createElement('input', { className: 'profile-input', type: 'text', value: name,
+	          placeholder: 'Name', onChange: this.nameChanged }),
+	        React.createElement('input', { className: 'profile-input', type: this.state.ageFocused ? 'number' : 'text',
+	          value: age, placeholder: this.state.ageFocused ? null : 'Age',
+	          onFocus: this.ageFocus, onBlur: this.ageUnfocus, onChange: this.ageChanged })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'form-row' },
+	        React.createElement('textarea', { className: 'profile-input', value: description,
+	          placeholder: 'Tell everyone a little bit about yourself!',
+	          onChange: this.descriptionChanged })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'form-row' },
+	        React.createElement('input', { className: 'profile-input', type: 'text', value: location,
+	          placeholder: 'Address', onChange: this.locationChanged }),
+	        React.createElement('input', { className: 'profile-input', type: 'text',
+	          placeholder: 'City' }),
+	        React.createElement('input', { className: 'profile-input', type: 'text',
+	          placeholder: 'State' })
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'form-header' },
+	        'Preferences'
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'form-row' },
+	        React.createElement(SearchStatus, { className: 'profile-input',
+	          searchStatus: search_status,
+	          updateSearchStatus: this.updateSearchStatus }),
+	        React.createElement(Smoker, { className: 'profile-input', smoker: smoker,
+	          updateSmoker: this.updateSmoker })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'form-row' },
+	        React.createElement(Diet, { className: 'profile-input', diet: diet, updateDiet: this.updateDiet }),
+	        React.createElement(Pet, { className: 'profile-input', pet: pet, updatePet: this.updatePet })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'form-row' },
+	        React.createElement('input', { className: 'profile-input', type: this.state.budgetFocused ? 'number' : 'text',
+	          value: budget, placeholder: this.state.budgetFocused ? null : 'Budget',
+	          onFocus: this.budgetFocus, onBlur: this.ageUnfocus, onChange: this.budgetChanged })
+	      ),
+	      React.createElement(
+	        'button',
+	        { className: 'profile-submit', type: 'submit' },
+	        'Continue'
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = Form;
+
+/***/ },
+/* 555 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);

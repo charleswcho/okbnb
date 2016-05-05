@@ -46,7 +46,7 @@ class Api::ProfilesController < ApplicationController
 
   def update
     @profile = Profile.find(params[:id])
-    if @profile.update
+    if @profile.update(profile_params)
       render json: @profile
     else
       render json: @profile.errors.full_messages, status: 400

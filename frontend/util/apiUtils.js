@@ -46,7 +46,7 @@ var ApiUtils = {
   updateProfile: function (profileParams) {
     $.ajax({
       method: "PATCH",
-      url: "api/profiles",
+      url: "api/profiles/" + profileParams.profile.id,
       data: profileParams,
       success: function (profile) {
         console.log("Updated Profile");
@@ -59,7 +59,6 @@ var ApiUtils = {
   },
 
   deleteProfile: function (id) {
-    debugger;
     $.ajax({
       method: "DELETE",
       url: "api/profiles/" + id,

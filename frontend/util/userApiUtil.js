@@ -20,20 +20,6 @@ module.exports = {
     });
   },
 
-  // TODO: SFEATURE - Delete profile
-  // destroy: function () {
-  //   $.ajax({
-  //     method: "POST",
-  //     url: "api/user",
-  //     success: function (currentUser) {
-  //       ServerActions.receiveCurrentUser(currentUser);
-  //     },
-  //     error: function (e) {
-  //       console.log(["Error", e]);
-  //     }
-  //   });
-  // }
-
   signIn: function (credentials) {
     $.ajax({
       method: "POST",

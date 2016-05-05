@@ -52,7 +52,8 @@ var Search = React.createClass({
   locationChanged: function (coords) {
     var newMapOptions = {
       center: coords,
-      zoom: 13
+      zoom: 12,
+      scrollwheel: false
     }
 
     this.setState({

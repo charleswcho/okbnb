@@ -6,10 +6,18 @@ module.exports = React.createClass({
 
   render: function () {
     var profile = this.props.profile;
+    var Edit, Delete;
+    if (this.props.showEditDelete) {
+      Edit = <button className='edit-profile-button'
+                     onClick={this.props.editProfile}>Edit</button>
+      Delete = <button className='delete-profile-button'
+                       onClick={this.props.deleteProfile}>Delete</button>
+    }
+
     return (
       <div className='detail-description'>
         <div className='description-heading'>My self summary
-          <div className='description-body'>{profile.description}</div>
+          <p className='description-body'>{profile.description}</p>
         </div>
         <br/>
         <div className='description-heading'>Preferences
@@ -29,6 +37,10 @@ module.exports = React.createClass({
             <img className='description-item-pic' src='http://res.cloudinary.com/ddodpmqri/image/upload/v1462388771/money_box_eywt0a.png' alt='budget' height='20' width='20'/>
             <div className='description-item'>{Accounting.formatMoney(profile.budget)}</div>
           </div>
+        </div>
+        <div className='detail-edit-delete'>
+          {Edit}
+          {Delete}
         </div>
       </div>
     );

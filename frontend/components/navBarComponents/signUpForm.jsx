@@ -2,7 +2,7 @@ var React = require('react');
 
 var ClientActions = require('../../actions/clientActions');
 
-module.exports = React.createClass({
+var SignUpForm = React.createClass({
   getInitialState: function() {
     return {
       username: '',
@@ -52,3 +52,5 @@ module.exports = React.createClass({
     )
   }
 });
+
+module.exports = SignUpForm;

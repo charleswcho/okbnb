@@ -5,15 +5,15 @@ var UserStore = require('../stores/userStore');
 var ProfileStore = require('../stores/profileStore');
 var ClientActions = require('../actions/clientActions');
 
-var Title = require('./detailsPageComponents/title');
-var Description = require('./detailsPageComponents/description');
+var Header = require('./profileEditFormComponents/header');
+var EditForm = require('./profileEditFormComponents/editForm');
 
-var Detail = React.createClass({
+module.exports = React.createClass({
   getInitialState: function () {
     return {
       user: UserStore.currentUser(),
       profile: ProfileStore.find(this.props.params.id)
-    };
+    }
   },
 
   componentDidMount: function () {
@@ -36,34 +36,20 @@ var Detail = React.createClass({
     this.setState({ profile: ProfileStore.find(this.props.params.id) });
   },
 
-  _deleteProfile: function () {
-    ClientActions.deleteProfile(this.state.profile.id);
-    hashHistory.goBack();
-  },
-
-  _editProfile: function (e) {
-    e.preventDefault();
-    hashHistory.push({pathname: 'profile/edit/' + this.state.profile.id})
+  _updatedProfile: function () {
+    hashHistory.push({pathname: 'profile/' + this.state.profile.id})
   },
 
   render: function () {
-    var currentUser = this.state.user;
-    var profile = this.state.profile;
-    var showEditDelete = false;
-    if (currentUser.id === profile.user_id) {
-      showEditDelete = true;
-    }
-
     return (
-      <div className='profile-detail'>
-        <Title profile={this.state.profile}/>
-        <Description user={this.state.user} profile={this.state.profile}
-                     showEditDelete={showEditDelete}
-                     editProfile={this._editProfile}
-                     deleteProfile={this._deleteProfile}/>
+      <div className='new-profile-page'>
+        <div className='profile-form-container'>
+          <Header/>
+          <EditForm user={this.state.user} profile={this.state.profile}
+                    updatedProfile={this._updatedProfile}/>
+        </div>
       </div>
+
     );
   }
 });
-
-module.exports = Detail;

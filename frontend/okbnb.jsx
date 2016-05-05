@@ -15,6 +15,7 @@ var SplashScreen = require('./components/splashScreen');
 var Search = require('./components/search');
 var Detail = require('./components/detail');
 var ProfileForm = require('./components/profileForm');
+var ProfileEditForm = require('./components/profileEditForm');
 var Footer = require('./components/footer');
 
 // These are for testing
@@ -50,6 +51,7 @@ var Router = (
       <Route component={SolidNav}>
         <Route path='search/:loc' component={Search}/>
         <Route path='profile/new' component={ProfileForm}/>
+        <Route path='profile/edit/:id' component={ProfileEditForm}/>
         <Route path='profile/:id' component={Detail}/>
       </Route>
     </Route>

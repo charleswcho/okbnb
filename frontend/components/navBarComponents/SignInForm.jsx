@@ -2,7 +2,7 @@ var React = require('react');
 
 var ClientActions = require('../../actions/clientActions');
 
-module.exports = React.createClass({
+var SignInForm = React.createClass({
   getInitialState: function() {
     return {
       username: '',
@@ -14,14 +14,14 @@ module.exports = React.createClass({
   usernameChanged: function(e) {
     e.preventDefault();
     this.setState({
-      username: e.target.username,
+      username: e.target.value,
     });
   },
 
   passwordChanged: function(e) {
     e.preventDefault();
     this.setState({
-      password: e.target.password
+      password: e.target.value
     });
   },
 
@@ -61,3 +61,5 @@ module.exports = React.createClass({
     )
   }
 });
+
+module.exports = SignInForm;

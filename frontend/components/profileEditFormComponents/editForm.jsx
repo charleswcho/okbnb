@@ -19,21 +19,23 @@ var Pet = require('../formPreferencesComponents/pet');
 
 var Form = React.createClass({
   getInitialState: function () {
+    var user = this.props.user;
+    var profile = this.props.profile;
     return {
       ageFocused: false,
       budgetFocused: false,
 
-      user_id: UserStore.currentUser().id,
-      profilePicURL: '',
-      name: '',
-      age: null,
-      description: '',
-      location: '',
-      search_status: null,
-      smoker: null,
-      diet: null,
-      pet: null,
-      budget: null
+      user_id: user.id,
+      profilePicURL: profile.profilePicURL,
+      name: profile.name,
+      age: profile.age,
+      description: profile.description,
+      location: profile.location,
+      search_status: profile.search_status,
+      smoker: profile.smoker,
+      diet: profile.diet,
+      pet: profile.pet,
+      budget: profile.budget
     };
   },
 
@@ -97,12 +99,12 @@ var Form = React.createClass({
     this.setState({ search_status: search_status })
   },
 
-  updateSmoker: function(smoker) {
-    this.setState({ smoker: smoker })
-  },
-
   updateDiet: function(diet) {
     this.setState({ diet: diet })
+  },
+
+  updateSmoker: function(smoker) {
+    this.setState({ smoker: smoker })
   },
 
   updatePet: function(pet) {
@@ -124,6 +126,7 @@ var Form = React.createClass({
     e.preventDefault();
 
     var params = {
+      id: this.props.profile.id,
       user_id: this.state.user_id,
       profilePicURL: this.state.profilePicURL,
       name: this.state.name,
@@ -139,7 +142,8 @@ var Form = React.createClass({
 
     console.log(params)
 
-    GeoUtils.parseAddress(params, ClientActions.createProfile)
+    GeoUtils.parseAddress(params, ClientActions.updateProfile)
+    this.props.updatedProfile();
   },
 
   ageFocus: function () {
@@ -175,6 +179,10 @@ var Form = React.createClass({
     var age = this.state.age;
     var description = this.state.description;
     var location = this.state.location;
+    var search_status = this.state.search_status;
+    var smoker = this.state.smoker;
+    var diet = this.state.diet;
+    var pet = this.state.pet;
     var budget = this.state.budget;
 
     return (
@@ -216,13 +224,15 @@ var Form = React.createClass({
 
         <div className='form-row'>
           <SearchStatus className='profile-input'
+                        searchStatus={search_status}
                         updateSearchStatus={this.updateSearchStatus}/>
-          <Smoker className='profile-input' updateSmoker={this.updateSmoker}/>
+          <Smoker className='profile-input' smoker={smoker}
+                  updateSmoker={this.updateSmoker}/>
         </div>
 
         <div className='form-row'>
-          <Diet className='profile-input' updateDiet={this.updateDiet}/>
-          <Pet className='profile-input' updatePet={this.updatePet}/>
+          <Diet className='profile-input' diet={diet} updateDiet={this.updateDiet}/>
+          <Pet className='profile-input' pet={pet} updatePet={this.updatePet}/>
         </div>
 
         <div className='form-row'>
