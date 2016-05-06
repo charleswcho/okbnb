@@ -3,11 +3,11 @@
 # Table name: users
 #
 #  id              :integer          not null, primary key
-#  username        :string           not null
 #  password_digest :string           not null
 #  session_token   :string           not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  email           :string
 #
 
 class User < ActiveRecord::Base
@@ -23,12 +23,12 @@ class User < ActiveRecord::Base
     length: { minimum: 6, allow_nil: true }
   )
   validates :session_token, presence: true, uniqueness: true
-  validates :username, presence: true, uniqueness: true
+  validates :email, presence: true, uniqueness: true
 
   has_one :profile
 
-  def self.find_by_credentials(username, password)
-    user = User.find_by(username: username)
+  def self.find_by_credentials(email, password)
+    user = User.find_by(email: email)
 
     return nil if user.nil?
     user.is_password?(password) ? user : nil

@@ -37,14 +37,18 @@ var Detail = React.createClass({
     this.setState({ profile: ProfileStore.find(this.props.params.id) });
   },
 
-  _deleteProfile: function () {
-    ClientActions.deleteProfile(this.state.profile.id);
-    hashHistory.goBack();
-  },
-
   _editProfile: function (e) {
     e.preventDefault();
     hashHistory.push({pathname: 'profile/edit/' + this.state.profile.id})
+  },
+
+  _deleteProfile: function () {
+    ClientActions.deleteProfile(this.state.profile.id);
+    hashHistory.push({ pathname: 'search/' + ProfileStore.currentLoc() })
+  },
+
+  _handleContact: function () {
+    ClientActions.contactProfile(this.state.profile.user_id);
   },
 
   render: function () {
@@ -57,7 +61,7 @@ var Detail = React.createClass({
 
     return (
       <div className='profile-detail'>
-        <Title profile={this.state.profile}/>
+        <Title profile={this.state.profile} handleContact={this._handleContact}/>
         <Description user={this.state.user} profile={this.state.profile}
                      showEditDelete={showEditDelete}
                      editProfile={this._editProfile}

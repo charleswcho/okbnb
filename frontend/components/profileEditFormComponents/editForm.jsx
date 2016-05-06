@@ -197,27 +197,23 @@ var Form = React.createClass({
         </div>
 
         <div className='form-row'>
-          <input className='profile-input' type='text' value={name}
+          <input className='profile-input-name-age' type='text' value={name}
                  placeholder='Name' onChange={this.nameChanged}/>
 
-          <input className='profile-input' type={this.state.ageFocused ? 'number' : 'text' }
+          <input className='profile-input-name-age' type={this.state.ageFocused ? 'number' : 'text' }
                  value={age} placeholder={this.state.ageFocused ? null : 'Age' }
                  onFocus={this.ageFocus} onBlur={this.ageUnfocus} onChange={this.ageChanged} />
         </div>
         <div className='form-row'>
           <textarea className='profile-input' value={description}
                     placeholder='Tell everyone a little bit about yourself!'
-                    onChange={this.descriptionChanged}>
+                    onChange={this.descriptionChanged} id='description-input'>
           </textarea>
         </div>
 
         <div className='form-row'>
           <input className='profile-input' type='text' value={location}
                  placeholder='Address' onChange={this.locationChanged} />
-          <input className='profile-input' type='text'
-                 placeholder='City' />
-          <input className='profile-input' type='text'
-                 placeholder='State' />
         </div>
 
         <label className='form-header'>Preferences</label>

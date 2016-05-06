@@ -18,7 +18,7 @@ var ApiUtils = {
 
   fetchProfile: function (id) {
     $.ajax({
-      url: "api/profile/" + id,
+      url: "api/profiles/" + id,
       success: function (profile) {
         ServerActions.receiveProfile(profile)
       },
@@ -70,7 +70,19 @@ var ApiUtils = {
         console.log(["Error", e.responseText]);
       },
     });
+  },
+
+  contactProfile: function (user_id) {
+    console.log('Sending contact request')
+    $.ajax({
+      method: "POST",
+      url: "api/profiles/contact",
+      data: { user_id: user_id },
+      success: function () {
+        console.log("Contacted Profile");
+      }
+    });
   }
- }
+}
 
  module.exports = ApiUtils;

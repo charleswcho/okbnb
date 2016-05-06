@@ -38,6 +38,7 @@ var Search = React.createClass({
     // Start parse request
     var loc = this.props.params.loc;
     GeoUtils.parseLoc(loc, this.locationChanged);
+    ServerActions.updateLoc(loc);
 
     this.profileListener = ProfileStore.addListener(this._profilesChanged);
     this.filterListener = FilterParamsStore.addListener(this._filtersChanged);
@@ -69,7 +70,6 @@ var Search = React.createClass({
       mapOptions: newMapOptions,
       renderMap: true
     });
-    console.log(coords)
     console.log(this.state.renderMap)
   },
 

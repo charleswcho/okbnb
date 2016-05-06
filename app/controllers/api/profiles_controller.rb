@@ -1,5 +1,4 @@
 class Api::ProfilesController < ApplicationController
-
   def index
     @profiles = Profile.all
 
@@ -60,6 +59,12 @@ class Api::ProfilesController < ApplicationController
     else
       render json: @profile.errors.full_messages, status: 400
     end
+  end
+
+  def contact
+    @user = User.find(params[:user_id].to_i)
+    UserMailer.offer_notification_email(current_user, @user).deliver
+    render json: @user
   end
 
   private

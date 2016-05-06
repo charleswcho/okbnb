@@ -6,6 +6,7 @@ var ProfileStore = new Store(AppDispatcher);
 
 var _profiles = {};
 var _hoveredProfileId = null;
+var _currentLocation = null;
 
 function resetProfiles (profiles) {
   _profiles = {};
@@ -34,6 +35,10 @@ function updateHovered (profileId) {
   }
 };
 
+function updateLoc (loc) {
+  _currentLocation = loc;
+};
+
 ProfileStore.all = function () {
   return Object.assign({}, _profiles);
 };
@@ -44,6 +49,10 @@ ProfileStore.find = function(id){
 
 ProfileStore.hovered = function () {
   return _hoveredProfileId;
+};
+
+ProfileStore.currentLoc = function () {
+  return _currentLocation;
 };
 
 ProfileStore.__onDispatch = function (payload) {
@@ -65,6 +74,10 @@ ProfileStore.__onDispatch = function (payload) {
       ProfileStore.__emitChange();
     case ProfileConstants.UPDATE_HOVERED:
       updateHovered(payload.profileId);
+      ProfileStore.__emitChange();
+      break;
+    case ProfileConstants.UPDATE_LOC:
+      updateLoc(payload.loc);
       ProfileStore.__emitChange();
       break;
   }

@@ -18,7 +18,9 @@ module.exports = React.createClass({
           <div className='detail-title-location'>{profile.location}</div>
         </div>
         <button className='detail-contact-button'
-                onClick={this.props.handleContact}>Send Booking Offer</button>
+                onClick={this.props.handleContact}>
+                { 'Send Booking Offer' }
+        </button>
       </div>
     );
   }

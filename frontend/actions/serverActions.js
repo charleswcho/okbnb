@@ -56,5 +56,12 @@ module.exports = {
       actionType: ProfileConstants.UPDATE_HOVERED,
       profileId: profileId
     });
+  },
+
+  updateLoc: function(loc) {
+    AppDispatcher.dispatch({
+      actionType: ProfileConstants.UPDATE_LOC,
+      loc: loc
+    });
   }
 };

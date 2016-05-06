@@ -54,12 +54,12 @@ module.exports = React.createClass({
   },
 
   toggleNavBarRight: function () {
-    if (this.state.currentUser && this.state.currentUser.username) {
+    if (this.state.currentUser && this.state.currentUser.email) {
       return (
         <Nav pullRight>
           <NavItem id='create-profile'
                    onClick={this.handleCreateProfile}>Create a Profile</NavItem>
-                 <NavItem className='' id='username'>{this.state.currentUser.username}</NavItem>
+                 <NavItem className='' id='email'>{this.state.currentUser.email}</NavItem>
           <NavItem className='' onClick={this.signOut}>Sign Out</NavItem>
         </Nav>
       )

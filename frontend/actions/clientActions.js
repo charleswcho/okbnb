@@ -13,5 +13,6 @@ module.exports = {
   fetchProfile: ApiUtil.fetchProfile,
   createProfile: ApiUtil.createProfile,
   updateProfile: ApiUtil.updateProfile,
-  deleteProfile: ApiUtil.deleteProfile
+  deleteProfile: ApiUtil.deleteProfile,
+  contactProfile: ApiUtil.contactProfile
 }
