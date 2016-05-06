@@ -15,14 +15,12 @@ var Filters = React.createClass({
           <div className='filter-row'>
             <SearchStatusOption/>
             <SmokerOption/>
-          </div>
-          <div className='filter-row'>
             <DietOption/>
             <PetOption/>
           </div>
         </div>
         <div className='filter-budget'>
-          <div className='filter-heading'>Budget</div>
+          <div className='filter-heading' id='budget'>Budget</div>
           <BudgetOption/>
         </div>
       </div>

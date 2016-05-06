@@ -2,6 +2,7 @@ var React = require('react');
 var hashHistory = require('react-router').hashHistory;
 
 var ClientActions = require('../actions/clientActions');
+var ServerActions = require('../actions/serverActions');
 var ProfileStore = require('../stores/profileStore');
 var FilterParamsStore = require('../stores/filterParams');
 
@@ -33,6 +34,7 @@ var Search = React.createClass({
   },
 
   componentDidMount: function () {
+    window.scroll(0,0);
     // Start parse request
     var loc = this.props.params.loc;
     GeoUtils.parseLoc(loc, this.locationChanged);
@@ -40,7 +42,7 @@ var Search = React.createClass({
     this.profileListener = ProfileStore.addListener(this._profilesChanged);
     this.filterListener = FilterParamsStore.addListener(this._filtersChanged);
     var filterParams = FilterParamsStore.params();
-    ClientActions.fetchProfiles();
+    ServerActions.clearProfiles();
   },
 
   componentWillUnmount: function () {
@@ -53,7 +55,14 @@ var Search = React.createClass({
     var newMapOptions = {
       center: coords,
       zoom: 12,
-      scrollwheel: false
+      scrollwheel: false,
+      mapTypeControl: false,
+      zoomControl: true,
+      zoomControlOptions: {
+       position: google.maps.ControlPosition.LEFT_TOP
+      },
+      scaleControl: false,
+      streetViewControl: false,
     }
 
     this.setState({

@@ -7,6 +7,7 @@ var ClientActions = require('../actions/clientActions');
 
 var Title = require('./detailsPageComponents/title');
 var Description = require('./detailsPageComponents/description');
+var Footer = require('./footer');
 
 var Detail = React.createClass({
   getInitialState: function () {
@@ -61,6 +62,7 @@ var Detail = React.createClass({
                      showEditDelete={showEditDelete}
                      editProfile={this._editProfile}
                      deleteProfile={this._deleteProfile}/>
+        <Footer/>
       </div>
     );
   }

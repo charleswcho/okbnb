@@ -22,6 +22,10 @@ function deleteProfile (id) {
   delete _profiles[id];
 };
 
+function clearProfiles () {
+  _profiles = {};
+};
+
 function updateHovered (profileId) {
   if (_hoveredProfileId === profileId) {
     _hoveredProfileId = null;
@@ -56,6 +60,9 @@ ProfileStore.__onDispatch = function (payload) {
       deleteProfile(payload.profileId);
       ProfileStore.__emitChange();
       break;
+    case ProfileConstants.CLEAR_PROFILES:
+      clearProfiles();
+      ProfileStore.__emitChange();
     case ProfileConstants.UPDATE_HOVERED:
       updateHovered(payload.profileId);
       ProfileStore.__emitChange();

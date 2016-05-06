@@ -6,9 +6,18 @@
   flex-direction: column;
 }
 
+@media (max-width: 760px) {
+  .filters {
+    height: 350px;
+  }
+}
+
 .filter-heading {
   font-size: 18px;
   padding: 10px 10px;
+}
+
+#budget {
   border-top: 1px solid rgba(255,255,255,0.1)
 }
 
@@ -17,7 +26,6 @@
 }
 
 .filter-budget {
-  height: 100px;
 }
 
 .budget-option {
@@ -34,29 +42,18 @@
   border: 1px solid #9dbaf2;
 }
 
-// .budget-slider {
-//   color: white;
-//   height: 40px;
-//   width: 200px;
-// }
-
-// .rc-slider-track {
-//   background-color: red;
-// }
-//
-// .rc-slider-handle {
-//   color: red;
-// }
-
 .filter-row {
+  padding: 5px 5px 5px 5px;
   display: flex;
   justify-content: center;
-  height: 50px;
-  padding: 5px 5px 5px 5px;
+  flex-wrap: wrap;
 }
 
 .filter-input {
-  width: 200px;
-  margin-left: 20px;
-  margin-right: 20px;
+  width: 175px;
+  margin-right: 5px;
+}
+
+.dropdown.btn-group {
+  margin-bottom: 5px;
 }

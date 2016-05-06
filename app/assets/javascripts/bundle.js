@@ -54,14 +54,13 @@
 	var hashHistory = ReactRouter.hashHistory;
 	
 	// Components
-	var SolidNav = __webpack_require__(225);
+	var NavBar = __webpack_require__(226);
 	var SplashScreen = __webpack_require__(523);
 	
 	var Search = __webpack_require__(526);
 	var Detail = __webpack_require__(541);
 	var ProfileForm = __webpack_require__(545);
 	var ProfileEditForm = __webpack_require__(552);
-	var Footer = __webpack_require__(555);
 	
 	// These are for testing
 	
@@ -85,8 +84,8 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      this.props.children,
-	      React.createElement(Footer, null)
+	      React.createElement(NavBar, null),
+	      this.props.children
 	    );
 	  }
 	});
@@ -98,14 +97,10 @@
 	    Route,
 	    { path: '/', component: App },
 	    React.createElement(IndexRoute, { component: SplashScreen }),
-	    React.createElement(
-	      Route,
-	      { component: SolidNav },
-	      React.createElement(Route, { path: 'search/:loc', component: Search }),
-	      React.createElement(Route, { path: 'profile/new', component: ProfileForm }),
-	      React.createElement(Route, { path: 'profile/edit/:id', component: ProfileEditForm }),
-	      React.createElement(Route, { path: 'profile/:id', component: Detail })
-	    )
+	    React.createElement(Route, { path: 'search/:loc', component: Search }),
+	    React.createElement(Route, { path: 'profile/new', component: ProfileForm }),
+	    React.createElement(Route, { path: 'profile/edit/:id', component: ProfileEditForm }),
+	    React.createElement(Route, { path: 'profile/:id', component: Detail })
 	  )
 	);
 	
@@ -25481,28 +25476,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 225 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var NavBar = __webpack_require__(226);
-	
-	var SolidNav = React.createClass({
-	  displayName: 'SolidNav',
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(NavBar, { clear: false }),
-	      this.props.children
-	    );
-	  }
-	});
-	
-	module.exports = SolidNav;
-
-/***/ },
+/* 225 */,
 /* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -25573,6 +25547,11 @@
 	          { id: 'create-profile',
 	            onClick: this.handleCreateProfile },
 	          'Create a Profile'
+	        ),
+	        React.createElement(
+	          NavItem,
+	          { className: '', id: 'username' },
+	          this.state.currentUser.username
 	        ),
 	        React.createElement(
 	          NavItem,
@@ -44978,6 +44957,13 @@
 	      profileId: profileId
 	    });
 	  },
+	
+	  clearProfiles: function () {
+	    AppDispatcher.dispatch({
+	      actionType: ProfileConstants.CLEAR_PROFILES
+	    });
+	  },
+	
 	  updateHovered: function (profileId) {
 	    AppDispatcher.dispatch({
 	      actionType: ProfileConstants.UPDATE_HOVERED,
@@ -45311,6 +45297,7 @@
 	  PROFILES_RECEIVED: "PROFILES_RECEIVED",
 	  PROFILE_RECEIVED: "PROFILE_RECEIVED",
 	  DELETE_PROFILE: "DELETE_PROFILE",
+	  CLEAR_PROFILES: "CLEAR_PROFILES",
 	  UPDATE_HOVERED: "UPDATE_HOVERED"
 	};
 
@@ -52059,9 +52046,9 @@
 
 	var React = __webpack_require__(1);
 	
-	var NavBar = __webpack_require__(226);
 	var SearchBar = __webpack_require__(524);
 	var Cities = __webpack_require__(525);
+	var Footer = __webpack_require__(555);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52080,21 +52067,25 @@
 	        React.createElement(
 	          'div',
 	          { className: 'splash-image' },
-	          React.createElement(NavBar, { clear: true }),
 	          React.createElement(
 	            'div',
-	            { id: 'splash-image-title' },
-	            'MEET HERE'
-	          ),
-	          React.createElement(
-	            'div',
-	            { id: 'splash-image-subtitle' },
-	            'Find tenants from 191+ countries and experience diversity in a whole new way.'
+	            { className: 'splash-image-greeting' },
+	            React.createElement(
+	              'div',
+	              { id: 'splash-image-title' },
+	              'MEET HERE'
+	            ),
+	            React.createElement(
+	              'div',
+	              { id: 'splash-image-subtitle' },
+	              'Find tenants from 191+ countries and experience diversity in a whole new way.'
+	            )
 	          ),
 	          React.createElement(SearchBar, null)
 	        )
 	      ),
-	      React.createElement(Cities, null)
+	      React.createElement(Cities, null),
+	      React.createElement(Footer, null)
 	    );
 	  }
 	});
@@ -52229,6 +52220,7 @@
 	var hashHistory = __webpack_require__(166).hashHistory;
 	
 	var ClientActions = __webpack_require__(493);
+	var ServerActions = __webpack_require__(495);
 	var ProfileStore = __webpack_require__(527);
 	var FilterParamsStore = __webpack_require__(528);
 	
@@ -52262,6 +52254,7 @@
 	  },
 	
 	  componentDidMount: function () {
+	    window.scroll(0, 0);
 	    // Start parse request
 	    var loc = this.props.params.loc;
 	    GeoUtils.parseLoc(loc, this.locationChanged);
@@ -52269,7 +52262,7 @@
 	    this.profileListener = ProfileStore.addListener(this._profilesChanged);
 	    this.filterListener = FilterParamsStore.addListener(this._filtersChanged);
 	    var filterParams = FilterParamsStore.params();
-	    ClientActions.fetchProfiles();
+	    ServerActions.clearProfiles();
 	  },
 	
 	  componentWillUnmount: function () {
@@ -52282,7 +52275,14 @@
 	    var newMapOptions = {
 	      center: coords,
 	      zoom: 12,
-	      scrollwheel: false
+	      scrollwheel: false,
+	      mapTypeControl: false,
+	      zoomControl: true,
+	      zoomControlOptions: {
+	        position: google.maps.ControlPosition.LEFT_TOP
+	      },
+	      scaleControl: false,
+	      streetViewControl: false
 	    };
 	
 	    this.setState({
@@ -52351,6 +52351,10 @@
 	  delete _profiles[id];
 	};
 	
+	function clearProfiles() {
+	  _profiles = {};
+	};
+	
 	function updateHovered(profileId) {
 	  if (_hoveredProfileId === profileId) {
 	    _hoveredProfileId = null;
@@ -52385,6 +52389,9 @@
 	      deleteProfile(payload.profileId);
 	      ProfileStore.__emitChange();
 	      break;
+	    case ProfileConstants.CLEAR_PROFILES:
+	      clearProfiles();
+	      ProfileStore.__emitChange();
 	    case ProfileConstants.UPDATE_HOVERED:
 	      updateHovered(payload.profileId);
 	      ProfileStore.__emitChange();
@@ -52501,11 +52508,7 @@
 	          'div',
 	          { className: 'filter-row' },
 	          React.createElement(SearchStatusOption, null),
-	          React.createElement(SmokerOption, null)
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'filter-row' },
+	          React.createElement(SmokerOption, null),
 	          React.createElement(DietOption, null),
 	          React.createElement(PetOption, null)
 	        )
@@ -52515,7 +52518,7 @@
 	        { className: 'filter-budget' },
 	        React.createElement(
 	          'div',
-	          { className: 'filter-heading' },
+	          { className: 'filter-heading', id: 'budget' },
 	          'Budget'
 	        ),
 	        React.createElement(BudgetOption, null)
@@ -53208,6 +53211,7 @@
 	
 	var Title = __webpack_require__(542);
 	var Description = __webpack_require__(543);
+	var Footer = __webpack_require__(555);
 	
 	var Detail = React.createClass({
 	  displayName: 'Detail',
@@ -53264,7 +53268,8 @@
 	      React.createElement(Description, { user: this.state.user, profile: this.state.profile,
 	        showEditDelete: showEditDelete,
 	        editProfile: this._editProfile,
-	        deleteProfile: this._deleteProfile })
+	        deleteProfile: this._deleteProfile }),
+	      React.createElement(Footer, null)
 	    );
 	  }
 	});
@@ -53283,13 +53288,17 @@
 	
 	  render: function () {
 	    var profile = this.props.profile;
+	    var profilePicURL = 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif';
+	    if (profile.profilePicURL) {
+	      profilePicURL = profile.profilePicURL;
+	    }
 	    return React.createElement(
 	      'div',
 	      { className: 'detail-title' },
 	      React.createElement(
 	        'div',
 	        { className: 'detail-title-pic' },
-	        React.createElement('img', { className: 'detail-profile-pic', src: profile.profilePicURL, alt: 'profile-pic', height: '180', width: '180' })
+	        React.createElement('img', { className: 'detail-profile-pic', src: profilePicURL, alt: 'profile-pic', height: '180', width: '180' })
 	      ),
 	      React.createElement(
 	        'div',
@@ -53304,6 +53313,12 @@
 	          { className: 'detail-title-location' },
 	          profile.location
 	        )
+	      ),
+	      React.createElement(
+	        'button',
+	        { className: 'detail-contact-button',
+	          onClick: this.props.handleContact },
+	        'Send Booking Offer'
 	      )
 	    );
 	  }
@@ -53327,14 +53342,14 @@
 	    if (this.props.showEditDelete) {
 	      Edit = React.createElement(
 	        'button',
-	        { className: 'edit-profile-button',
-	          onClick: this.props.editProfile },
+	        { className: 'profile-button',
+	          onClick: this.props.editProfile, id: 'edit' },
 	        'Edit'
 	      );
 	      Delete = React.createElement(
 	        'button',
-	        { className: 'delete-profile-button',
-	          onClick: this.props.deleteProfile },
+	        { className: 'profile-button',
+	          onClick: this.props.deleteProfile, id: 'delete' },
 	        'Delete'
 	      );
 	    }

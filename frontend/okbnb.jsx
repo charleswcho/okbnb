@@ -9,14 +9,13 @@ var hashHistory = ReactRouter.hashHistory;
 
 
 // Components
-var SolidNav = require('./components/solidNav');
+var NavBar = require('./components/navBar');
 var SplashScreen = require('./components/splashScreen');
 
 var Search = require('./components/search');
 var Detail = require('./components/detail');
 var ProfileForm = require('./components/profileForm');
 var ProfileEditForm = require('./components/profileEditForm');
-var Footer = require('./components/footer');
 
 // These are for testing
 
@@ -37,8 +36,8 @@ var App = React.createClass({
   render: function(){
     return (
       <div>
+        <NavBar/>
         {this.props.children}
-        <Footer/>
       </div>
     );
   }
@@ -48,12 +47,10 @@ var Router = (
   <Router history={hashHistory}>
     <Route path='/' component={App}>
       <IndexRoute component={SplashScreen}/>
-      <Route component={SolidNav}>
-        <Route path='search/:loc' component={Search}/>
-        <Route path='profile/new' component={ProfileForm}/>
-        <Route path='profile/edit/:id' component={ProfileEditForm}/>
-        <Route path='profile/:id' component={Detail}/>
-      </Route>
+      <Route path='search/:loc' component={Search}/>
+      <Route path='profile/new' component={ProfileForm}/>
+      <Route path='profile/edit/:id' component={ProfileEditForm}/>
+      <Route path='profile/:id' component={Detail}/>
     </Route>
   </Router>
 );

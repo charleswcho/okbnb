@@ -44,6 +44,13 @@ module.exports = {
       profileId: profileId
     });
   },
+
+  clearProfiles: function () {
+    AppDispatcher.dispatch({
+      actionType: ProfileConstants.CLEAR_PROFILES
+    });
+  },
+
   updateHovered: function(profileId) {
     AppDispatcher.dispatch({
       actionType: ProfileConstants.UPDATE_HOVERED,

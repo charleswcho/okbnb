@@ -8,10 +8,10 @@ module.exports = React.createClass({
     var profile = this.props.profile;
     var Edit, Delete;
     if (this.props.showEditDelete) {
-      Edit = <button className='edit-profile-button'
-                     onClick={this.props.editProfile}>Edit</button>
-      Delete = <button className='delete-profile-button'
-                       onClick={this.props.deleteProfile}>Delete</button>
+      Edit = <button className='profile-button'
+                     onClick={this.props.editProfile} id='edit'>Edit</button>
+      Delete = <button className='profile-button'
+                       onClick={this.props.deleteProfile} id='delete'>Delete</button>
     }
 
     return (
