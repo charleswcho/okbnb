@@ -25,21 +25,21 @@ OkBnB is a web application inspired by AirBnb that was build using Ruby on Rails
   This feature was implemented using a filter store that triggers a refetch of all the profiles on change.  The filter params are sent to the `api/profiles` and are used to chain Active Record queries to return the filtered profiles.
 
 
-![image of filters index](https://github.com/charleswcho/okbnb/tree/master/docs/filters.png)
+![imageoffiltersindex](https://github.com/charleswcho/okbnb/tree/master/docs/filters.png)
 
 
 ### Communication
 
   When a user is interested in a profile, they can send a booking offer to the potential tenant.  This will call the custom route `api/profiles/contact` which takes the profile's owner and the current user       then sends an email from the current user to the profile's owner to notify them that there is someone interested in them.
 
-![image of filters index](https://github.com/charleswcho/okbnb/tree/master/docs/profileDetail.png)
+![imageoffiltersindex](https://github.com/charleswcho/okbnb/tree/master/docs/profileDetail.png)
 
 
 ### Editing & Deleting Profiles
 
   If the current user is the owner of a particular profile they have access to editing and deleting that profile.  The edit form in prefilled with the information of the profile and on submit, returns to the edited version of the profile.
 
-![image of filters index](https://github.com/charleswcho/okbnb/tree/master/docs/profileEdit.png)
+![imageoffiltersindex](https://github.com/charleswcho/okbnb/tree/master/docs/profileEdit.png)
 
 ## Future features
 
