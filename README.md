@@ -1,148 +1,63 @@
-# FresherNote
+# OkBnB
 
-[Heroku link][heroku] **NB:** This should be a link to your production site
+[OkBnb live][heroku]
 
-[heroku]: http://www.herokuapp.com
+[heroku]: https://okbnb.herokuapp.com
 
 ## Minimum Viable Product
 
-OkBnB is a web application inspired by AirBnb that will be build using Ruby on Rails and React.js.  By the end of Week 9, this app will, at a minimum, satisfy the following criteria:
+OkBnB is a web application inspired by AirBnb that was build using Ruby on Rails and React.js.  
 
 - [X] New account creation, login, and guest/demo login
-- [ ] Smooth, bug-free navigation
-- [ ] Adequate seed data to demonstrate the site's features
-- [ ] The minimally necessary features for an AirBnb-inspired site: viewing potential tenant profiles and filtering by certain parameters, offer a booking to a tenant, and create new profiles
+- [X] Smooth, bug-free navigation
+- [X] Adequate seed data to demonstrate the site's features
+- [X] The minimally necessary features for an AirBnb-inspired site: viewing potential tenant profiles and filtering by certain parameters, offer a booking to a tenant, and create new profiles
 - [X] Hosting on Heroku
-- [ ] CSS styling that is satisfactorily visually appealing
+- [X] CSS styling that is satisfactorily visually appealing
 
-## Product Goals and Priorities
+## Features & Implementation
 
-OkBnb will allow users to do the following:
+### Filtering
 
-<!-- This is a Markdown checklist. Use it to keep track of your
-progress. Put an x between the brackets for a checkmark: [x] -->
+  Profiles can be filtered by a number of options however even before the user inputs anything the profiles are filtered by the borders of the map.  
+  If a profile's location is not within the bounds of the map, it is not displayed on the index.
 
-- [X] Create an account (MVP)
-- [X] Log in / Log out, including as a Guest/Demo User (MVP)
-- [ ] View and create tenant profiles (MVP)
-- [ ] Filter through tenant profiles with parameters (MVP)
-- [ ] Contact potential tenants (MVP)
-- [ ] Offer a date range of availability to tenant (expected feature, but not MVP)
+  This feature was implemented using a filter store that triggers a refetch of all the profiles on change.  The filter params are sent to the `api/profiles` and are used to chain Active Record queries to return the filtered profiles.
 
-## Design Docs
-* [View Wireframes][views]
-* [React Components][components]
-* [Flux Cycles][flux-cycles]
-* [API endpoints][api-endpoints]
-* [DB schema][schema]
 
-[views]: ./docs/views.md
-[components]: ./docs/components.md
-[flux-cycles]: ./docs/flux-cycles.md
-[api-endpoints]: ./docs/api-endpoints.md
-[schema]: ./docs/schema.md
+![image of filters index](https://github.com/charleswcho/okbnb/tree/master/docs/filters.png)
 
-## Implementation Timeline
 
-### Phase 1: Backend setup and User Authentication (0.5 days)
+### Communication
 
-**Objective:** Functioning rails project with Authentication
+  When a user is interested in a profile, they can send a booking offer to the potential tenant.  This will call the custom route `api/profiles/contact` which takes the profile's owner and the current user       then sends an email from the current user to the profile's owner to notify them that there is someone interested in them.
 
-- [ ] create new project
-- [ ] create `User` model
-- [ ] authentication
-- [ ] user signup/signin pages
-- [ ] blank landing page after signin
+![image of filters index](https://github.com/charleswcho/okbnb/tree/master/docs/profileDetail.png)
 
-### Phase 2: Profiles Model, API, and basic APIUtil (1.5 days)
 
-**Objective:** Profiles can be created, viewed, edited and destroyed through
-the API.
+### Editing & Deleting Profiles
 
-- [ ] create `Profile` model
-- [ ] profiles belong to users
-- [ ] seed the database with Profiles and demo user
-- [ ] CRUD API for notes (`ProfilesController`)
-- [ ] jBuilder views for profiles
-- [ ] setup Webpack & Flux scaffold
-- [ ] setup `APIUtil` to interact with the API
-- [ ] test out API interaction in the console.
+  If the current user is the owner of a particular profile they have access to editing and deleting that profile.  The edit form in prefilled with the information of the profile and on submit, returns to the edited version of the profile.
 
-### Phase 3: Flux Architecture and Router (2.0 days)
+![image of filters index](https://github.com/charleswcho/okbnb/tree/master/docs/profileEdit.png)
 
-**Objective:** Profiles can be created, read, edited and destroyed with the
-user interface.
+## Future features
 
-- [ ] setup the flux loop with skeleton files
-- [ ] setup React Router
-- implement each profile component, building out the flux loop as needed.
-  - [ ] `ProfileIndex`
-  - [ ] `ProfileIndexItem`
-  - [ ] `ProfileDetail`
-  - [ ] `DetailDescription`
-  - [ ] `DescriptionItem`
-  - [ ] `DescriptionItemDetail`
-  - [ ] `ProfileForm`
+### Errors
 
-### Phase 4: Google Maps API (2.0 days)
+  Errors will be shown on auth errors, profile create, edit, and delete, and sending messages.
 
-**Objective:** Integrate maps with profiles for geolocation.
+### Slider
 
-- setup Google Maps API
-  - [ ] Get API key for JavaScript Google Map
-- [ ] Add ajax request methods to Utils
-- [ ] Add receive methods in Server Actions and Update Profile Store as needed
-- implement each map component, building out the flux loop as needed.
-  - [ ] `Map`
-- add markers to map to display the location of profiles
-- add filtering to map
-  - [ ] update backend with proper methods to return profiles within params
-- [ ] Test api methods then the map component with Seed data
+  Filtering is not yet complete with the last feature being a slider for my budget.
+  It will be a two handled slider that will take the range in between and then
+  filter the results on the profiles that have budgets in that range.
 
-### Phase 5: Start Styling (0.5 days)
+### Search
 
-**Objective:** Existing pages (including singup/signin) will look good.
+  My app will be able to give relevant suggestions based on the location typed in.
 
-- [ ] create a basic style guide
-- [ ] position elements on the page
-- [ ] add basic colors & styles
+### Direct Messaging
 
-### Phase 6: Cities (0.5 days)
-
-**Objective:** Cities are searchable.
-
-- [ ] create `City` model
-- build out API, Flux loop, and components for:
-  - [ ] `Cities`
-
-### Phase 7: Home Page (1.5 day)
-
-**Objective:** Create appealing home page s
-
-- [ ] Integrate React-Bootstrap.
-
-- implement home page components
-  - [ ] `Navbar`
-  - [ ] `SplashScreen`
-  - [ ] `SearchBar`
-  - [ ] `Footer`
-- Use CSS to style new views
-
-### Phase 8: Styling Cleanup and Seeding (1 day)
-
-**objective:** Make the site feel more cohesive and awesome.
-
-- [ ] Get feedback on my UI from others
-- [ ] Refactor HTML classes & CSS rules
-- [ ] Add modals, transitions, and other styling flourishes.
-
-### Bonus Features (TBD)
-- [ ] Messaging in app instead of using Email
-- [ ] List cities matching search input in dropdown
-- [ ] Add video splash view for home page
-
-[phase-one]: ./docs/phases/phase1.md
-[phase-two]: ./docs/phases/phase2.md
-[phase-three]: ./docs/phases/phase3.md
-[phase-four]: ./docs/phases/phase4.md
-[phase-five]: ./docs/phases/phase5.md
+  Eventually my users should be able to message each other inside my app instead
+  of having to use email.

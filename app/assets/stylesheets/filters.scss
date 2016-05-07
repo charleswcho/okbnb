@@ -29,13 +29,17 @@
 }
 
 .budget-option {
-  color: grey;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
 }
 
+.budget-option-label {
+  color: white; 
+}
+
 .budget-input {
+  color: black;
   width: 40px;
   margin-left: 20px;
   margin-right: 20px;

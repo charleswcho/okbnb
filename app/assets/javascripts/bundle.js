@@ -53011,10 +53011,20 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'budget-option' },
-	      React.createElement('input', { className: 'budget-input', type: 'number',
-	        onChange: this.minChanged, value: min }),
-	      React.createElement('input', { className: 'budget-input', type: 'number',
-	        onChange: this.maxChanged, value: max })
+	      React.createElement(
+	        'label',
+	        { className: 'budget-option-label' },
+	        'Min',
+	        React.createElement('input', { className: 'budget-input', type: 'number',
+	          onChange: this.minChanged, value: min })
+	      ),
+	      React.createElement(
+	        'label',
+	        { className: 'budget-option-label' },
+	        'Max',
+	        React.createElement('input', { className: 'budget-input', type: 'number',
+	          onChange: this.maxChanged, value: max })
+	      )
 	    );
 	  }
 	});

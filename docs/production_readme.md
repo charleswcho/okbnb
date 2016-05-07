@@ -1,18 +1,12 @@
-# FresherNote
+# OkBnB
 
-[FresherNote live][heroku] **NB:** This should be a link to your production site
+[OkBnb live][heroku]
 
-[heroku]: http://www.herokuapp.com
-
-FresherNote is a full-stack web application inspired by Evernote.  It utilizes Ruby on Rails on the backend, a PostgreSQL database, and React.js with a Flux architectural framework on the frontend.  
-
-## Features & Implementation
-
- **NB**: don't copy and paste any of this.  Many folks will implement similar features, and many employers will see the READMEs of a lot of a/A grads.  You must write in a way that distinguishes your README from that of other students', but use this as a guide for what topics to cover.  
+[heroku]: https://okbnb.herokuapp.com
 
 ### Single-Page App
 
-FresherNote is truly a single-page; all content is delivered on one static page.  The root page listens to a `SessionStore` and renders content based on a call to `SessionStore.currentUser()`.  Sensitive information is kept out of the frontend of the app by making an API call to `SessionsController#get_user`.
+
 
 ```ruby
 class Api::SessionsController < ApplicationController
@@ -53,22 +47,5 @@ render: function () {
 }
 ```
 
-### Tags
 
-As with notebooks, tags are stored in the database through a `tag` table and a join table.  The `tag` table contains the columns `id` and `tag_name`.  The `tagged_notes` table is the associated join table, which contains three columns: `id`, `tag_id`, and `note_id`.  
-
-Tags are maintained on the frontend in the `TagStore`.  Because creating, editing, and destroying notes can potentially affect `Tag` objects, the `NoteIndex` and the `NotebookIndex` both listen to the `TagStore`.  It was not necessary to create a `Tag` component, as tags are simply rendered as part of the individual `Note` components.  
-
-![tag screenshot](https://github.com/appacademy/sample-project-proposal/blob/master/docs/tagScreenshot.png)
-
-## Future Directions for the Project
-
-In addition to the features already implemented, I plan to continue work on this project.  The next steps for FresherNote are outlined below.
-
-### Search
-
-Searching notes is a standard feature of Evernote.  I plan to utilize the Fuse.js library to create a fuzzy search of notes and notebooks.  This search will look go through tags, note titles, notebook titles, and note content.  
-
-### Direct Messaging
-
-Although this is less essential functionality, I also plan to implement messaging between FresherNote users.  To do this, I will use WebRTC so that notifications of messages happens seamlessly.  
+![tagscreenshot](https://github.com/appacademy/sample-project-proposal/blob/master/docs/tagScreenshot.png)

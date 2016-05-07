@@ -29,10 +29,14 @@ var BudgetOption = React.createClass({
     var max = this.state.max;
     return (
       <div className='budget-option'>
-        <input className='budget-input' type='number'
-               onChange={this.minChanged} value={min}/>
-        <input className='budget-input' type='number'
-               onChange={this.maxChanged} value={max}/>
+        <label className='budget-option-label'>Min
+          <input className='budget-input' type='number'
+                 onChange={this.minChanged} value={min}/>
+        </label>
+        <label className='budget-option-label'>Max
+          <input className='budget-input' type='number'
+                 onChange={this.maxChanged} value={max}/>
+        </label>
       </div>
     );
   }
