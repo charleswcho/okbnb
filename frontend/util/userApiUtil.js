@@ -2,18 +2,15 @@ var ServerActions = require('../actions/serverActions');
 
 module.exports = {
   create: function (credentials) {
-    console.log("1 Sent Create request");
     console.log(credentials)
     $.ajax({
       method: "POST",
       url: "api/user",
       data: { user: credentials },
       success: function (currentUser) {
-        console.log(["2 Received responce", currentUser]);
         ServerActions.receiveCurrentUser(currentUser);
       },
       error: function (e) {
-        //debugger;
         ServerActions.handleError(e)
         console.log(["Error", e.responseText]);
       }
@@ -29,7 +26,6 @@ module.exports = {
         ServerActions.receiveCurrentUser(currentUser);
       },
       error: function (e) {
-        //debugger;
         ServerActions.handleError(e)
         console.log(["Error", e.responseText]);
       }

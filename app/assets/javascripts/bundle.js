@@ -44845,18 +44845,15 @@
 	
 	module.exports = {
 	  create: function (credentials) {
-	    console.log("1 Sent Create request");
 	    console.log(credentials);
 	    $.ajax({
 	      method: "POST",
 	      url: "api/user",
 	      data: { user: credentials },
 	      success: function (currentUser) {
-	        console.log(["2 Received responce", currentUser]);
 	        ServerActions.receiveCurrentUser(currentUser);
 	      },
 	      error: function (e) {
-	        //debugger;
 	        ServerActions.handleError(e);
 	        console.log(["Error", e.responseText]);
 	      }
@@ -44872,7 +44869,6 @@
 	        ServerActions.receiveCurrentUser(currentUser);
 	      },
 	      error: function (e) {
-	        //debugger;
 	        ServerActions.handleError(e);
 	        console.log(["Error", e.responseText]);
 	      }
@@ -54742,12 +54738,19 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var hashHistory = __webpack_require__(166).hashHistory;
+	
+	var ProfileStore = __webpack_require__(527);
 	
 	var Header = __webpack_require__(547);
 	var Form = __webpack_require__(548);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
+	
+	  createdProfile: function () {
+	    hashHistory.push({ pathname: 'search/' + ProfileStore.currentLoc() });
+	  },
 	
 	  render: function () {
 	    return React.createElement(
@@ -54757,7 +54760,7 @@
 	        'div',
 	        { className: 'profile-form-container' },
 	        React.createElement(Header, null),
-	        React.createElement(Form, null)
+	        React.createElement(Form, { createdProfile: this.createdProfile })
 	      ),
 	      React.createElement(
 	        'div',
@@ -54831,8 +54834,6 @@
 	var React = __webpack_require__(1);
 	var DropdownButton = __webpack_require__(226).DropdownButton;
 	var MenuItem = __webpack_require__(226).MenuItem;
-	
-	var hashHistory = __webpack_require__(166).hashHistory;
 	
 	var ClientActions = __webpack_require__(492);
 	var UserStore = __webpack_require__(502);
@@ -54965,6 +54966,7 @@
 	    console.log(params);
 	
 	    GeoUtils.parseAddress(params, ClientActions.createProfile);
+	    this.props.createdProfile();
 	  },
 	
 	  ageFocus: function () {

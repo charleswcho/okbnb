@@ -1,15 +1,22 @@
 var React = require('react');
+var hashHistory = require('react-router').hashHistory;
+
+var ProfileStore = require('../stores/profileStore');
 
 var Header = require('./profileFormComponents/header');
 var Form = require('./profileFormComponents/form');
 
 module.exports = React.createClass({
+  createdProfile: function () {
+    hashHistory.push({ pathname: 'search/' + ProfileStore.currentLoc() })
+  },
+
   render: function () {
     return (
       <div className='new-profile-page'>
         <div className='profile-form-container'>
           <Header/>
-          <Form/>
+          <Form createdProfile={this.createdProfile}/>
         </div>
         <div className='key-features'>
           <div className='key-feature'>

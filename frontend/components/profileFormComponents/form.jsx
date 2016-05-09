@@ -2,8 +2,6 @@ var React = require('react');
 var DropdownButton = require('react-bootstrap').DropdownButton
 var MenuItem = require('react-bootstrap').MenuItem
 
-var hashHistory = require('react-router').hashHistory;
-
 var ClientActions = require('../../actions/clientActions');
 var UserStore = require('../../stores/userStore');
 var ProfileStore = require('../../stores/profileStore');
@@ -136,6 +134,7 @@ var Form = React.createClass({
     console.log(params)
 
     GeoUtils.parseAddress(params, ClientActions.createProfile)
+    this.props.createdProfile();
   },
 
   ageFocus: function () {
