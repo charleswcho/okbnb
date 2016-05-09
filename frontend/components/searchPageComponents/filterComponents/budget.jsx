@@ -1,27 +1,27 @@
 var React = require('react');
-var FilterActions = require('../../../actions/filterActions');
+var ReactSlider = require('react-slider');
 
-// var Rcslider = require('rc-slider');
-// <Rcslider className='budget-slider' allowCross={false} range={true}/>
+var FilterActions = require('../../../actions/filterActions');
 
 var BudgetOption = React.createClass({
   getInitialState: function () {
     return {
-      min: '',
-      max: ''
+      min: 0,
+      max: 100
     };
   },
 
-  minChanged: function (e) {
-    e.preventDefault();
-    this.setState({ min: e.target.value })
-    FilterActions.updateMin(parseInt(e.target.value))
-  },
+  updateBudget: function (range) {
+    this.setState({
+      min: range[0],
+      max: range[1]
+    });
+    var adjustedRange = {
+      min: range[0] * 20,
+      max: range[1] * 20
+    };
 
-  maxChanged: function (e) {
-    e.preventDefault();
-    this.setState({ max: e.target.value })
-    FilterActions.updateMax(parseInt(e.target.value))
+    FilterActions.updateBudget(adjustedRange);
   },
 
   render: function() {
@@ -29,14 +29,10 @@ var BudgetOption = React.createClass({
     var max = this.state.max;
     return (
       <div className='budget-option'>
-        <label className='budget-option-label'>Min
-          <input className='budget-input' type='number'
-                 onChange={this.minChanged} value={min}/>
-        </label>
-        <label className='budget-option-label'>Max
-          <input className='budget-input' type='number'
-                 onChange={this.maxChanged} value={max}/>
-        </label>
+        <ReactSlider onAfterChange={this.updateBudget} withBars defaultValue={[this.state.min, this.state.max]} className="slider">
+                <div id="left-handle" className="my-handle">{this.state.min*20}</div>
+                <div id="right-handle" className="my-handle">{this.state.max*20 + "+"}</div>
+        </ReactSlider>
       </div>
     );
   }

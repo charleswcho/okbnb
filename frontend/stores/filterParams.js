@@ -41,12 +41,8 @@ FilterParamsStore.__onDispatch = function (payload) {
       }
       FilterParamsStore.__emitChange();
       break;
-    case FilterConstants.UPDATE_MIN:
-      _params.budget.min = payload.min;
-      FilterParamsStore.__emitChange();
-      break;
-    case FilterConstants.UPDATE_MAX:
-      _params.budget.max = payload.max;
+    case FilterConstants.UPDATE_BUDGET:
+      _params.budget = payload.budget;
       FilterParamsStore.__emitChange();
       break;
   }
