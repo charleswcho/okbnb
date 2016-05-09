@@ -188,7 +188,7 @@ var Form = React.createClass({
           <input className='profile-input-name-age' type='text' value={name}
                  placeholder='Name' onChange={this.nameChanged}/>
 
-          <input className='profile-input' type={this.state.ageFocused ? 'number' : 'text' }
+          <input className='profile-input-name-age' type={this.state.ageFocused ? 'number' : 'text' }
                  value={age} placeholder={this.state.ageFocused ? null : 'Age' }
                  onFocus={this.ageFocus} onBlur={this.ageUnfocus} onChange={this.ageChanged}/>
         </div>
