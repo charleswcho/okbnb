@@ -26,6 +26,7 @@ class User < ActiveRecord::Base
   validates :email, presence: true, uniqueness: true
 
   has_one :profile
+  has_many :offers
 
   def self.find_by_credentials(email, password)
     user = User.find_by(email: email)

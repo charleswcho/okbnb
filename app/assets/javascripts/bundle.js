@@ -45395,12 +45395,15 @@
 	    });
 	  },
 	
-	  contactProfile: function (user_id) {
+	  contactProfile: function (profile_id, user_id) {
 	    console.log('Sending contact request');
 	    $.ajax({
 	      method: "POST",
 	      url: "api/profiles/contact",
-	      data: { user_id: user_id },
+	      data: {
+	        profile_id: profile_id,
+	        user_id: user_id
+	      },
 	      success: function () {
 	        console.log("Contacted Profile");
 	      }
@@ -54138,7 +54141,11 @@
 	  },
 	
 	  _handleContact: function () {
-	    ClientActions.contactProfile(this.state.profile.user_id);
+	    ClientActions.contactProfile(this.state.profile.id, this.state.user.id);
+	  },
+	
+	  _canContact: function () {
+	    ClientActions.canContact(this.state.profile.id, this.state.user.id);
 	  },
 	
 	  render: function () {
@@ -54152,7 +54159,9 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'profile-detail' },
-	      React.createElement(Title, { profile: this.state.profile, handleContact: this._handleContact }),
+	      React.createElement(Title, { profile: this.state.profile,
+	        user: this.state.user,
+	        handleContact: this._handleContact }),
 	      React.createElement(Description, { user: this.state.user, profile: this.state.profile,
 	        showEditDelete: showEditDelete,
 	        editProfile: this._editProfile,

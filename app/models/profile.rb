@@ -29,6 +29,7 @@ class Profile < ActiveRecord::Base
   validates :pet, inclusion: { in: ["Cat", "Dog", "Bird", "Other"] }
 
   belongs_to :user
+  has_many :offers
 
   def self.in_bounds(bounds)
     self.where("lat < ?", bounds[:northEast][:lat])

@@ -48,7 +48,15 @@ var Detail = React.createClass({
   },
 
   _handleContact: function () {
-    ClientActions.contactProfile(this.state.profile.user_id);
+    ClientActions.contactProfile(
+      this.state.profile.id, this.state.user.id
+    );
+  },
+
+  _canContact: function () {
+    ClientActions.canContact(
+      this.state.profile.id, this.state.user.id
+    );
   },
 
   render: function () {
@@ -61,7 +69,9 @@ var Detail = React.createClass({
 
     return (
       <div className='profile-detail'>
-        <Title profile={this.state.profile} handleContact={this._handleContact}/>
+        <Title profile={this.state.profile}
+               user={this.state.user}
+               handleContact={this._handleContact}/>
         <Description user={this.state.user} profile={this.state.profile}
                      showEditDelete={showEditDelete}
                      editProfile={this._editProfile}

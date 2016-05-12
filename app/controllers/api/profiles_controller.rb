@@ -1,3 +1,5 @@
+require 'byebug'
+
 class Api::ProfilesController < ApplicationController
   def index
     @profiles = Profile.all
@@ -62,8 +64,12 @@ class Api::ProfilesController < ApplicationController
   end
 
   def contact
+    @offer = Offer.create({
+      profile_id: params[:profile_id].to_i,
+      user_id: params[:user_id].to_i
+    })
     @user = User.find(params[:user_id].to_i)
-    UserMailer.offer_notification_email(current_user, @user).deliver
+    UserMailer.offer_notification_email(current_user, @user).deliver_now
     render json: @user
   end
 

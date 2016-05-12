@@ -72,12 +72,15 @@ var ApiUtils = {
     });
   },
 
-  contactProfile: function (user_id) {
+  contactProfile: function (profile_id, user_id) {
     console.log('Sending contact request')
     $.ajax({
       method: "POST",
       url: "api/profiles/contact",
-      data: { user_id: user_id },
+      data: {
+        profile_id: profile_id,
+        user_id: user_id
+      },
       success: function () {
         console.log("Contacted Profile");
       }
