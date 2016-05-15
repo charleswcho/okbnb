@@ -70,7 +70,6 @@ var Detail = React.createClass({
     if (currentUser.id === profile.user_id) {
       showEditDelete = true;
     }
-    console.log(this.state.offered);
 
     return (
       <div className='profile-detail'>

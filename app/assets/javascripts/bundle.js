@@ -54180,7 +54180,6 @@
 	    if (currentUser.id === profile.user_id) {
 	      showEditDelete = true;
 	    }
-	    console.log(this.state.offered);
 	
 	    return React.createElement(
 	      'div',
@@ -55798,11 +55797,9 @@
 	
 	var OfferUtils = {
 	  fetchOffers: function (profile_id) {
-	    console.log("Set Offer request");
 	    $.ajax({
 	      url: "api/offers/" + profile_id,
 	      success: function (offers) {
-	        console.log("Received offers");
 	        ServerActions.receiveOffers(offers);
 	      },
 	      error: function (e) {
