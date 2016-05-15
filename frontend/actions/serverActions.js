@@ -38,6 +38,12 @@ module.exports = {
       profile: profile
     });
   },
+  receiveOffer: function(offer){
+    AppDispatcher.dispatch({
+      actionType: OfferConstants.UPDATE_OFFER,
+      offer: offer
+    });
+  },
   deleteProfile: function(profileId){
     AppDispatcher.dispatch({
       actionType: ProfileConstants.DELETE_PROFILE,

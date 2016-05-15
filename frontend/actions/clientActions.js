@@ -14,5 +14,8 @@ module.exports = {
   createProfile: ApiUtil.createProfile,
   updateProfile: ApiUtil.updateProfile,
   deleteProfile: ApiUtil.deleteProfile,
-  contactProfile: ApiUtil.contactProfile
+  contactProfile: ApiUtil.contactProfile,
+
+  // Offer methods
+  fetchOffer: OfferUtil.fetchOffer
 }

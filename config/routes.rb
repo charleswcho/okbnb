@@ -10,5 +10,6 @@ Rails.application.routes.draw do
         post 'contact'
       end
     end
+    resources :offers, only: [:show]
   end
 end
