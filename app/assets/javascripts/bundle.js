@@ -55046,7 +55046,7 @@
 	    e.preventDefault();
 	
 	    var params = {
-	      user_id: this.state.user_id,
+	      user_id: UserStore.currentUser().id,
 	      profilePicURL: this.state.profilePicURL,
 	      name: this.state.name,
 	      age: this.state.age,
@@ -55090,7 +55090,7 @@
 	  },
 	
 	  render: function () {
-	    var profilePicURL = 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif';
+	    var profilePicURL = 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif';
 	    if (this.state.profilePicURL) {
 	      profilePicURL = this.state.profilePicURL;
 	    }
