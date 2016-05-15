@@ -1,5 +1,3 @@
-require 'byebug'
-
 class Api::OffersController < ApplicationController
   def show
     @profile = Profile.find(params[:id])
