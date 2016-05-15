@@ -1,5 +1,5 @@
 
 
 module.exports = {
-  UPDATE_OFFER: "UPDATE_OFFER"
+  UPDATE_OFFERS: "UPDATE_OFFERS"
 }

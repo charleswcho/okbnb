@@ -59,8 +59,8 @@
 	
 	var Search = __webpack_require__(526);
 	var Detail = __webpack_require__(542);
-	var ProfileForm = __webpack_require__(546);
-	var ProfileEditForm = __webpack_require__(553);
+	var ProfileForm = __webpack_require__(548);
+	var ProfileEditForm = __webpack_require__(555);
 	
 	// These are for testing
 	
@@ -75,6 +75,9 @@
 	
 	var FilterParamsStore = __webpack_require__(528);
 	window.FilterStore = FilterParamsStore;
+	
+	var OfferStore = __webpack_require__(543);
+	window.OfferStore = OfferStore;
 	// These are for testing
 	
 	var App = React.createClass({
@@ -44820,6 +44823,7 @@
 
 	var UserApiUtil = __webpack_require__(493);
 	var ApiUtil = __webpack_require__(501);
+	var OfferUtil = __webpack_require__(558);
 	
 	module.exports = {
 	  // User and Session methods
@@ -44834,7 +44838,10 @@
 	  createProfile: ApiUtil.createProfile,
 	  updateProfile: ApiUtil.updateProfile,
 	  deleteProfile: ApiUtil.deleteProfile,
-	  contactProfile: ApiUtil.contactProfile
+	  contactProfile: ApiUtil.contactProfile,
+	
+	  // Offer methods
+	  fetchOffers: OfferUtil.fetchOffers
 	};
 
 /***/ },
@@ -44910,6 +44917,7 @@
 	var AppDispatcher = __webpack_require__(495);
 	var ProfileConstants = __webpack_require__(499);
 	var UserConstants = __webpack_require__(500);
+	var OfferConstants = __webpack_require__(544);
 	
 	module.exports = {
 	  // User and Session methods
@@ -44941,12 +44949,14 @@
 	      profiles: profiles
 	    });
 	  },
+	
 	  receiveProfile: function (profile) {
 	    AppDispatcher.dispatch({
 	      actionType: ProfileConstants.PROFILE_RECEIVED,
 	      profile: profile
 	    });
 	  },
+	
 	  deleteProfile: function (profileId) {
 	    AppDispatcher.dispatch({
 	      actionType: ProfileConstants.DELETE_PROFILE,
@@ -44971,6 +44981,14 @@
 	    AppDispatcher.dispatch({
 	      actionType: ProfileConstants.UPDATE_LOC,
 	      loc: loc
+	    });
+	  },
+	
+	  // Offer methods
+	  receiveOffers: function (offers) {
+	    AppDispatcher.dispatch({
+	      actionType: OfferConstants.UPDATE_OFFERS,
+	      offers: offers
 	    });
 	  }
 	};
@@ -45322,6 +45340,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var ServerActions = __webpack_require__(494);
+	var OfferUtil = __webpack_require__(558);
 	
 	var ApiUtils = {
 	  fetchProfiles: function (filters) {
@@ -45406,6 +45425,7 @@
 	      },
 	      success: function () {
 	        console.log("Contacted Profile");
+	        OfferUtil.fetchOffers(profile_id);
 	      }
 	    });
 	  }
@@ -54094,10 +54114,11 @@
 	
 	var UserStore = __webpack_require__(502);
 	var ProfileStore = __webpack_require__(527);
+	var OfferStore = __webpack_require__(543);
 	var ClientActions = __webpack_require__(492);
 	
-	var Title = __webpack_require__(543);
-	var Description = __webpack_require__(544);
+	var Title = __webpack_require__(545);
+	var Description = __webpack_require__(546);
 	var Footer = __webpack_require__(525);
 	
 	var Detail = React.createClass({
@@ -54106,20 +54127,24 @@
 	  getInitialState: function () {
 	    return {
 	      user: UserStore.currentUser(),
-	      profile: ProfileStore.find(this.props.params.id)
+	      profile: ProfileStore.find(this.props.params.id),
+	      offered: OfferStore.offered(UserStore.currentUser().id)
 	    };
 	  },
 	
 	  componentDidMount: function () {
 	    this.userListener = UserStore.addListener(this._userChanged);
 	    this.profileListener = ProfileStore.addListener(this._profileChanged);
+	    this.offerListener = OfferStore.addListener(this._offersChanged);
 	    ClientActions.fetchCurrentUser();
 	    ClientActions.fetchProfile(this.props.params.id);
+	    ClientActions.fetchOffers(this.state.profile.id);
 	  },
 	
 	  componentWillUnmount: function () {
 	    this.userListener.remove();
 	    this.profileListener.remove();
+	    this.offerListener.remove();
 	  },
 	
 	  _userChanged: function () {
@@ -54128,6 +54153,10 @@
 	
 	  _profileChanged: function () {
 	    this.setState({ profile: ProfileStore.find(this.props.params.id) });
+	  },
+	
+	  _offersChanged: function () {
+	    this.setState({ offered: OfferStore.offered(UserStore.currentUser().id) });
 	  },
 	
 	  _editProfile: function (e) {
@@ -54141,11 +54170,7 @@
 	  },
 	
 	  _handleContact: function () {
-	    ClientActions.contactProfile(this.state.profile.id, this.state.user.id);
-	  },
-	
-	  _canContact: function () {
-	    ClientActions.canContact(this.state.profile.id, this.state.user.id);
+	    ClientActions.contactProfile(this.state.profile.id, this.state.user.id, ClientActions.fetchOffers(this.state.profile.id));
 	  },
 	
 	  render: function () {
@@ -54155,13 +54180,15 @@
 	    if (currentUser.id === profile.user_id) {
 	      showEditDelete = true;
 	    }
+	    console.log(this.state.offered);
 	
 	    return React.createElement(
 	      'div',
 	      { className: 'profile-detail' },
 	      React.createElement(Title, { profile: this.state.profile,
 	        user: this.state.user,
-	        handleContact: this._handleContact }),
+	        handleContact: this._handleContact,
+	        offered: this.state.offered }),
 	      React.createElement(Description, { user: this.state.user, profile: this.state.profile,
 	        showEditDelete: showEditDelete,
 	        editProfile: this._editProfile,
@@ -54177,17 +54204,78 @@
 /* 543 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var AppDispatcher = __webpack_require__(495);
+	var OfferConstants = __webpack_require__(544);
+	var Store = __webpack_require__(503).Store;
+	
+	var OfferStore = new Store(AppDispatcher);
+	var _offers = {};
+	var _errors = [];
+	
+	function resetOffers(offers) {
+	  _offers = {};
+	  offers.forEach(function (offer) {
+	    _offers[offer.user_id] = offer;
+	  });
+	};
+	
+	setErrors = function (errors) {
+	  _errors = errors;
+	};
+	
+	OfferStore.offered = function (user_id) {
+	  console.log(_offers);
+	  if (_offers[user_id]) {
+	    return true;
+	  }
+	  return false;
+	};
+	
+	OfferStore.errors = function () {
+	  return _errors;
+	};
+	
+	OfferStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case OfferConstants.UPDATE_OFFERS:
+	      resetOffers(payload.offers);
+	      OfferStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = OfferStore;
+
+/***/ },
+/* 544 */
+/***/ function(module, exports) {
+
+	
+	
+	module.exports = {
+	  UPDATE_OFFERS: "UPDATE_OFFERS"
+	};
+
+/***/ },
+/* 545 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1);
 	
+	var emptyProfile = 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif';
 	module.exports = React.createClass({
 	  displayName: 'exports',
 	
-	
 	  render: function () {
 	    var profile = this.props.profile;
-	    var profilePicURL = 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif';
+	    var profilePicURL = emptyProfile;
 	    if (profile.profilePicURL) {
 	      profilePicURL = profile.profilePicURL;
+	    }
+	
+	    var offerText = 'Send Booking Offer';
+	    if (this.props.offered) {
+	      offerText = 'Sent Booking Offer';
 	    }
 	    return React.createElement(
 	      'div',
@@ -54215,19 +54303,19 @@
 	        'button',
 	        { className: 'detail-contact-button',
 	          onClick: this.props.handleContact },
-	        'Send Booking Offer'
+	        offerText
 	      )
 	    );
 	  }
 	});
 
 /***/ },
-/* 544 */
+/* 546 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var Accounting = __webpack_require__(545);
+	var Accounting = __webpack_require__(547);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -54324,7 +54412,7 @@
 	});
 
 /***/ },
-/* 545 */
+/* 547 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -54743,7 +54831,7 @@
 
 
 /***/ },
-/* 546 */
+/* 548 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -54751,8 +54839,8 @@
 	
 	var ProfileStore = __webpack_require__(527);
 	
-	var Header = __webpack_require__(547);
-	var Form = __webpack_require__(548);
+	var Header = __webpack_require__(549);
+	var Form = __webpack_require__(550);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -54810,7 +54898,7 @@
 	});
 
 /***/ },
-/* 547 */
+/* 549 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -54837,7 +54925,7 @@
 	});
 
 /***/ },
-/* 548 */
+/* 550 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -54852,10 +54940,10 @@
 	var GeoUtils = __webpack_require__(541);
 	
 	// Components
-	var SearchStatus = __webpack_require__(549);
-	var Smoker = __webpack_require__(550);
-	var Diet = __webpack_require__(551);
-	var Pet = __webpack_require__(552);
+	var SearchStatus = __webpack_require__(551);
+	var Smoker = __webpack_require__(552);
+	var Diet = __webpack_require__(553);
+	var Pet = __webpack_require__(554);
 	
 	var Form = React.createClass({
 	  displayName: 'Form',
@@ -55087,7 +55175,7 @@
 	module.exports = Form;
 
 /***/ },
-/* 549 */
+/* 551 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55149,7 +55237,7 @@
 	module.exports = SearchStatus;
 
 /***/ },
-/* 550 */
+/* 552 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55204,7 +55292,7 @@
 	module.exports = Smoker;
 
 /***/ },
-/* 551 */
+/* 553 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55276,7 +55364,7 @@
 	module.exports = Diet;
 
 /***/ },
-/* 552 */
+/* 554 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55348,7 +55436,7 @@
 	module.exports = Pet;
 
 /***/ },
-/* 553 */
+/* 555 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55358,8 +55446,8 @@
 	var ProfileStore = __webpack_require__(527);
 	var ClientActions = __webpack_require__(492);
 	
-	var Header = __webpack_require__(554);
-	var EditForm = __webpack_require__(555);
+	var Header = __webpack_require__(556);
+	var EditForm = __webpack_require__(557);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -55411,7 +55499,7 @@
 	});
 
 /***/ },
-/* 554 */
+/* 556 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55438,7 +55526,7 @@
 	});
 
 /***/ },
-/* 555 */
+/* 557 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55455,10 +55543,10 @@
 	var GeoUtils = __webpack_require__(541);
 	
 	// Components
-	var SearchStatus = __webpack_require__(549);
-	var Smoker = __webpack_require__(550);
-	var Diet = __webpack_require__(551);
-	var Pet = __webpack_require__(552);
+	var SearchStatus = __webpack_require__(551);
+	var Smoker = __webpack_require__(552);
+	var Diet = __webpack_require__(553);
+	var Pet = __webpack_require__(554);
 	
 	var Form = React.createClass({
 	  displayName: 'Form',
@@ -55701,6 +55789,30 @@
 	});
 	
 	module.exports = Form;
+
+/***/ },
+/* 558 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ServerActions = __webpack_require__(494);
+	
+	var OfferUtils = {
+	  fetchOffers: function (profile_id) {
+	    console.log("Set Offer request");
+	    $.ajax({
+	      url: "api/offers/" + profile_id,
+	      success: function (offers) {
+	        console.log("Received offers");
+	        ServerActions.receiveOffers(offers);
+	      },
+	      error: function (e) {
+	        console.log(["Error", e.responseText]);
+	      }
+	    });
+	  }
+	};
+	
+	module.exports = OfferUtils;
 
 /***/ }
 /******/ ]);

@@ -30,6 +30,9 @@ window.ProfileStore = ProfileStore;
 
 var FilterParamsStore = require('./stores/filterParams');
 window.FilterStore = FilterParamsStore;
+
+var OfferStore = require('./stores/offerStore');
+window.OfferStore = OfferStore;
 // These are for testing
 
 var App = React.createClass({

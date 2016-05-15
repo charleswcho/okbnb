@@ -1,11 +1,13 @@
+require 'byebug'
+
 class Api::OffersController < ApplicationController
   def show
-    @offer = User.find_by(profile_id: params[:profile_id])
-
-    if (@offer)
-      render json: @offer
+    @profile = Profile.find(params[:id])
+    if (@profile)
+      @offers = @profile.offers
+      render :index
     else
-      render json: @offer.errors.full_messages, status: 400
+      render json: @profile.errors.full_messages, status: 400
     end
   end
 end

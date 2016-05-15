@@ -1,6 +1,7 @@
 var AppDispatcher = require('../dispatcher/dispatcher');
 var ProfileConstants = require('../constants/profileConstants');
 var UserConstants = require('../constants/userConstants');
+var OfferConstants = require('../constants/offerConstants');
 
 module.exports = {
   // User and Session methods
@@ -32,18 +33,14 @@ module.exports = {
       profiles: profiles
     });
   },
+
   receiveProfile: function(profile){
     AppDispatcher.dispatch({
       actionType: ProfileConstants.PROFILE_RECEIVED,
       profile: profile
     });
   },
-  receiveOffer: function(offer){
-    AppDispatcher.dispatch({
-      actionType: OfferConstants.UPDATE_OFFER,
-      offer: offer
-    });
-  },
+
   deleteProfile: function(profileId){
     AppDispatcher.dispatch({
       actionType: ProfileConstants.DELETE_PROFILE,
@@ -68,6 +65,14 @@ module.exports = {
     AppDispatcher.dispatch({
       actionType: ProfileConstants.UPDATE_LOC,
       loc: loc
+    });
+  },
+
+  // Offer methods
+  receiveOffers: function(offers){
+    AppDispatcher.dispatch({
+      actionType: OfferConstants.UPDATE_OFFERS,
+      offers: offers
     });
   }
 };

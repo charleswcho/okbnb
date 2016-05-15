@@ -3,6 +3,7 @@ var hashHistory = require('react-router').hashHistory;
 
 var UserStore = require('../stores/userStore');
 var ProfileStore = require('../stores/profileStore');
+var OfferStore = require('../stores/offerStore');
 var ClientActions = require('../actions/clientActions');
 
 var Title = require('./detailsPageComponents/title');
@@ -13,20 +14,24 @@ var Detail = React.createClass({
   getInitialState: function () {
     return {
       user: UserStore.currentUser(),
-      profile: ProfileStore.find(this.props.params.id)
+      profile: ProfileStore.find(this.props.params.id),
+      offered: OfferStore.offered(UserStore.currentUser().id)
     };
   },
 
   componentDidMount: function () {
     this.userListener = UserStore.addListener(this._userChanged);
     this.profileListener = ProfileStore.addListener(this._profileChanged);
+    this.offerListener = OfferStore.addListener(this._offersChanged);
     ClientActions.fetchCurrentUser();
     ClientActions.fetchProfile(this.props.params.id);
+    ClientActions.fetchOffers(this.state.profile.id);
   },
 
   componentWillUnmount: function () {
     this.userListener.remove();
     this.profileListener.remove();
+    this.offerListener.remove();
   },
 
   _userChanged: function () {
@@ -35,6 +40,10 @@ var Detail = React.createClass({
 
   _profileChanged: function () {
     this.setState({ profile: ProfileStore.find(this.props.params.id) });
+  },
+
+  _offersChanged: function () {
+    this.setState({ offered: OfferStore.offered(UserStore.currentUser().id) });
   },
 
   _editProfile: function (e) {
@@ -49,13 +58,8 @@ var Detail = React.createClass({
 
   _handleContact: function () {
     ClientActions.contactProfile(
-      this.state.profile.id, this.state.user.id
-    );
-  },
-
-  _canContact: function () {
-    ClientActions.canContact(
-      this.state.profile.id, this.state.user.id
+      this.state.profile.id, this.state.user.id,
+      ClientActions.fetchOffers(this.state.profile.id)
     );
   },
 
@@ -66,12 +70,14 @@ var Detail = React.createClass({
     if (currentUser.id === profile.user_id) {
       showEditDelete = true;
     }
+    console.log(this.state.offered);
 
     return (
       <div className='profile-detail'>
         <Title profile={this.state.profile}
                user={this.state.user}
-               handleContact={this._handleContact}/>
+               handleContact={this._handleContact}
+               offered={this.state.offered}/>
         <Description user={this.state.user} profile={this.state.profile}
                      showEditDelete={showEditDelete}
                      editProfile={this._editProfile}

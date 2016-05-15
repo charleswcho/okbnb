@@ -3,19 +3,26 @@ var OfferConstants = require('../constants/offerConstants');
 var Store = require('flux/utils').Store;
 
 var OfferStore = new Store(AppDispatcher);
-var _currentOffer = {};
+var _offers = {};
 var _errors = [];
 
-var setCurrentOffer = function(offer) {
-  _currentOffer = offer;
+function resetOffers (offers) {
+  _offers = {};
+  offers.forEach(function (offer) {
+    _offers[offer.user_id] = offer;
+  });
 };
 
 setErrors = function (errors) {
   _errors = errors;
 };
 
-OfferStore.currentOffer = function () {
-  return _currentOffer;
+OfferStore.offered = function (user_id) {
+  console.log(_offers);
+  if (_offers[user_id]) {
+    return true;
+  }
+  return false;
 };
 
 OfferStore.errors = function () {
@@ -24,8 +31,8 @@ OfferStore.errors = function () {
 
 OfferStore.__onDispatch = function (payload) {
   switch(payload.actionType) {
-    case OfferConstants.UPDATE_OFFER:
-      setCurrentOffer(payload.offer);
+    case OfferConstants.UPDATE_OFFERS:
+      resetOffers(payload.offers);
       OfferStore.__emitChange();
       break;
   }

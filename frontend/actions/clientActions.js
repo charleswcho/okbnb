@@ -1,5 +1,6 @@
 var UserApiUtil = require('../util/userApiUtil');
 var ApiUtil = require('../util/apiUtils');
+var OfferUtil = require('../util/offerUtils');
 
 module.exports = {
   // User and Session methods
@@ -17,5 +18,5 @@ module.exports = {
   contactProfile: ApiUtil.contactProfile,
 
   // Offer methods
-  fetchOffer: OfferUtil.fetchOffer
+  fetchOffers: OfferUtil.fetchOffers
 }

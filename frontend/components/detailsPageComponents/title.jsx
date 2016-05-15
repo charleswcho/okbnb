@@ -1,12 +1,17 @@
 var React = require('react');
 
+var emptyProfile = 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif';
 module.exports = React.createClass({
-
   render: function () {
     var profile = this.props.profile;
-    var profilePicURL = 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif';
+    var profilePicURL = emptyProfile;
     if (profile.profilePicURL) {
       profilePicURL = profile.profilePicURL;
+    }
+
+    var offerText = 'Send Booking Offer';
+    if (this.props.offered) {
+      offerText = 'Sent Booking Offer';
     }
     return (
       <div className='detail-title'>
@@ -19,7 +24,7 @@ module.exports = React.createClass({
         </div>
         <button className='detail-contact-button'
                 onClick={this.props.handleContact}>
-                { 'Send Booking Offer' }
+                { offerText }
         </button>
       </div>
     );

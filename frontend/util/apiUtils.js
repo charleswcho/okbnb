@@ -1,4 +1,5 @@
 var ServerActions = require('../actions/serverActions');
+var OfferUtil = require('./offerUtils');
 
 var ApiUtils = {
   fetchProfiles: function (filters) {
@@ -83,6 +84,7 @@ var ApiUtils = {
       },
       success: function () {
         console.log("Contacted Profile");
+        OfferUtil.fetchOffers(profile_id);
       }
     });
   }
