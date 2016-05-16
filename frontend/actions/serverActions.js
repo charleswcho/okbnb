@@ -21,10 +21,16 @@ module.exports = {
 
   handleError: function(error) {
 		AppDispatcher.dispatch({
-			actionType: UserConstants.ERROR,
-			errors: error.responseJSON.errors
+			actionType: UserConstants.ERRORS,
+			errors: error.responseJSON
 		});
 	},
+
+  clearErrors: function () {
+    AppDispatcher.dispatch({
+      actionType: UserConstants.CLEAR_ERRORS
+    });
+  },
 
   // Profile methods
   receiveProfiles: function(profiles){

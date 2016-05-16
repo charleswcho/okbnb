@@ -25507,8 +25507,25 @@
 	  getInitialState: function () {
 	    return {
 	      showSignUpModal: false,
-	      showSignInModal: false
+	      showSignInModal: false,
+	      errors: UserStore.errors()
 	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.errorsListener = UserStore.addListener(this._errorsChanged);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.errorsListener.remove();
+	  },
+	
+	  _errorsChanged: function () {
+	    this.setState({ errors: UserStore.errors() });
+	  },
+	
+	  clearErrors: function () {
+	    ClientActions.clearErrors();
 	  },
 	
 	  openSignUpModal: function () {
@@ -25585,15 +25602,17 @@
 	      { className: 'navBar' },
 	      React.createElement(
 	        Modal,
-	        { show: this.state.showSignUpModal, onHide: this.closeSignUpModal },
+	        { show: this.state.showSignUpModal, onHide: this.closeSignUpModal,
+	          onExited: this.clearErrors },
 	        React.createElement(SignUpForm, { closeSignUpModal: this.closeSignUpModal,
-	          errors: this.state.authErrors })
+	          errors: this.state.errors })
 	      ),
 	      React.createElement(
 	        Modal,
-	        { show: this.state.showSignInModal, onHide: this.closeSignInModal },
+	        { show: this.state.showSignInModal, onHide: this.closeSignInModal,
+	          onExited: this.clearErrors },
 	        React.createElement(SignInForm, { closeSignInModal: this.closeSignInModal,
-	          errors: this.state.authErrors })
+	          errors: this.state.errors })
 	      ),
 	      React.createElement(
 	        Navbar,
@@ -44831,6 +44850,7 @@
 	  signIn: UserApiUtil.signIn,
 	  signOut: UserApiUtil.signOut,
 	  fetchCurrentUser: UserApiUtil.fetchCurrentUser,
+	  clearErrors: UserApiUtil.clearErrors,
 	
 	  // Profile methods
 	  fetchProfiles: ApiUtil.fetchProfiles,
@@ -44862,7 +44882,6 @@
 	      },
 	      error: function (e) {
 	        ServerActions.handleError(e);
-	        console.log(["Error", e.responseText]);
 	      }
 	    });
 	  },
@@ -44877,7 +44896,6 @@
 	      },
 	      error: function (e) {
 	        ServerActions.handleError(e);
-	        console.log(["Error", e.responseText]);
 	      }
 	    });
 	  },
@@ -44891,7 +44909,6 @@
 	      },
 	      error: function (e) {
 	        ServerActions.handleError(e);
-	        console.log(["Error", e.responseText]);
 	      }
 	    });
 	  },
@@ -44904,9 +44921,12 @@
 	      },
 	      error: function (e) {
 	        ServerActions.handleError(e);
-	        console.log(["Error", e.responseText]);
 	      }
 	    });
+	  },
+	
+	  clearErrors: function () {
+	    ServerActions.clearErrors();
 	  }
 	};
 
@@ -44937,8 +44957,14 @@
 	
 	  handleError: function (error) {
 	    AppDispatcher.dispatch({
-	      actionType: UserConstants.ERROR,
-	      errors: error.responseJSON.errors
+	      actionType: UserConstants.ERRORS,
+	      errors: error.responseJSON
+	    });
+	  },
+	
+	  clearErrors: function () {
+	    AppDispatcher.dispatch({
+	      actionType: UserConstants.CLEAR_ERRORS
 	    });
 	  },
 	
@@ -45332,7 +45358,8 @@
 	module.exports = {
 	  RECEIVE_CURRENT_USER: "RECEIVE_CURRENT_USER",
 	  REMOVE_CURRENT_USER: "REMOVE_CURRENT_USER",
-	  ERROR: "ERROR"
+	  ERRORS: "ERRORS",
+	  CLEAR_ERRORS: "CLEAR_ERRORS"
 	};
 
 /***/ },
@@ -45453,8 +45480,14 @@
 	  _currentUser = {};
 	};
 	
-	setErrors = function (errors) {
+	var setErrors = function (errors) {
+	  _errors = [];
 	  _errors = errors;
+	  console.log(_errors);
+	};
+	
+	var clearErrors = function () {
+	  _errors = {};
 	};
 	
 	UserStore.currentUser = function () {
@@ -45475,8 +45508,12 @@
 	      deleteCurrentUser();
 	      UserStore.__emitChange();
 	      break;
-	    case UserConstants.ERROR:
+	    case UserConstants.ERRORS:
 	      setErrors(payload.errors);
+	      UserStore.__emitChange();
+	      break;
+	    case UserConstants.CLEAR_ERRORS:
+	      clearErrors();
 	      UserStore.__emitChange();
 	      break;
 	  }
@@ -51941,8 +51978,7 @@
 	  getInitialState: function () {
 	    return {
 	      email: '',
-	      password: '',
-	      errors: this.props.errors
+	      password: ''
 	    };
 	  },
 	
@@ -51966,12 +52002,16 @@
 	      email: this.state.email,
 	      password: this.state.password
 	    });
-	    this.props.closeSignUpModal();
+	    if (!this.props.errors) {
+	      this.props.closeSignUpModal();
+	    }
 	  },
 	
 	  render: function () {
 	    var email = this.state.email;
 	    var password = this.state.password;
+	    var error1 = this.props.errors[1];
+	    var error2 = this.props.errors[0];
 	
 	    return React.createElement(
 	      'form',
@@ -51985,6 +52025,16 @@
 	        placeholder: 'Email', onInput: this.emailChanged }),
 	      React.createElement('input', { className: 'auth-input', type: 'password', value: password,
 	        placeholder: 'Password', onInput: this.passwordChanged }),
+	      React.createElement(
+	        'div',
+	        { className: 'errors' },
+	        error1
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'errors' },
+	        error2
+	      ),
 	      React.createElement(
 	        'button',
 	        { className: 'auth-submit', type: 'submit' },
@@ -52010,8 +52060,7 @@
 	  getInitialState: function () {
 	    return {
 	      email: '',
-	      password: '',
-	      errors: this.props.errors
+	      password: ''
 	    };
 	  },
 	
@@ -52035,7 +52084,9 @@
 	      email: this.state.email,
 	      password: this.state.password
 	    });
-	    this.props.closeSignInModal();
+	    if (!this.props.errors) {
+	      this.props.closeSignInModal();
+	    }
 	  },
 	
 	  demoSignIn: function (e) {
@@ -52050,7 +52101,8 @@
 	  render: function () {
 	    var email = this.state.email;
 	    var password = this.state.password;
-	
+	    var errors = this.props.errors.errors;
+	    console.log(errors);
 	    return React.createElement(
 	      'form',
 	      { className: 'auth-form', onSubmit: this.handleSubmit },
@@ -52063,6 +52115,11 @@
 	        placeholder: 'Email', onInput: this.emailChanged }),
 	      React.createElement('input', { className: 'auth-input', type: 'password', value: password,
 	        placeholder: 'Password', onInput: this.passwordChanged }),
+	      React.createElement(
+	        'div',
+	        { className: 'errors' },
+	        errors
+	      ),
 	      React.createElement(
 	        'a',
 	        { className: 'demo-link', onClick: this.demoSignIn },

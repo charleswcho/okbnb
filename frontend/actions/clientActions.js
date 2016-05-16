@@ -8,6 +8,7 @@ module.exports = {
   signIn: UserApiUtil.signIn,
   signOut: UserApiUtil.signOut,
   fetchCurrentUser: UserApiUtil.fetchCurrentUser,
+  clearErrors: UserApiUtil.clearErrors,
 
   // Profile methods
   fetchProfiles: ApiUtil.fetchProfiles,

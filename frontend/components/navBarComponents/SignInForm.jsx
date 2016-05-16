@@ -6,8 +6,7 @@ var SignInForm = React.createClass({
   getInitialState: function() {
     return {
       email: '',
-      password: '',
-      errors: this.props.errors
+      password: ''
     };
   },
 
@@ -31,7 +30,9 @@ var SignInForm = React.createClass({
       email: this.state.email,
       password: this.state.password
     });
-    this.props.closeSignInModal()
+    if (!this.props.errors) {
+      this.props.closeSignInModal()
+    }
   },
 
   demoSignIn: function (e) {
@@ -46,7 +47,8 @@ var SignInForm = React.createClass({
   render: function() {
     var email = this.state.email;
     var password = this.state.password;
-
+    var errors = this.props.errors.errors;
+    console.log(errors);
     return (
       <form className='auth-form' onSubmit={this.handleSubmit}>
         <h2 className='auth-header'>Sign In</h2>
@@ -55,7 +57,8 @@ var SignInForm = React.createClass({
 
         <input className='auth-input' type='password' value={password}
                placeholder='Password' onInput={this.passwordChanged} />
-             <a className='demo-link' onClick={this.demoSignIn}>demo account</a>
+        <div className='errors'>{errors}</div>
+        <a className='demo-link' onClick={this.demoSignIn}>demo account</a>
         <button className='auth-submit' type='submit'>Sign In</button>
       </form>
     )

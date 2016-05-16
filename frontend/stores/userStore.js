@@ -14,8 +14,14 @@ var deleteCurrentUser = function() {
   _currentUser = {};
 };
 
-setErrors = function (errors) {
+var setErrors = function (errors) {
+  _errors = [];
   _errors = errors;
+  console.log(_errors);
+};
+
+var clearErrors = function () {
+  _errors = {};
 };
 
 UserStore.currentUser = function () {
@@ -36,8 +42,12 @@ UserStore.__onDispatch = function (payload) {
       deleteCurrentUser();
       UserStore.__emitChange();
       break;
-    case UserConstants.ERROR:
+    case UserConstants.ERRORS:
       setErrors(payload.errors);
+      UserStore.__emitChange();
+      break;
+    case UserConstants.CLEAR_ERRORS:
+      clearErrors();
       UserStore.__emitChange();
       break;
   }

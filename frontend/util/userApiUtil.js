@@ -12,7 +12,6 @@ module.exports = {
       },
       error: function (e) {
         ServerActions.handleError(e)
-        console.log(["Error", e.responseText]);
       }
     });
   },
@@ -27,7 +26,6 @@ module.exports = {
       },
       error: function (e) {
         ServerActions.handleError(e)
-        console.log(["Error", e.responseText]);
       }
     });
   },
@@ -41,7 +39,6 @@ module.exports = {
       },
       error: function (e) {
         ServerActions.handleError(e)
-        console.log(["Error", e.responseText]);
       }
     });
   },
@@ -53,9 +50,12 @@ module.exports = {
         ServerActions.receiveCurrentUser(currentUser);
       },
       error: function (e) {
-        ServerActions.handleError(e)
-        console.log(["Error", e.responseText]);
+        ServerActions.handleError(e);
       }
     });
+  },
+
+  clearErrors: function () {
+    ServerActions.clearErrors();
   }
 }

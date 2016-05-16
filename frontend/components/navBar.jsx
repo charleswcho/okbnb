@@ -21,8 +21,25 @@ module.exports = React.createClass({
   getInitialState: function () {
     return {
       showSignUpModal: false,
-      showSignInModal: false
+      showSignInModal: false,
+      errors: UserStore.errors()
     }
+  },
+
+  componentDidMount: function () {
+    this.errorsListener = UserStore.addListener(this._errorsChanged);
+  },
+
+  componentWillUnmount: function () {
+    this.errorsListener.remove();
+  },
+
+  _errorsChanged: function () {
+    this.setState({ errors: UserStore.errors() });
+  },
+
+  clearErrors: function () {
+    ClientActions.clearErrors();
   },
 
   openSignUpModal: function () {
@@ -59,7 +76,8 @@ module.exports = React.createClass({
         <Nav pullRight>
           <NavItem id='create-profile'
                    onClick={this.handleCreateProfile}>Create a Profile</NavItem>
-                 <NavItem className='' id='email'>{this.state.currentUser.email}</NavItem>
+          <NavItem className='' id='email'>{this.state.currentUser.email}
+          </NavItem>
           <NavItem className='' onClick={this.signOut}>Sign Out</NavItem>
         </Nav>
       )
@@ -76,14 +94,16 @@ module.exports = React.createClass({
   render: function () {
     return (
       <div className='navBar'>
-        <Modal show={this.state.showSignUpModal} onHide={this.closeSignUpModal}>
+        <Modal show={this.state.showSignUpModal} onHide={this.closeSignUpModal}
+               onExited={this.clearErrors}>
           <SignUpForm closeSignUpModal={this.closeSignUpModal}
-                      errors={this.state.authErrors}/>
+                      errors={this.state.errors}/>
         </Modal>
 
-        <Modal show={this.state.showSignInModal} onHide={this.closeSignInModal}>
+        <Modal show={this.state.showSignInModal} onHide={this.closeSignInModal}
+               onExited={this.clearErrors}>
           <SignInForm closeSignInModal={this.closeSignInModal}
-                      errors={this.state.authErrors}/>
+                      errors={this.state.errors}/>
         </Modal>
 
         <Navbar>
