@@ -3,7 +3,7 @@ var UserStore = require('../stores/userStore');
 
 var currentUserState = {
   getInitialState: function () {
-    this.setState({
+    this.setState ({
       currentUser: UserStore.currentUser()
     });
   },
@@ -20,7 +20,7 @@ var currentUserState = {
   updateUser: function () {
     this.setState({
       currentUser: UserStore.currentUser()
-    })
+    });
   }
 }
 

@@ -25492,7 +25492,6 @@
 	    NavItem = __webpack_require__(226).NavItem;
 	
 	var CurrentUserStateMixin = __webpack_require__(491);
-	var Errors = __webpack_require__(523);
 	
 	var ClientActions = __webpack_require__(492);
 	var ServerActions = __webpack_require__(525);
@@ -25506,13 +25505,25 @@
 	  displayName: 'NavBar',
 	
 	  mixins: [CurrentUserStateMixin],
-	  mixins: [Errors],
 	
 	  getInitialState: function () {
 	    return {
 	      showSignUpModal: false,
-	      showSignInModal: false
+	      showSignInModal: false,
+	      errors: ErrorStore.errors()
 	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.errorsListener = ErrorStore.addListener(this._errorsChanged);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.errorsListener.remove();
+	  },
+	
+	  _errorsChanged: function () {
+	    this.setState({ errors: ErrorStore.errors() });
 	  },
 	
 	  clearErrors: function () {
@@ -51985,35 +51996,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 523 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var ClientActions = __webpack_require__(492);
-	var ErrorStore = __webpack_require__(524);
-	
-	var Errors = {
-	  getInitialState: function () {
-	    return {
-	      errors: ErrorStore.errors()
-	    };
-	  },
-	
-	  componentDidMount: function () {
-	    this.errorsListener = ErrorStore.addListener(this._errorsChanged);
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.errorsListener.remove();
-	  },
-	
-	  _errorsChanged: function () {
-	    this.setState({ errors: ErrorStore.errors() });
-	  }
-	};
-	
-	module.exports = Errors;
-
-/***/ },
+/* 523 */,
 /* 524 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -52295,7 +52278,6 @@
 	    var email = this.state.email;
 	    var password = this.state.password;
 	    var errors = this.props.errors.errors;
-	    console.log(errors);
 	    return React.createElement(
 	      'form',
 	      { className: 'auth-form', onSubmit: this.handleSubmit },

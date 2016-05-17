@@ -48,7 +48,6 @@ var SignInForm = React.createClass({
     var email = this.state.email;
     var password = this.state.password;
     var errors = this.props.errors.errors;
-    console.log(errors);
     return (
       <form className='auth-form' onSubmit={this.handleSubmit}>
         <h2 className='auth-header'>Sign In</h2>

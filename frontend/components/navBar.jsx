@@ -8,7 +8,6 @@ var Navbar = require('react-bootstrap').Navbar,
     NavItem = require('react-bootstrap').NavItem;
 
 var CurrentUserStateMixin = require('../mixins/currentUserState');
-var Errors = require('../mixins/errors');
 
 var ClientActions = require('../actions/clientActions');
 var ServerActions = require('../actions/ServerActions');
@@ -20,13 +19,25 @@ var SignInForm = require('./navBarComponents/signInForm');
 
 var NavBar = React.createClass({
   mixins: [CurrentUserStateMixin],
-  mixins: [Errors],
 
   getInitialState: function () {
     return {
       showSignUpModal: false,
-      showSignInModal: false
+      showSignInModal: false,
+      errors: ErrorStore.errors()
     }
+  },
+
+  componentDidMount: function () {
+    this.errorsListener = ErrorStore.addListener(this._errorsChanged);
+  },
+
+  componentWillUnmount: function () {
+    this.errorsListener.remove();
+  },
+
+  _errorsChanged: function () {
+    this.setState({ errors: ErrorStore.errors() });
   },
 
   clearErrors: function () {
