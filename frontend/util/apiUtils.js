@@ -12,7 +12,7 @@ var ApiUtils = {
         ServerActions.receiveProfiles(profiles)
       },
       error: function (e) {
-        console.log(["Error", e.responseText]);
+        ServerActions.handleError(e)
       },
     });
   },
@@ -24,12 +24,12 @@ var ApiUtils = {
         ServerActions.receiveProfile(profile)
       },
       error: function (e) {
-        console.log(["Error", e.responseText]);
+        ServerActions.handleError(e)
       },
     });
   },
 
-  createProfile: function (profileParams) {
+  createProfile: function (profileParams, cb) {
     $.ajax({
       method: "POST",
       url: "api/profiles",
@@ -37,6 +37,7 @@ var ApiUtils = {
       success: function (profile) {
         console.log("Created new Profile");
         ServerActions.receiveProfile(profile)
+        cb(profile.id);
       },
       error: function (e) {
         ServerActions.handleError(e)
@@ -54,7 +55,7 @@ var ApiUtils = {
         ServerActions.receiveProfile(profile)
       },
       error: function (e) {
-        console.log(["Error", e.responseText]);
+        ServerActions.handleError(e)
       },
     });
   },
@@ -68,7 +69,7 @@ var ApiUtils = {
         ServerActions.deleteProfile(profile.id)
       },
       error: function (e) {
-        console.log(["Error", e.responseText]);
+        ServerActions.handleError(e)
       },
     });
   },

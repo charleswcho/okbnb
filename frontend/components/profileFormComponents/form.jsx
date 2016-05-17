@@ -133,8 +133,7 @@ var Form = React.createClass({
 
     console.log(params)
 
-    GeoUtils.parseAddress(params, ClientActions.createProfile)
-    this.props.createdProfile();
+    GeoUtils.parseAddress(params, ClientActions.createProfile, this.props.createdProfile)
   },
 
   ageFocus: function () {
@@ -171,6 +170,10 @@ var Form = React.createClass({
     var description = this.state.description;
     var location = this.state.location;
     var budget = this.state.budget;
+
+    var errors = this.props.errors.map(function (error) {
+      return <div className='errors'>{error}</div>
+    });
 
     return (
       <form className='profile-form' onSubmit={this.handleSubmit}>
@@ -221,6 +224,7 @@ var Form = React.createClass({
                  value={budget} placeholder={this.state.budgetFocused ? null : 'Budget' }
                  onFocus={this.budgetFocus} onBlur={this.ageUnfocus} onChange={this.budgetChanged} />
         </div>
+        <div className='errors-list'>{errors}</div>
 
         <button className='profile-submit' type='submit'>Continue</button>
       </form>

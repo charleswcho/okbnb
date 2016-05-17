@@ -45412,7 +45412,7 @@
 	        ServerActions.receiveProfiles(profiles);
 	      },
 	      error: function (e) {
-	        console.log(["Error", e.responseText]);
+	        ServerActions.handleError(e);
 	      }
 	    });
 	  },
@@ -45424,12 +45424,12 @@
 	        ServerActions.receiveProfile(profile);
 	      },
 	      error: function (e) {
-	        console.log(["Error", e.responseText]);
+	        ServerActions.handleError(e);
 	      }
 	    });
 	  },
 	
-	  createProfile: function (profileParams) {
+	  createProfile: function (profileParams, cb) {
 	    $.ajax({
 	      method: "POST",
 	      url: "api/profiles",
@@ -45437,6 +45437,7 @@
 	      success: function (profile) {
 	        console.log("Created new Profile");
 	        ServerActions.receiveProfile(profile);
+	        cb(profile.id);
 	      },
 	      error: function (e) {
 	        ServerActions.handleError(e);
@@ -45454,7 +45455,7 @@
 	        ServerActions.receiveProfile(profile);
 	      },
 	      error: function (e) {
-	        console.log(["Error", e.responseText]);
+	        ServerActions.handleError(e);
 	      }
 	    });
 	  },
@@ -45468,7 +45469,7 @@
 	        ServerActions.deleteProfile(profile.id);
 	      },
 	      error: function (e) {
-	        console.log(["Error", e.responseText]);
+	        ServerActions.handleError(e);
 	      }
 	    });
 	  },
@@ -51996,7 +51997,35 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 523 */,
+/* 523 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ClientActions = __webpack_require__(492);
+	var ErrorStore = __webpack_require__(524);
+	
+	var Errors = {
+	  getInitialState: function () {
+	    return {
+	      errors: ErrorStore.errors()
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.errorsListener = ErrorStore.addListener(this._errorsChanged);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.errorsListener.remove();
+	  },
+	
+	  _errorsChanged: function () {
+	    this.setState({ errors: ErrorStore.errors() });
+	  }
+	};
+	
+	module.exports = Errors;
+
+/***/ },
 /* 524 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -54307,14 +54336,14 @@
 
 	
 	var geoUtils = {
-	  parseAddress: function (params, callback) {
+	  parseAddress: function (params, callback, cbArg) {
 	    var self = this;
 	    var geocoder = new google.maps.Geocoder();
 	    geocoder.geocode({ "address": params.location }, function (results, status) {
 	      if (status === google.maps.GeocoderStatus.OK) {
 	        params.lat = results[0].geometry.location.lat();
 	        params.lng = results[0].geometry.location.lng();
-	        callback({ profile: params });
+	        callback({ profile: params }, cbArg);
 	      } else {
 	        callback({ profile: params });
 	        console.log(status);
@@ -55065,11 +55094,15 @@
 	var Header = __webpack_require__(554);
 	var Form = __webpack_require__(555);
 	
+	var Errors = __webpack_require__(523);
+	
 	module.exports = React.createClass({
 	  displayName: 'exports',
 	
-	  createdProfile: function () {
-	    hashHistory.push({ pathname: 'search/' + ProfileStore.currentLoc() });
+	  mixins: [Errors],
+	
+	  createdProfile: function (id) {
+	    hashHistory.push({ pathname: 'profile/' + id });
 	  },
 	
 	  render: function () {
@@ -55080,7 +55113,8 @@
 	        'div',
 	        { className: 'profile-form-container' },
 	        React.createElement(Header, null),
-	        React.createElement(Form, { createdProfile: this.createdProfile })
+	        React.createElement(Form, { createdProfile: this.createdProfile,
+	          errors: this.state.errors })
 	      ),
 	      React.createElement(
 	        'div',
@@ -55285,8 +55319,7 @@
 	
 	    console.log(params);
 	
-	    GeoUtils.parseAddress(params, ClientActions.createProfile);
-	    this.props.createdProfile();
+	    GeoUtils.parseAddress(params, ClientActions.createProfile, this.props.createdProfile);
 	  },
 	
 	  ageFocus: function () {
@@ -55323,6 +55356,14 @@
 	    var description = this.state.description;
 	    var location = this.state.location;
 	    var budget = this.state.budget;
+	
+	    var errors = this.props.errors.map(function (error) {
+	      return React.createElement(
+	        'div',
+	        { className: 'errors' },
+	        error
+	      );
+	    });
 	
 	    return React.createElement(
 	      'form',
@@ -55385,6 +55426,11 @@
 	        React.createElement('input', { className: 'profile-input', type: this.state.budgetFocused ? 'number' : 'text',
 	          value: budget, placeholder: this.state.budgetFocused ? null : 'Budget',
 	          onFocus: this.budgetFocus, onBlur: this.ageUnfocus, onChange: this.budgetChanged })
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'errors-list' },
+	        errors
 	      ),
 	      React.createElement(
 	        'button',

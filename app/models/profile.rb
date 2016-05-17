@@ -21,13 +21,13 @@
 #
 
 class Profile < ActiveRecord::Base
-  validates :user_id, :profilePicURL, :name, :description,
-            :location, :lat, :lng, :search_status, :diet, :pet, :budget, presence: true
-  validates :search_status, inclusion: { in: ["Active", "Passive", "Don't contact"] }
-  validates :smoker, inclusion: { in: [true, false] }
-  validates :diet, inclusion: { in: ["Vege", "Vegan", "Gluten", "Other"] }
-  validates :pet, inclusion: { in: ["Cat", "Dog", "Bird", "Other"] }
-
+  validates :user_id, :profilePicURL, :name, :age, :description,
+            :location, :search_status, :smoker, :diet, :pet, :budget, presence: true
+  # validates :search_status, inclusion: { in: ["Active", "Passive", "Don't contact"] }
+  # validates :smoker, inclusion: { in: [true, false] }
+  # validates :diet, inclusion: { in: ["Vege", "Vegan", "Gluten", "Other"] }
+  # validates :pet, inclusion: { in: ["Cat", "Dog", "Bird", "Other"] }
+  validates :user_id, uniqueness: { message: 'can only have one profile'}
   belongs_to :user
   has_many :offers
 

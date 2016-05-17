@@ -7,9 +7,13 @@ var ErrorStore = require('../stores/errorStore');
 var Header = require('./profileFormComponents/header');
 var Form = require('./profileFormComponents/form');
 
+var Errors = require('../mixins/errors');
+
 module.exports = React.createClass({
-  createdProfile: function () {
-    hashHistory.push({ pathname: 'search/' + ProfileStore.currentLoc() })
+  mixins: [Errors],
+
+  createdProfile: function (id) {
+    hashHistory.push({pathname: 'profile/' + id})
   },
 
   render: function () {
@@ -17,7 +21,8 @@ module.exports = React.createClass({
       <div className='new-profile-page'>
         <div className='profile-form-container'>
           <Header/>
-          <Form createdProfile={this.createdProfile}/>
+          <Form createdProfile={this.createdProfile}
+                errors={this.state.errors}/>
         </div>
         <div className='key-features'>
           <div className='key-feature'>
