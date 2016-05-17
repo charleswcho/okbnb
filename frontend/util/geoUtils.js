@@ -9,6 +9,7 @@ var geoUtils = {
         params.lng = results[0].geometry.location.lng();
         callback({ profile: params });
       } else {
+        callback({ profile: params });
         console.log(status)
       }
     });

@@ -2,6 +2,7 @@ var React = require('react');
 var hashHistory = require('react-router').hashHistory;
 
 var ProfileStore = require('../stores/profileStore');
+var ErrorStore = require('../stores/errorStore');
 
 var Header = require('./profileFormComponents/header');
 var Form = require('./profileFormComponents/form');

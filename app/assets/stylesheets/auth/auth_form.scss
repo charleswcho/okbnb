@@ -36,8 +36,13 @@
   margin-top: 10px;
   border: none;
   border-radius: 2px;
+  outline: none;
 }
 
 .auth-submit:hover {
-  background-color: #577ed5;
+  background-color: #4c7bd9;
+}
+
+.auth-submit:active {
+  background-color: #376bd5;
 }

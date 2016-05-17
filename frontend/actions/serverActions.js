@@ -2,6 +2,7 @@ var AppDispatcher = require('../dispatcher/dispatcher');
 var ProfileConstants = require('../constants/profileConstants');
 var UserConstants = require('../constants/userConstants');
 var OfferConstants = require('../constants/offerConstants');
+var ErrorConstants = require('../constants/errorConstants');
 
 module.exports = {
   // User and Session methods
@@ -29,6 +30,19 @@ module.exports = {
   clearErrors: function () {
     AppDispatcher.dispatch({
       actionType: UserConstants.CLEAR_ERRORS
+    });
+  },
+
+  handleError: function(error) {
+    AppDispatcher.dispatch({
+      actionType: ErrorConstants.ERRORS,
+      errors: error.responseJSON
+    });
+  },
+
+  clearErrors: function () {
+    AppDispatcher.dispatch({
+      actionType: ErrorConstants.CLEAR_ERRORS
     });
   },
 

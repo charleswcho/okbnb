@@ -55,28 +55,28 @@
 	
 	// Components
 	var NavBar = __webpack_require__(225);
-	var SplashScreen = __webpack_require__(522);
+	var SplashScreen = __webpack_require__(528);
 	
-	var Search = __webpack_require__(526);
-	var Detail = __webpack_require__(542);
-	var ProfileForm = __webpack_require__(548);
-	var ProfileEditForm = __webpack_require__(555);
+	var Search = __webpack_require__(532);
+	var Detail = __webpack_require__(548);
+	var ProfileForm = __webpack_require__(553);
+	var ProfileEditForm = __webpack_require__(560);
 	
 	// These are for testing
 	
 	var ClientActions = __webpack_require__(492);
 	window.ClientActions = ClientActions;
 	
-	var UserStore = __webpack_require__(502);
+	var UserStore = __webpack_require__(505);
 	window.UserStore = UserStore;
 	
-	var ProfileStore = __webpack_require__(527);
+	var ProfileStore = __webpack_require__(533);
 	window.ProfileStore = ProfileStore;
 	
-	var FilterParamsStore = __webpack_require__(528);
+	var FilterParamsStore = __webpack_require__(534);
 	window.FilterStore = FilterParamsStore;
 	
-	var OfferStore = __webpack_require__(543);
+	var OfferStore = __webpack_require__(549);
 	window.OfferStore = OfferStore;
 	// These are for testing
 	
@@ -25492,40 +25492,31 @@
 	    NavItem = __webpack_require__(226).NavItem;
 	
 	var CurrentUserStateMixin = __webpack_require__(491);
+	var Errors = __webpack_require__(523);
 	
 	var ClientActions = __webpack_require__(492);
-	var UserStore = __webpack_require__(502);
+	var ServerActions = __webpack_require__(525);
+	var UserStore = __webpack_require__(505);
+	var ErrorStore = __webpack_require__(524);
 	
-	var SignUpForm = __webpack_require__(520);
-	var SignInForm = __webpack_require__(521);
+	var SignUpForm = __webpack_require__(526);
+	var SignInForm = __webpack_require__(527);
 	
-	module.exports = React.createClass({
-	  displayName: 'exports',
+	var NavBar = React.createClass({
+	  displayName: 'NavBar',
 	
 	  mixins: [CurrentUserStateMixin],
+	  mixins: [Errors],
 	
 	  getInitialState: function () {
 	    return {
 	      showSignUpModal: false,
-	      showSignInModal: false,
-	      errors: UserStore.errors()
+	      showSignInModal: false
 	    };
 	  },
 	
-	  componentDidMount: function () {
-	    this.errorsListener = UserStore.addListener(this._errorsChanged);
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.errorsListener.remove();
-	  },
-	
-	  _errorsChanged: function () {
-	    this.setState({ errors: UserStore.errors() });
-	  },
-	
 	  clearErrors: function () {
-	    ClientActions.clearErrors();
+	    ServerActions.clearErrors();
 	  },
 	
 	  openSignUpModal: function () {
@@ -25640,6 +25631,8 @@
 	    );
 	  }
 	});
+	
+	module.exports = NavBar;
 
 /***/ },
 /* 226 */
@@ -44802,20 +44795,12 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var ClientActions = __webpack_require__(492);
-	var UserStore = __webpack_require__(502);
+	var UserStore = __webpack_require__(505);
 	
-	// We can add this mixin to any component by requiring it and adding it under the property mixins like so:
-	//
-	// var Component = React.createClass({
-	//     mixins: [CurrentUserStateMixin],
-	//     //other methods go here
-	// })
-	
-	module.exports = {
+	var currentUserState = {
 	  getInitialState: function () {
 	    this.setState({
-	      currentUser: UserStore.currentUser(),
-	      authErrors: UserStore.errors()
+	      currentUser: UserStore.currentUser()
 	    });
 	  },
 	
@@ -44830,19 +44815,20 @@
 	
 	  updateUser: function () {
 	    this.setState({
-	      currentUser: UserStore.currentUser(),
-	      authErrors: UserStore.errors()
+	      currentUser: UserStore.currentUser()
 	    });
 	  }
 	};
+	
+	module.exports = currentUserState;
 
 /***/ },
 /* 492 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var UserApiUtil = __webpack_require__(493);
-	var ApiUtil = __webpack_require__(501);
-	var OfferUtil = __webpack_require__(558);
+	var ApiUtil = __webpack_require__(503);
+	var OfferUtil = __webpack_require__(504);
 	
 	module.exports = {
 	  // User and Session methods
@@ -44937,7 +44923,8 @@
 	var AppDispatcher = __webpack_require__(495);
 	var ProfileConstants = __webpack_require__(499);
 	var UserConstants = __webpack_require__(500);
-	var OfferConstants = __webpack_require__(544);
+	var OfferConstants = __webpack_require__(501);
+	var ErrorConstants = __webpack_require__(502);
 	
 	module.exports = {
 	  // User and Session methods
@@ -44965,6 +44952,19 @@
 	  clearErrors: function () {
 	    AppDispatcher.dispatch({
 	      actionType: UserConstants.CLEAR_ERRORS
+	    });
+	  },
+	
+	  handleError: function (error) {
+	    AppDispatcher.dispatch({
+	      actionType: ErrorConstants.ERRORS,
+	      errors: error.responseJSON
+	    });
+	  },
+	
+	  clearErrors: function () {
+	    AppDispatcher.dispatch({
+	      actionType: ErrorConstants.CLEAR_ERRORS
 	    });
 	  },
 	
@@ -45364,10 +45364,31 @@
 
 /***/ },
 /* 501 */
+/***/ function(module, exports) {
+
+	
+	
+	module.exports = {
+	  UPDATE_OFFERS: "UPDATE_OFFERS"
+	};
+
+/***/ },
+/* 502 */
+/***/ function(module, exports) {
+
+	
+	
+	module.exports = {
+	  ERRORS: "ERRORS",
+	  CLEAR_ERRORS: "CLEAR_ERRORS"
+	};
+
+/***/ },
+/* 503 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var ServerActions = __webpack_require__(494);
-	var OfferUtil = __webpack_require__(558);
+	var OfferUtil = __webpack_require__(504);
 	
 	var ApiUtils = {
 	  fetchProfiles: function (filters) {
@@ -45407,7 +45428,7 @@
 	        ServerActions.receiveProfile(profile);
 	      },
 	      error: function (e) {
-	        console.log(["Error", e.responseText]);
+	        ServerActions.handleError(e);
 	      }
 	    });
 	  },
@@ -45461,16 +45482,37 @@
 	module.exports = ApiUtils;
 
 /***/ },
-/* 502 */
+/* 504 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ServerActions = __webpack_require__(494);
+	
+	var OfferUtils = {
+	  fetchOffers: function (profile_id) {
+	    $.ajax({
+	      url: "api/offers/" + profile_id,
+	      success: function (offers) {
+	        ServerActions.receiveOffers(offers);
+	      },
+	      error: function (e) {
+	        console.log(["Error", e.responseText]);
+	      }
+	    });
+	  }
+	};
+	
+	module.exports = OfferUtils;
+
+/***/ },
+/* 505 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(495);
 	var UserConstants = __webpack_require__(500);
-	var Store = __webpack_require__(503).Store;
+	var Store = __webpack_require__(506).Store;
 	
 	var UserStore = new Store(AppDispatcher);
 	var _currentUser = {};
-	var _errors = [];
 	
 	var setCurrentUser = function (user) {
 	  _currentUser = user;
@@ -45480,22 +45522,8 @@
 	  _currentUser = {};
 	};
 	
-	var setErrors = function (errors) {
-	  _errors = [];
-	  _errors = errors;
-	  console.log(_errors);
-	};
-	
-	var clearErrors = function () {
-	  _errors = {};
-	};
-	
 	UserStore.currentUser = function () {
 	  return _currentUser;
-	};
-	
-	UserStore.errors = function () {
-	  return _errors;
 	};
 	
 	UserStore.__onDispatch = function (payload) {
@@ -45508,21 +45536,13 @@
 	      deleteCurrentUser();
 	      UserStore.__emitChange();
 	      break;
-	    case UserConstants.ERRORS:
-	      setErrors(payload.errors);
-	      UserStore.__emitChange();
-	      break;
-	    case UserConstants.CLEAR_ERRORS:
-	      clearErrors();
-	      UserStore.__emitChange();
-	      break;
 	  }
 	};
 	
 	module.exports = UserStore;
 
 /***/ },
-/* 503 */
+/* 506 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -45534,15 +45554,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(504);
-	module.exports.MapStore = __webpack_require__(507);
-	module.exports.Mixin = __webpack_require__(519);
-	module.exports.ReduceStore = __webpack_require__(508);
-	module.exports.Store = __webpack_require__(509);
+	module.exports.Container = __webpack_require__(507);
+	module.exports.MapStore = __webpack_require__(510);
+	module.exports.Mixin = __webpack_require__(522);
+	module.exports.ReduceStore = __webpack_require__(511);
+	module.exports.Store = __webpack_require__(512);
 
 
 /***/ },
-/* 504 */
+/* 507 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -45564,10 +45584,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(505);
+	var FluxStoreGroup = __webpack_require__(508);
 	
 	var invariant = __webpack_require__(498);
-	var shallowEqual = __webpack_require__(506);
+	var shallowEqual = __webpack_require__(509);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -45725,7 +45745,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 505 */
+/* 508 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -45806,7 +45826,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 506 */
+/* 509 */
 /***/ function(module, exports) {
 
 	/**
@@ -45861,7 +45881,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 507 */
+/* 510 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -45882,8 +45902,8 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(508);
-	var Immutable = __webpack_require__(518);
+	var FluxReduceStore = __webpack_require__(511);
+	var Immutable = __webpack_require__(521);
 	
 	var invariant = __webpack_require__(498);
 	
@@ -46011,7 +46031,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 508 */
+/* 511 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -46032,9 +46052,9 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(509);
+	var FluxStore = __webpack_require__(512);
 	
-	var abstractMethod = __webpack_require__(517);
+	var abstractMethod = __webpack_require__(520);
 	var invariant = __webpack_require__(498);
 	
 	var FluxReduceStore = (function (_FluxStore) {
@@ -46118,7 +46138,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 509 */
+/* 512 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -46137,7 +46157,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(510);
+	var _require = __webpack_require__(513);
 	
 	var EventEmitter = _require.EventEmitter;
 	
@@ -46301,7 +46321,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 510 */
+/* 513 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -46314,14 +46334,14 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(511)
+	  EventEmitter: __webpack_require__(514)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 511 */
+/* 514 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -46340,11 +46360,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(512);
-	var EventSubscriptionVendor = __webpack_require__(514);
+	var EmitterSubscription = __webpack_require__(515);
+	var EventSubscriptionVendor = __webpack_require__(517);
 	
-	var emptyFunction = __webpack_require__(516);
-	var invariant = __webpack_require__(515);
+	var emptyFunction = __webpack_require__(519);
+	var invariant = __webpack_require__(518);
 	
 	/**
 	 * @class BaseEventEmitter
@@ -46518,7 +46538,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 512 */
+/* 515 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -46539,7 +46559,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(513);
+	var EventSubscription = __webpack_require__(516);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -46571,7 +46591,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 513 */
+/* 516 */
 /***/ function(module, exports) {
 
 	/**
@@ -46625,7 +46645,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 514 */
+/* 517 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -46644,7 +46664,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(515);
+	var invariant = __webpack_require__(518);
 	
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -46734,7 +46754,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 515 */
+/* 518 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -46789,7 +46809,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 516 */
+/* 519 */
 /***/ function(module, exports) {
 
 	/**
@@ -46831,7 +46851,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 517 */
+/* 520 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -46858,7 +46878,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 518 */
+/* 521 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -51842,7 +51862,7 @@
 	}));
 
 /***/ },
-/* 519 */
+/* 522 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -51859,7 +51879,7 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(505);
+	var FluxStoreGroup = __webpack_require__(508);
 	
 	var invariant = __webpack_require__(498);
 	
@@ -51965,7 +51985,180 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 520 */
+/* 523 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ClientActions = __webpack_require__(492);
+	var ErrorStore = __webpack_require__(524);
+	
+	var Errors = {
+	  getInitialState: function () {
+	    return {
+	      errors: ErrorStore.errors()
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.errorsListener = ErrorStore.addListener(this._errorsChanged);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.errorsListener.remove();
+	  },
+	
+	  _errorsChanged: function () {
+	    this.setState({ errors: ErrorStore.errors() });
+	  }
+	};
+	
+	module.exports = Errors;
+
+/***/ },
+/* 524 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(495);
+	var ErrorConstants = __webpack_require__(502);
+	var Store = __webpack_require__(506).Store;
+	
+	var ErrorStore = new Store(AppDispatcher);
+	
+	var _errors = [];
+	
+	var setErrors = function (errors) {
+	  _errors = [];
+	  _errors = errors;
+	  console.log(_errors);
+	};
+	
+	var clearErrors = function () {
+	  _errors = {};
+	};
+	
+	ErrorStore.errors = function () {
+	  return _errors;
+	};
+	
+	ErrorStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ErrorConstants.ERRORS:
+	      setErrors(payload.errors);
+	      ErrorStore.__emitChange();
+	      break;
+	    case ErrorConstants.CLEAR_ERRORS:
+	      clearErrors();
+	      ErrorStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = ErrorStore;
+
+/***/ },
+/* 525 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(495);
+	var ProfileConstants = __webpack_require__(499);
+	var UserConstants = __webpack_require__(500);
+	var OfferConstants = __webpack_require__(501);
+	var ErrorConstants = __webpack_require__(502);
+	
+	module.exports = {
+	  // User and Session methods
+	  receiveCurrentUser: function (currentUser) {
+	    AppDispatcher.dispatch({
+	      actionType: UserConstants.RECEIVE_CURRENT_USER,
+	      currentUser: currentUser
+	    });
+	  },
+	
+	  removeCurrentUser: function (currentUser) {
+	    AppDispatcher.dispatch({
+	      actionType: UserConstants.REMOVE_CURRENT_USER,
+	      currentUser: currentUser
+	    });
+	  },
+	
+	  handleError: function (error) {
+	    AppDispatcher.dispatch({
+	      actionType: UserConstants.ERRORS,
+	      errors: error.responseJSON
+	    });
+	  },
+	
+	  clearErrors: function () {
+	    AppDispatcher.dispatch({
+	      actionType: UserConstants.CLEAR_ERRORS
+	    });
+	  },
+	
+	  handleError: function (error) {
+	    AppDispatcher.dispatch({
+	      actionType: ErrorConstants.ERRORS,
+	      errors: error.responseJSON
+	    });
+	  },
+	
+	  clearErrors: function () {
+	    AppDispatcher.dispatch({
+	      actionType: ErrorConstants.CLEAR_ERRORS
+	    });
+	  },
+	
+	  // Profile methods
+	  receiveProfiles: function (profiles) {
+	    AppDispatcher.dispatch({
+	      actionType: ProfileConstants.PROFILES_RECEIVED,
+	      profiles: profiles
+	    });
+	  },
+	
+	  receiveProfile: function (profile) {
+	    AppDispatcher.dispatch({
+	      actionType: ProfileConstants.PROFILE_RECEIVED,
+	      profile: profile
+	    });
+	  },
+	
+	  deleteProfile: function (profileId) {
+	    AppDispatcher.dispatch({
+	      actionType: ProfileConstants.DELETE_PROFILE,
+	      profileId: profileId
+	    });
+	  },
+	
+	  clearProfiles: function () {
+	    AppDispatcher.dispatch({
+	      actionType: ProfileConstants.CLEAR_PROFILES
+	    });
+	  },
+	
+	  updateHovered: function (profileId) {
+	    AppDispatcher.dispatch({
+	      actionType: ProfileConstants.UPDATE_HOVERED,
+	      profileId: profileId
+	    });
+	  },
+	
+	  updateLoc: function (loc) {
+	    AppDispatcher.dispatch({
+	      actionType: ProfileConstants.UPDATE_LOC,
+	      loc: loc
+	    });
+	  },
+	
+	  // Offer methods
+	  receiveOffers: function (offers) {
+	    AppDispatcher.dispatch({
+	      actionType: OfferConstants.UPDATE_OFFERS,
+	      offers: offers
+	    });
+	  }
+	};
+
+/***/ },
+/* 526 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52047,7 +52240,7 @@
 	module.exports = SignUpForm;
 
 /***/ },
-/* 521 */
+/* 527 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52137,14 +52330,14 @@
 	module.exports = SignInForm;
 
 /***/ },
-/* 522 */
+/* 528 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var SearchBar = __webpack_require__(523);
-	var Cities = __webpack_require__(524);
-	var Footer = __webpack_require__(525);
+	var SearchBar = __webpack_require__(529);
+	var Cities = __webpack_require__(530);
+	var Footer = __webpack_require__(531);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52187,7 +52380,7 @@
 	});
 
 /***/ },
-/* 523 */
+/* 529 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52239,7 +52432,7 @@
 	});
 
 /***/ },
-/* 524 */
+/* 530 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52309,7 +52502,7 @@
 	module.exports = Cities;
 
 /***/ },
-/* 525 */
+/* 531 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52368,7 +52561,7 @@
 	module.exports = Footer;
 
 /***/ },
-/* 526 */
+/* 532 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52376,14 +52569,14 @@
 	
 	var ClientActions = __webpack_require__(492);
 	var ServerActions = __webpack_require__(494);
-	var ProfileStore = __webpack_require__(527);
-	var FilterParamsStore = __webpack_require__(528);
+	var ProfileStore = __webpack_require__(533);
+	var FilterParamsStore = __webpack_require__(534);
 	
-	var Filters = __webpack_require__(530);
-	var Index = __webpack_require__(538);
-	var Map = __webpack_require__(540);
+	var Filters = __webpack_require__(536);
+	var Index = __webpack_require__(544);
+	var Map = __webpack_require__(546);
 	
-	var GeoUtils = __webpack_require__(541);
+	var GeoUtils = __webpack_require__(547);
 	
 	var Search = React.createClass({
 	  displayName: 'Search',
@@ -52479,10 +52672,10 @@
 	module.exports = Search;
 
 /***/ },
-/* 527 */
+/* 533 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(503).Store;
+	var Store = __webpack_require__(506).Store;
 	var AppDispatcher = __webpack_require__(495);
 	var ProfileConstants = __webpack_require__(499);
 	
@@ -52570,15 +52763,15 @@
 	module.exports = ProfileStore;
 
 /***/ },
-/* 528 */
+/* 534 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(495);
-	var Store = __webpack_require__(503).Store;
+	var Store = __webpack_require__(506).Store;
 	
 	var _params = { budget: { min: 0 } };
 	
-	var FilterConstants = __webpack_require__(529);
+	var FilterConstants = __webpack_require__(535);
 	
 	var FilterParamsStore = new Store(AppDispatcher);
 	
@@ -52626,7 +52819,7 @@
 	module.exports = FilterParamsStore;
 
 /***/ },
-/* 529 */
+/* 535 */
 /***/ function(module, exports) {
 
 	
@@ -52641,16 +52834,16 @@
 	};
 
 /***/ },
-/* 530 */
+/* 536 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var SearchStatusOption = __webpack_require__(531);
-	var SmokerOption = __webpack_require__(533);
-	var DietOption = __webpack_require__(534);
-	var PetOption = __webpack_require__(535);
-	var BudgetOption = __webpack_require__(536);
+	var SearchStatusOption = __webpack_require__(537);
+	var SmokerOption = __webpack_require__(539);
+	var DietOption = __webpack_require__(540);
+	var PetOption = __webpack_require__(541);
+	var BudgetOption = __webpack_require__(542);
 	
 	var Filters = React.createClass({
 	  displayName: 'Filters',
@@ -52693,11 +52886,11 @@
 	module.exports = Filters;
 
 /***/ },
-/* 531 */
+/* 537 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var FilterActions = __webpack_require__(532);
+	var FilterActions = __webpack_require__(538);
 	
 	var DropdownButton = __webpack_require__(226).DropdownButton;
 	var MenuItem = __webpack_require__(226).MenuItem;
@@ -52766,11 +52959,11 @@
 	module.exports = SearchStatusOption;
 
 /***/ },
-/* 532 */
+/* 538 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(495);
-	var FilterConstants = __webpack_require__(529);
+	var FilterConstants = __webpack_require__(535);
 	
 	module.exports = {
 	  updateBounds: function (value) {
@@ -52812,11 +53005,11 @@
 	};
 
 /***/ },
-/* 533 */
+/* 539 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var FilterActions = __webpack_require__(532);
+	var FilterActions = __webpack_require__(538);
 	
 	var DropdownButton = __webpack_require__(226).DropdownButton;
 	var MenuItem = __webpack_require__(226).MenuItem;
@@ -52876,11 +53069,11 @@
 	module.exports = SmokerOption;
 
 /***/ },
-/* 534 */
+/* 540 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var FilterActions = __webpack_require__(532);
+	var FilterActions = __webpack_require__(538);
 	
 	var DropdownButton = __webpack_require__(226).DropdownButton;
 	var MenuItem = __webpack_require__(226).MenuItem;
@@ -52958,11 +53151,11 @@
 	module.exports = DietOption;
 
 /***/ },
-/* 535 */
+/* 541 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var FilterActions = __webpack_require__(532);
+	var FilterActions = __webpack_require__(538);
 	
 	var DropdownButton = __webpack_require__(226).DropdownButton;
 	var MenuItem = __webpack_require__(226).MenuItem;
@@ -53039,13 +53232,13 @@
 	module.exports = PetOption;
 
 /***/ },
-/* 536 */
+/* 542 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ReactSlider = __webpack_require__(537);
+	var ReactSlider = __webpack_require__(543);
 	
-	var FilterActions = __webpack_require__(532);
+	var FilterActions = __webpack_require__(538);
 	
 	var BudgetOption = React.createClass({
 	  displayName: 'BudgetOption',
@@ -53097,7 +53290,7 @@
 	module.exports = BudgetOption;
 
 /***/ },
-/* 537 */
+/* 543 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
@@ -53895,12 +54088,12 @@
 
 
 /***/ },
-/* 538 */
+/* 544 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var IndexItem = __webpack_require__(539);
+	var IndexItem = __webpack_require__(545);
 	
 	var Index = React.createClass({
 	  displayName: 'Index',
@@ -53931,7 +54124,7 @@
 	module.exports = Index;
 
 /***/ },
-/* 539 */
+/* 545 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -53989,15 +54182,15 @@
 	});
 
 /***/ },
-/* 540 */
+/* 546 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(32);
 	var hashHistory = __webpack_require__(166).hashHistory;
 	
-	var FilterActions = __webpack_require__(532);
-	var ProfileStore = __webpack_require__(527);
+	var FilterActions = __webpack_require__(538);
+	var ProfileStore = __webpack_require__(533);
 	
 	function _getCoordsObj(latLng) {
 	  return {
@@ -54127,7 +54320,7 @@
 	});
 
 /***/ },
-/* 541 */
+/* 547 */
 /***/ function(module, exports) {
 
 	
@@ -54141,6 +54334,7 @@
 	        params.lng = results[0].geometry.location.lng();
 	        callback({ profile: params });
 	      } else {
+	        callback({ profile: params });
 	        console.log(status);
 	      }
 	    });
@@ -54163,20 +54357,20 @@
 	module.exports = geoUtils;
 
 /***/ },
-/* 542 */
+/* 548 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var hashHistory = __webpack_require__(166).hashHistory;
 	
-	var UserStore = __webpack_require__(502);
-	var ProfileStore = __webpack_require__(527);
-	var OfferStore = __webpack_require__(543);
+	var UserStore = __webpack_require__(505);
+	var ProfileStore = __webpack_require__(533);
+	var OfferStore = __webpack_require__(549);
 	var ClientActions = __webpack_require__(492);
 	
-	var Title = __webpack_require__(545);
-	var Description = __webpack_require__(546);
-	var Footer = __webpack_require__(525);
+	var Title = __webpack_require__(550);
+	var Description = __webpack_require__(551);
+	var Footer = __webpack_require__(531);
 	
 	var Detail = React.createClass({
 	  displayName: 'Detail',
@@ -54257,12 +54451,12 @@
 	module.exports = Detail;
 
 /***/ },
-/* 543 */
+/* 549 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(495);
-	var OfferConstants = __webpack_require__(544);
-	var Store = __webpack_require__(503).Store;
+	var OfferConstants = __webpack_require__(501);
+	var Store = __webpack_require__(506).Store;
 	
 	var OfferStore = new Store(AppDispatcher);
 	var _offers = {};
@@ -54303,17 +54497,7 @@
 	module.exports = OfferStore;
 
 /***/ },
-/* 544 */
-/***/ function(module, exports) {
-
-	
-	
-	module.exports = {
-	  UPDATE_OFFERS: "UPDATE_OFFERS"
-	};
-
-/***/ },
-/* 545 */
+/* 550 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -54366,12 +54550,12 @@
 	});
 
 /***/ },
-/* 546 */
+/* 551 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var Accounting = __webpack_require__(547);
+	var Accounting = __webpack_require__(552);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -54468,7 +54652,7 @@
 	});
 
 /***/ },
-/* 547 */
+/* 552 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -54887,16 +55071,17 @@
 
 
 /***/ },
-/* 548 */
+/* 553 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var hashHistory = __webpack_require__(166).hashHistory;
 	
-	var ProfileStore = __webpack_require__(527);
+	var ProfileStore = __webpack_require__(533);
+	var ErrorStore = __webpack_require__(524);
 	
-	var Header = __webpack_require__(549);
-	var Form = __webpack_require__(550);
+	var Header = __webpack_require__(554);
+	var Form = __webpack_require__(555);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -54954,7 +55139,7 @@
 	});
 
 /***/ },
-/* 549 */
+/* 554 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -54981,7 +55166,7 @@
 	});
 
 /***/ },
-/* 550 */
+/* 555 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -54989,17 +55174,17 @@
 	var MenuItem = __webpack_require__(226).MenuItem;
 	
 	var ClientActions = __webpack_require__(492);
-	var UserStore = __webpack_require__(502);
-	var ProfileStore = __webpack_require__(527);
-	var FilterParamsStore = __webpack_require__(528);
+	var UserStore = __webpack_require__(505);
+	var ProfileStore = __webpack_require__(533);
+	var FilterParamsStore = __webpack_require__(534);
 	
-	var GeoUtils = __webpack_require__(541);
+	var GeoUtils = __webpack_require__(547);
 	
 	// Components
-	var SearchStatus = __webpack_require__(551);
-	var Smoker = __webpack_require__(552);
-	var Diet = __webpack_require__(553);
-	var Pet = __webpack_require__(554);
+	var SearchStatus = __webpack_require__(556);
+	var Smoker = __webpack_require__(557);
+	var Diet = __webpack_require__(558);
+	var Pet = __webpack_require__(559);
 	
 	var Form = React.createClass({
 	  displayName: 'Form',
@@ -55231,7 +55416,7 @@
 	module.exports = Form;
 
 /***/ },
-/* 551 */
+/* 556 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55293,7 +55478,7 @@
 	module.exports = SearchStatus;
 
 /***/ },
-/* 552 */
+/* 557 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55348,7 +55533,7 @@
 	module.exports = Smoker;
 
 /***/ },
-/* 553 */
+/* 558 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55420,7 +55605,7 @@
 	module.exports = Diet;
 
 /***/ },
-/* 554 */
+/* 559 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55492,18 +55677,18 @@
 	module.exports = Pet;
 
 /***/ },
-/* 555 */
+/* 560 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var hashHistory = __webpack_require__(166).hashHistory;
 	
-	var UserStore = __webpack_require__(502);
-	var ProfileStore = __webpack_require__(527);
+	var UserStore = __webpack_require__(505);
+	var ProfileStore = __webpack_require__(533);
 	var ClientActions = __webpack_require__(492);
 	
-	var Header = __webpack_require__(556);
-	var EditForm = __webpack_require__(557);
+	var Header = __webpack_require__(561);
+	var EditForm = __webpack_require__(562);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -55555,7 +55740,7 @@
 	});
 
 /***/ },
-/* 556 */
+/* 561 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55582,7 +55767,7 @@
 	});
 
 /***/ },
-/* 557 */
+/* 562 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55592,17 +55777,17 @@
 	var hashHistory = __webpack_require__(166).hashHistory;
 	
 	var ClientActions = __webpack_require__(492);
-	var UserStore = __webpack_require__(502);
-	var ProfileStore = __webpack_require__(527);
-	var FilterParamsStore = __webpack_require__(528);
+	var UserStore = __webpack_require__(505);
+	var ProfileStore = __webpack_require__(533);
+	var FilterParamsStore = __webpack_require__(534);
 	
-	var GeoUtils = __webpack_require__(541);
+	var GeoUtils = __webpack_require__(547);
 	
 	// Components
-	var SearchStatus = __webpack_require__(551);
-	var Smoker = __webpack_require__(552);
-	var Diet = __webpack_require__(553);
-	var Pet = __webpack_require__(554);
+	var SearchStatus = __webpack_require__(556);
+	var Smoker = __webpack_require__(557);
+	var Diet = __webpack_require__(558);
+	var Pet = __webpack_require__(559);
 	
 	var Form = React.createClass({
 	  displayName: 'Form',
@@ -55845,28 +56030,6 @@
 	});
 	
 	module.exports = Form;
-
-/***/ },
-/* 558 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var ServerActions = __webpack_require__(494);
-	
-	var OfferUtils = {
-	  fetchOffers: function (profile_id) {
-	    $.ajax({
-	      url: "api/offers/" + profile_id,
-	      success: function (offers) {
-	        ServerActions.receiveOffers(offers);
-	      },
-	      error: function (e) {
-	        console.log(["Error", e.responseText]);
-	      }
-	    });
-	  }
-	};
-	
-	module.exports = OfferUtils;
 
 /***/ }
 /******/ ]);

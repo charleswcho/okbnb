@@ -19,8 +19,15 @@
 // TODO: Make box around 'create profile' button
 
 #create-profile {
-  // padding: 5px, 10px;
-  // border: 2px solid grey;
+  font-weight: 200;
+  margin: 10px;
+  padding: 4px 12px;
+  border: 2px solid white;
+  border-radius: 2px;
+}
+
+#create-profile:hover {
+  background: #0e428a;
 }
 
 .modal-content {

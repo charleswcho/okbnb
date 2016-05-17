@@ -39,7 +39,7 @@ var ApiUtils = {
         ServerActions.receiveProfile(profile)
       },
       error: function (e) {
-        console.log(["Error", e.responseText]);
+        ServerActions.handleError(e)
       },
     });
   },
