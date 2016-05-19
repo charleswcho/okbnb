@@ -53477,10 +53477,8 @@
 	
 	    getInitialState: function () {
 	      var value = this._or(ensureArray(this.props.value), ensureArray(this.props.defaultValue));
-	
 	      // reused throughout the component to store results of iterations over `value`
 	      this.tempArray = value.slice();
-	
 	      // array for storing resize timeouts ids
 	      this.pendingResizeTimeouts = [];
 	
@@ -53503,10 +53501,8 @@
 	    // This basically allows the slider to be a controlled component.
 	    componentWillReceiveProps: function (newProps) {
 	      var value = this._or(ensureArray(newProps.value), this.state.value);
-	
 	      // ensure the array keeps the same size as `value`
 	      this.tempArray = value.slice();
-	
 	      for (var i = 0; i < value.length; i++) {
 	        this.state.value[i] = this._trimAlignValue(value[i], newProps);
 	      }
@@ -53570,7 +53566,6 @@
 	
 	        var sliderMax = rect[this._posMaxKey()];
 	        var sliderMin = rect[this._posMinKey()];
-	
 	        this.setState({
 	          upperBound: slider[size] - handle[size],
 	          sliderLength: Math.abs(sliderMax - sliderMin),
@@ -53609,6 +53604,7 @@
 	        willChange: this.state.index >= 0 ? this._posMinKey() : '',
 	        zIndex: this.state.zIndices.indexOf(i) + 1
 	      };
+	
 	      style[this._posMinKey()] = offset + 'px';
 	      return style;
 	    },
