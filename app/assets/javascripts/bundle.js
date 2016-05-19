@@ -55,11 +55,11 @@
 	
 	// Components
 	var NavBar = __webpack_require__(225);
-	var SplashScreen = __webpack_require__(528);
+	var SplashScreen = __webpack_require__(527);
 	
-	var Search = __webpack_require__(532);
-	var Detail = __webpack_require__(548);
-	var ProfileForm = __webpack_require__(553);
+	var Search = __webpack_require__(531);
+	var Detail = __webpack_require__(547);
+	var ProfileForm = __webpack_require__(552);
 	var ProfileEditForm = __webpack_require__(560);
 	
 	// These are for testing
@@ -70,13 +70,13 @@
 	var UserStore = __webpack_require__(505);
 	window.UserStore = UserStore;
 	
-	var ProfileStore = __webpack_require__(533);
+	var ProfileStore = __webpack_require__(532);
 	window.ProfileStore = ProfileStore;
 	
-	var FilterParamsStore = __webpack_require__(534);
+	var FilterParamsStore = __webpack_require__(533);
 	window.FilterStore = FilterParamsStore;
 	
-	var OfferStore = __webpack_require__(549);
+	var OfferStore = __webpack_require__(548);
 	window.OfferStore = OfferStore;
 	// These are for testing
 	
@@ -25494,12 +25494,12 @@
 	var CurrentUserStateMixin = __webpack_require__(491);
 	
 	var ClientActions = __webpack_require__(492);
-	var ServerActions = __webpack_require__(525);
+	var ServerActions = __webpack_require__(523);
 	var UserStore = __webpack_require__(505);
 	var ErrorStore = __webpack_require__(524);
 	
-	var SignUpForm = __webpack_require__(526);
-	var SignInForm = __webpack_require__(527);
+	var SignUpForm = __webpack_require__(525);
+	var SignInForm = __webpack_require__(526);
 	
 	var NavBar = React.createClass({
 	  displayName: 'NavBar',
@@ -45412,7 +45412,8 @@
 	        ServerActions.receiveProfiles(profiles);
 	      },
 	      error: function (e) {
-	        ServerActions.handleError(e);
+	        console.log(e.responceText);
+	        // ServerActions.handleError(e)
 	      }
 	    });
 	  },
@@ -45424,7 +45425,8 @@
 	        ServerActions.receiveProfile(profile);
 	      },
 	      error: function (e) {
-	        ServerActions.handleError(e);
+	        console.log(e.responceText);
+	        // ServerActions.handleError(e)
 	      }
 	    });
 	  },
@@ -45455,7 +45457,8 @@
 	        ServerActions.receiveProfile(profile);
 	      },
 	      error: function (e) {
-	        ServerActions.handleError(e);
+	        console.log(e.responceText);
+	        // ServerActions.handleError(e)
 	      }
 	    });
 	  },
@@ -45469,7 +45472,8 @@
 	        ServerActions.deleteProfile(profile.id);
 	      },
 	      error: function (e) {
-	        ServerActions.handleError(e);
+	        console.log(e.responceText);
+	        // ServerActions.handleError(e)
 	      }
 	    });
 	  },
@@ -52000,76 +52004,6 @@
 /* 523 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ClientActions = __webpack_require__(492);
-	var ErrorStore = __webpack_require__(524);
-	
-	var Errors = {
-	  getInitialState: function () {
-	    return {
-	      errors: ErrorStore.errors()
-	    };
-	  },
-	
-	  componentDidMount: function () {
-	    this.errorsListener = ErrorStore.addListener(this._errorsChanged);
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.errorsListener.remove();
-	  },
-	
-	  _errorsChanged: function () {
-	    this.setState({ errors: ErrorStore.errors() });
-	  }
-	};
-	
-	module.exports = Errors;
-
-/***/ },
-/* 524 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(495);
-	var ErrorConstants = __webpack_require__(502);
-	var Store = __webpack_require__(506).Store;
-	
-	var ErrorStore = new Store(AppDispatcher);
-	
-	var _errors = [];
-	
-	var setErrors = function (errors) {
-	  _errors = [];
-	  _errors = errors;
-	  console.log(_errors);
-	};
-	
-	var clearErrors = function () {
-	  _errors = {};
-	};
-	
-	ErrorStore.errors = function () {
-	  return _errors;
-	};
-	
-	ErrorStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case ErrorConstants.ERRORS:
-	      setErrors(payload.errors);
-	      ErrorStore.__emitChange();
-	      break;
-	    case ErrorConstants.CLEAR_ERRORS:
-	      clearErrors();
-	      ErrorStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = ErrorStore;
-
-/***/ },
-/* 525 */
-/***/ function(module, exports, __webpack_require__) {
-
 	var AppDispatcher = __webpack_require__(495);
 	var ProfileConstants = __webpack_require__(499);
 	var UserConstants = __webpack_require__(500);
@@ -52170,7 +52104,48 @@
 	};
 
 /***/ },
-/* 526 */
+/* 524 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(495);
+	var ErrorConstants = __webpack_require__(502);
+	var Store = __webpack_require__(506).Store;
+	
+	var ErrorStore = new Store(AppDispatcher);
+	
+	var _errors = [];
+	
+	var setErrors = function (errors) {
+	  _errors = [];
+	  _errors = errors;
+	  console.log(_errors);
+	};
+	
+	var clearErrors = function () {
+	  _errors = [];
+	};
+	
+	ErrorStore.errors = function () {
+	  return _errors;
+	};
+	
+	ErrorStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ErrorConstants.ERRORS:
+	      setErrors(payload.errors);
+	      ErrorStore.__emitChange();
+	      break;
+	    case ErrorConstants.CLEAR_ERRORS:
+	      clearErrors();
+	      ErrorStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = ErrorStore;
+
+/***/ },
+/* 525 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52252,7 +52227,7 @@
 	module.exports = SignUpForm;
 
 /***/ },
-/* 527 */
+/* 526 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52341,14 +52316,14 @@
 	module.exports = SignInForm;
 
 /***/ },
-/* 528 */
+/* 527 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var SearchBar = __webpack_require__(529);
-	var Cities = __webpack_require__(530);
-	var Footer = __webpack_require__(531);
+	var SearchBar = __webpack_require__(528);
+	var Cities = __webpack_require__(529);
+	var Footer = __webpack_require__(530);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -52391,7 +52366,7 @@
 	});
 
 /***/ },
-/* 529 */
+/* 528 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52443,7 +52418,7 @@
 	});
 
 /***/ },
-/* 530 */
+/* 529 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52513,7 +52488,7 @@
 	module.exports = Cities;
 
 /***/ },
-/* 531 */
+/* 530 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52572,7 +52547,7 @@
 	module.exports = Footer;
 
 /***/ },
-/* 532 */
+/* 531 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -52580,14 +52555,14 @@
 	
 	var ClientActions = __webpack_require__(492);
 	var ServerActions = __webpack_require__(494);
-	var ProfileStore = __webpack_require__(533);
-	var FilterParamsStore = __webpack_require__(534);
+	var ProfileStore = __webpack_require__(532);
+	var FilterParamsStore = __webpack_require__(533);
 	
-	var Filters = __webpack_require__(536);
-	var Index = __webpack_require__(544);
-	var Map = __webpack_require__(546);
+	var Filters = __webpack_require__(535);
+	var Index = __webpack_require__(543);
+	var Map = __webpack_require__(545);
 	
-	var GeoUtils = __webpack_require__(547);
+	var GeoUtils = __webpack_require__(546);
 	
 	var Search = React.createClass({
 	  displayName: 'Search',
@@ -52683,7 +52658,7 @@
 	module.exports = Search;
 
 /***/ },
-/* 533 */
+/* 532 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(506).Store;
@@ -52774,7 +52749,7 @@
 	module.exports = ProfileStore;
 
 /***/ },
-/* 534 */
+/* 533 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(495);
@@ -52782,7 +52757,7 @@
 	
 	var _params = { budget: { min: 0 } };
 	
-	var FilterConstants = __webpack_require__(535);
+	var FilterConstants = __webpack_require__(534);
 	
 	var FilterParamsStore = new Store(AppDispatcher);
 	
@@ -52830,7 +52805,7 @@
 	module.exports = FilterParamsStore;
 
 /***/ },
-/* 535 */
+/* 534 */
 /***/ function(module, exports) {
 
 	
@@ -52845,16 +52820,16 @@
 	};
 
 /***/ },
-/* 536 */
+/* 535 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var SearchStatusOption = __webpack_require__(537);
-	var SmokerOption = __webpack_require__(539);
-	var DietOption = __webpack_require__(540);
-	var PetOption = __webpack_require__(541);
-	var BudgetOption = __webpack_require__(542);
+	var SearchStatusOption = __webpack_require__(536);
+	var SmokerOption = __webpack_require__(538);
+	var DietOption = __webpack_require__(539);
+	var PetOption = __webpack_require__(540);
+	var BudgetOption = __webpack_require__(541);
 	
 	var Filters = React.createClass({
 	  displayName: 'Filters',
@@ -52897,11 +52872,11 @@
 	module.exports = Filters;
 
 /***/ },
-/* 537 */
+/* 536 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var FilterActions = __webpack_require__(538);
+	var FilterActions = __webpack_require__(537);
 	
 	var DropdownButton = __webpack_require__(226).DropdownButton;
 	var MenuItem = __webpack_require__(226).MenuItem;
@@ -52970,11 +52945,11 @@
 	module.exports = SearchStatusOption;
 
 /***/ },
-/* 538 */
+/* 537 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(495);
-	var FilterConstants = __webpack_require__(535);
+	var FilterConstants = __webpack_require__(534);
 	
 	module.exports = {
 	  updateBounds: function (value) {
@@ -53016,11 +52991,11 @@
 	};
 
 /***/ },
-/* 539 */
+/* 538 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var FilterActions = __webpack_require__(538);
+	var FilterActions = __webpack_require__(537);
 	
 	var DropdownButton = __webpack_require__(226).DropdownButton;
 	var MenuItem = __webpack_require__(226).MenuItem;
@@ -53080,11 +53055,11 @@
 	module.exports = SmokerOption;
 
 /***/ },
-/* 540 */
+/* 539 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var FilterActions = __webpack_require__(538);
+	var FilterActions = __webpack_require__(537);
 	
 	var DropdownButton = __webpack_require__(226).DropdownButton;
 	var MenuItem = __webpack_require__(226).MenuItem;
@@ -53162,11 +53137,11 @@
 	module.exports = DietOption;
 
 /***/ },
-/* 541 */
+/* 540 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var FilterActions = __webpack_require__(538);
+	var FilterActions = __webpack_require__(537);
 	
 	var DropdownButton = __webpack_require__(226).DropdownButton;
 	var MenuItem = __webpack_require__(226).MenuItem;
@@ -53243,13 +53218,13 @@
 	module.exports = PetOption;
 
 /***/ },
-/* 542 */
+/* 541 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ReactSlider = __webpack_require__(543);
+	var ReactSlider = __webpack_require__(542);
 	
-	var FilterActions = __webpack_require__(538);
+	var FilterActions = __webpack_require__(537);
 	
 	var BudgetOption = React.createClass({
 	  displayName: 'BudgetOption',
@@ -53301,7 +53276,7 @@
 	module.exports = BudgetOption;
 
 /***/ },
-/* 543 */
+/* 542 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
@@ -54099,12 +54074,12 @@
 
 
 /***/ },
-/* 544 */
+/* 543 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var IndexItem = __webpack_require__(545);
+	var IndexItem = __webpack_require__(544);
 	
 	var Index = React.createClass({
 	  displayName: 'Index',
@@ -54135,7 +54110,7 @@
 	module.exports = Index;
 
 /***/ },
-/* 545 */
+/* 544 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -54193,15 +54168,15 @@
 	});
 
 /***/ },
-/* 546 */
+/* 545 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(32);
 	var hashHistory = __webpack_require__(166).hashHistory;
 	
-	var FilterActions = __webpack_require__(538);
-	var ProfileStore = __webpack_require__(533);
+	var FilterActions = __webpack_require__(537);
+	var ProfileStore = __webpack_require__(532);
 	
 	function _getCoordsObj(latLng) {
 	  return {
@@ -54210,8 +54185,8 @@
 	  };
 	}
 	
-	module.exports = React.createClass({
-	  displayName: 'exports',
+	var Map = React.createClass({
+	  displayName: 'Map',
 	
 	  componentDidMount: function () {
 	    var map = ReactDOM.findDOMNode(this.refs.map);
@@ -54329,9 +54304,11 @@
 	    );
 	  }
 	});
+	
+	module.exports = Map;
 
 /***/ },
-/* 547 */
+/* 546 */
 /***/ function(module, exports) {
 
 	
@@ -54368,20 +54345,20 @@
 	module.exports = geoUtils;
 
 /***/ },
-/* 548 */
+/* 547 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var hashHistory = __webpack_require__(166).hashHistory;
 	
 	var UserStore = __webpack_require__(505);
-	var ProfileStore = __webpack_require__(533);
-	var OfferStore = __webpack_require__(549);
+	var ProfileStore = __webpack_require__(532);
+	var OfferStore = __webpack_require__(548);
 	var ClientActions = __webpack_require__(492);
 	
-	var Title = __webpack_require__(550);
-	var Description = __webpack_require__(551);
-	var Footer = __webpack_require__(531);
+	var Title = __webpack_require__(549);
+	var Description = __webpack_require__(550);
+	var Footer = __webpack_require__(530);
 	
 	var Detail = React.createClass({
 	  displayName: 'Detail',
@@ -54395,6 +54372,7 @@
 	  },
 	
 	  componentDidMount: function () {
+	    window.scroll(0, 0);
 	    this.userListener = UserStore.addListener(this._userChanged);
 	    this.profileListener = ProfileStore.addListener(this._profileChanged);
 	    this.offerListener = OfferStore.addListener(this._offersChanged);
@@ -54462,7 +54440,7 @@
 	module.exports = Detail;
 
 /***/ },
-/* 549 */
+/* 548 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(495);
@@ -54508,7 +54486,7 @@
 	module.exports = OfferStore;
 
 /***/ },
-/* 550 */
+/* 549 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -54561,12 +54539,12 @@
 	});
 
 /***/ },
-/* 551 */
+/* 550 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var Accounting = __webpack_require__(552);
+	var Accounting = __webpack_require__(551);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -54663,7 +54641,7 @@
 	});
 
 /***/ },
-/* 552 */
+/* 551 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*!
@@ -55082,19 +55060,19 @@
 
 
 /***/ },
-/* 553 */
+/* 552 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var hashHistory = __webpack_require__(166).hashHistory;
 	
-	var ProfileStore = __webpack_require__(533);
+	var ProfileStore = __webpack_require__(532);
 	var ErrorStore = __webpack_require__(524);
 	
-	var Header = __webpack_require__(554);
-	var Form = __webpack_require__(555);
+	var Header = __webpack_require__(553);
+	var Form = __webpack_require__(554);
 	
-	var Errors = __webpack_require__(523);
+	var Errors = __webpack_require__(559);
 	
 	module.exports = React.createClass({
 	  displayName: 'exports',
@@ -55155,7 +55133,7 @@
 	});
 
 /***/ },
-/* 554 */
+/* 553 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55182,7 +55160,7 @@
 	});
 
 /***/ },
-/* 555 */
+/* 554 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55191,16 +55169,16 @@
 	
 	var ClientActions = __webpack_require__(492);
 	var UserStore = __webpack_require__(505);
-	var ProfileStore = __webpack_require__(533);
-	var FilterParamsStore = __webpack_require__(534);
+	var ProfileStore = __webpack_require__(532);
+	var FilterParamsStore = __webpack_require__(533);
 	
-	var GeoUtils = __webpack_require__(547);
+	var GeoUtils = __webpack_require__(546);
 	
 	// Components
-	var SearchStatus = __webpack_require__(556);
-	var Smoker = __webpack_require__(557);
-	var Diet = __webpack_require__(558);
-	var Pet = __webpack_require__(559);
+	var SearchStatus = __webpack_require__(555);
+	var Smoker = __webpack_require__(556);
+	var Diet = __webpack_require__(557);
+	var Pet = __webpack_require__(558);
 	
 	var Form = React.createClass({
 	  displayName: 'Form',
@@ -55235,6 +55213,7 @@
 	
 	  componentWillUnmount: function () {
 	    this.listener.remove();
+	    ClientActions.clearErrors();
 	  },
 	
 	  openUploadWidget: function (e) {
@@ -55356,14 +55335,16 @@
 	    var description = this.state.description;
 	    var location = this.state.location;
 	    var budget = this.state.budget;
-	
-	    var errors = this.props.errors.map(function (error) {
-	      return React.createElement(
-	        'div',
-	        { className: 'errors' },
-	        error
-	      );
-	    });
+	    var errors;
+	    if (this.props.errors) {
+	      errors = this.props.errors.map(function (error) {
+	        return React.createElement(
+	          'div',
+	          { className: 'errors' },
+	          error
+	        );
+	      });
+	    }
 	
 	    return React.createElement(
 	      'form',
@@ -55444,7 +55425,7 @@
 	module.exports = Form;
 
 /***/ },
-/* 556 */
+/* 555 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55506,7 +55487,7 @@
 	module.exports = SearchStatus;
 
 /***/ },
-/* 557 */
+/* 556 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55561,7 +55542,7 @@
 	module.exports = Smoker;
 
 /***/ },
-/* 558 */
+/* 557 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55633,7 +55614,7 @@
 	module.exports = Diet;
 
 /***/ },
-/* 559 */
+/* 558 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -55705,6 +55686,35 @@
 	module.exports = Pet;
 
 /***/ },
+/* 559 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ClientActions = __webpack_require__(492);
+	var ErrorStore = __webpack_require__(524);
+	
+	var Errors = {
+	  getInitialState: function () {
+	    return {
+	      errors: ErrorStore.errors()
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.errorsListener = ErrorStore.addListener(this._errorsChanged);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.errorsListener.remove();
+	  },
+	
+	  _errorsChanged: function () {
+	    this.setState({ errors: ErrorStore.errors() });
+	  }
+	};
+	
+	module.exports = Errors;
+
+/***/ },
 /* 560 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -55712,7 +55722,7 @@
 	var hashHistory = __webpack_require__(166).hashHistory;
 	
 	var UserStore = __webpack_require__(505);
-	var ProfileStore = __webpack_require__(533);
+	var ProfileStore = __webpack_require__(532);
 	var ClientActions = __webpack_require__(492);
 	
 	var Header = __webpack_require__(561);
@@ -55806,16 +55816,16 @@
 	
 	var ClientActions = __webpack_require__(492);
 	var UserStore = __webpack_require__(505);
-	var ProfileStore = __webpack_require__(533);
-	var FilterParamsStore = __webpack_require__(534);
+	var ProfileStore = __webpack_require__(532);
+	var FilterParamsStore = __webpack_require__(533);
 	
-	var GeoUtils = __webpack_require__(547);
+	var GeoUtils = __webpack_require__(546);
 	
 	// Components
-	var SearchStatus = __webpack_require__(556);
-	var Smoker = __webpack_require__(557);
-	var Diet = __webpack_require__(558);
-	var Pet = __webpack_require__(559);
+	var SearchStatus = __webpack_require__(555);
+	var Smoker = __webpack_require__(556);
+	var Diet = __webpack_require__(557);
+	var Pet = __webpack_require__(558);
 	
 	var Form = React.createClass({
 	  displayName: 'Form',

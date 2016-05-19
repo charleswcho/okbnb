@@ -22,9 +22,10 @@
 
 class Profile < ActiveRecord::Base
   validates :user_id, :profilePicURL, :name, :age, :description,
-            :location, :search_status, :smoker, :diet, :pet, :budget, presence: true
+            :location, :search_status, presence: true
   # validates :search_status, inclusion: { in: ["Active", "Passive", "Don't contact"] }
-  # validates :smoker, inclusion: { in: [true, false] }
+  validates :smoker, inclusion: { in: [true, false], message: "can't be blank" }
+  validates :diet, :pet, :budget, presence: true
   # validates :diet, inclusion: { in: ["Vege", "Vegan", "Gluten", "Other"] }
   # validates :pet, inclusion: { in: ["Cat", "Dog", "Bird", "Other"] }
   validates :user_id, uniqueness: { message: 'can only have one profile'}

@@ -1,30 +1,10 @@
 User.create(email: "Guest", password: "1234567");
 
-# 10.times do |i|
-#   i = i.to_i
-#   charles = User.create(email: "Charles#{i}", password: "1234567");
-#   Profile.create!(
-#     user_id: i,
-#     profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1461952627/kwe0lerlmgdaggz8fwir.jpg',
-#     name: charles.email,
-#     age: i + 23,
-#     description: "asdfasd",
-#     location: "1#{i}0 Spear St, San Francisco, CA",
-#     lat: 37.791039 + (i * 0.001),
-#     lng: -122.394853,
-#     search_status: "Active",
-#     smoker: false,
-#     pet: "Dog",
-#     diet: "Vege",
-#     budget: 9001
-#   )
-# end
-
 # San Francisco
 
 User.create!(email: "VanessaHunter26@gmail.com", password: "1234567");
 Profile.create!(
-  user_id: 0,
+  user_id: 2,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462573634/profile-1_iguqo9.jpg',
   name: 'Vanessa Hunter',
   age: 21,
@@ -41,7 +21,7 @@ Profile.create!(
 
 User.create!(email: "AlexReed24@gmail.com", password: "1234567");
 Profile.create!(
-  user_id: 1,
+  user_id: 3,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462573791/profile-2_ytqce2.jpg
 ',
   name: 'Alex Reed',
@@ -63,7 +43,7 @@ Professional weirdo
 
 User.create!(email: "JohnWilis56@gmail.com", password: "1234567");
 Profile.create!(
-  user_id: 2,
+  user_id: 4,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462573862/profile-3_g6imxu.jpg
 ',
   name: 'John Wilis',
@@ -81,7 +61,7 @@ Profile.create!(
 
 User.create!(email: "AshleyBre37@gmail.com", password: "1234567");
 Profile.create!(
-  user_id: 3,
+  user_id: 5,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462573906/profile-4_jedvet.jpg
 ',
   name: 'Ashley Bre',
@@ -101,7 +81,7 @@ Profile.create!(
 
 User.create!(email: "JacobMason33@gmail.com", password: "1234567");
 Profile.create!(
-  user_id: 4,
+  user_id: 6,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574326/profile-5_jkqstf.jpg
 ',
   name: 'Jacob Mason',
@@ -119,7 +99,7 @@ Profile.create!(
 
 User.create!(email: "TofflerinaBox27@gmail.com", password: "1234567");
 Profile.create!(
-  user_id: 5,
+  user_id: 7,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462567098/profile-6_r60ify.jpg
 ',
   name: 'Tofflerina Box',
@@ -139,7 +119,7 @@ I'm a really cheerful and ditzy person, leading to jokes about how things fly ov
 
 User.create!(email: "EthanNoah28@gmail.com", password: "1234567");
 Profile.create!(
-  user_id: 6,
+  user_id: 8,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462567097/profile-7_sb1rhw.jpg
 ',
   name: 'Ethan Noah',
@@ -157,7 +137,7 @@ Profile.create!(
 
 User.create!(email: "MichaelSmith32@gmail.com", password: "1234567");
 Profile.create!(
-  user_id: 7,
+  user_id: 9,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574256/profile-8_zi55ip.jpg
 ',
   name: 'Michael Smith',
@@ -179,7 +159,7 @@ I am a lifetime student and I have 2 undergrad degrees, one graduate, and I’m 
 
 User.create!(email: "WilliamLiam39@gmail.com", password: "1234567");
 Profile.create!(
-  user_id: 8,
+  user_id: 10,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574588/profile-9_zbkazc.jpg
 ',
   name: 'William Liam',
@@ -197,7 +177,7 @@ Profile.create!(
 
 User.create!(email: "SophiaMia31@gmail.com", password: "1234567");
 Profile.create!(
-  user_id: 9,
+  user_id: 11,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574629/profile-10_qmh68p.jpg
 ',
   name: 'Sophia Mia',
@@ -219,7 +199,7 @@ Professional weirdo
 
 User.create!(email: "AidenJohnson23@gmail.com", password: "1234567");
 Profile.create!(
-  user_id: 10,
+  user_id: 12,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574705/profile-11_dyowfj.jpg
 ',
   name: 'Aiden Johnson',
@@ -237,7 +217,7 @@ Profile.create!(
 
 User.create!(email: "RobertGarcia34@gmail.com", password: "1234567");
 Profile.create!(
-  user_id: 11,
+  user_id: 13,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574758/profile-12_tvlrpq.jpg
 ',
   name: 'Robert Garcia',

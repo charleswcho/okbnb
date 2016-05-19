@@ -12,7 +12,7 @@ function _getCoordsObj(latLng) {
   };
 }
 
-module.exports = React.createClass({
+var Map = React.createClass({
   componentDidMount: function(){
     var map = ReactDOM.findDOMNode(this.refs.map);
     this.map = new google.maps.Map(map, this.props.mapOptions);
@@ -30,7 +30,7 @@ module.exports = React.createClass({
 
   componentDidUpdate: function () {
     if (!this.markers){
-      this.eachProfile(this.createMarkerFromProfile) 
+      this.eachProfile(this.createMarkerFromProfile)
     }
     this._onChange();
   },
@@ -125,3 +125,5 @@ module.exports = React.createClass({
     return ( <div className="half-map" ref="map">Map</div>);
   }
 });
+
+module.exports = Map;

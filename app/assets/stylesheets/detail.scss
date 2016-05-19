@@ -37,10 +37,15 @@
   border: none;
   border-radius: 2px;
   margin: 35px 0 0 40px;
+  outline: none;
 }
 
 .detail-contact-button:hover {
   background: #4c7bd9;
+}
+
+.detail-contact-button:active {
+  background-color: #376bd5;
 }
 
 .detail-description {

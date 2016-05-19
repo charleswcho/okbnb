@@ -20,6 +20,7 @@ var Detail = React.createClass({
   },
 
   componentDidMount: function () {
+    window.scroll(0,0);
     this.userListener = UserStore.addListener(this._userChanged);
     this.profileListener = ProfileStore.addListener(this._profileChanged);
     this.offerListener = OfferStore.addListener(this._offersChanged);

@@ -46,6 +46,7 @@ var Form = React.createClass({
 
   componentWillUnmount: function () {
     this.listener.remove();
+    ClientActions.clearErrors();
   },
 
   openUploadWidget: function(e) {
@@ -170,10 +171,12 @@ var Form = React.createClass({
     var description = this.state.description;
     var location = this.state.location;
     var budget = this.state.budget;
-
-    var errors = this.props.errors.map(function (error) {
-      return <div className='errors'>{error}</div>
-    });
+    var errors;
+    if (this.props.errors) {
+      errors = this.props.errors.map(function (error) {
+        return <div className='errors'>{error}</div>
+      });
+    }
 
     return (
       <form className='profile-form' onSubmit={this.handleSubmit}>

@@ -12,7 +12,8 @@ var ApiUtils = {
         ServerActions.receiveProfiles(profiles)
       },
       error: function (e) {
-        ServerActions.handleError(e)
+        console.log(e.responceText)
+        // ServerActions.handleError(e)
       },
     });
   },
@@ -24,7 +25,8 @@ var ApiUtils = {
         ServerActions.receiveProfile(profile)
       },
       error: function (e) {
-        ServerActions.handleError(e)
+        console.log(e.responceText)
+        // ServerActions.handleError(e)
       },
     });
   },
@@ -55,7 +57,8 @@ var ApiUtils = {
         ServerActions.receiveProfile(profile)
       },
       error: function (e) {
-        ServerActions.handleError(e)
+        console.log(e.responceText)
+        // ServerActions.handleError(e)
       },
     });
   },
@@ -69,7 +72,8 @@ var ApiUtils = {
         ServerActions.deleteProfile(profile.id)
       },
       error: function (e) {
-        ServerActions.handleError(e)
+        console.log(e.responceText)
+        // ServerActions.handleError(e)
       },
     });
   },

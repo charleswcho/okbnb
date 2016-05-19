@@ -13,7 +13,7 @@ var setErrors = function (errors) {
 };
 
 var clearErrors = function () {
-  _errors = {};
+  _errors = [];
 };
 
 ErrorStore.errors = function () {
