@@ -18,6 +18,7 @@ var Map = React.createClass({
     this.map = new google.maps.Map(map, this.props.mapOptions);
     this.markers = [];
     this.registerListeners();
+    this.props.renderedMap();
   },
 
   componentWillReceiveProps: function (newProps) {

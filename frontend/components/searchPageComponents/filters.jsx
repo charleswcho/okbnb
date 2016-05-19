@@ -7,7 +7,16 @@ var PetOption = require('./filterComponents/pet');
 var BudgetOption = require('./filterComponents/budget');
 
 var Filters = React.createClass({
+  renderBudget: function () {
+    if (this.props.renderBudget) {
+      return (<BudgetOption/>)
+    } else {
+      return null
+    }
+  },
+
   render: function () {
+
     return (
       <div className='filters'>
         <div className='filter-preferences'>
@@ -21,7 +30,7 @@ var Filters = React.createClass({
         </div>
         <div className='filter-budget'>
           <div className='filter-heading' id='budget'>Budget</div>
-          <BudgetOption/>
+          {this.renderBudget()}
         </div>
       </div>
     );

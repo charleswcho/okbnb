@@ -29,7 +29,8 @@ var Search = React.createClass({
       profiles: ProfileStore.all(),
       filterParams: FilterParamsStore.params(),
       mapOptions: {},
-      renderMap: false
+      renderMap: false,
+      renderBudget: false
     };
   },
 
@@ -73,27 +74,31 @@ var Search = React.createClass({
     console.log(this.state.renderMap)
   },
 
-  render: function() {
+  renderMap: function () {
     if (this.state.renderMap) {
       return(
-        <div className='search-page'>
-          <div className="half-filter-index">
-            <Filters />
-            <Index profiles={this.state.profiles} renderMap={this.state.renderMap}/>
-          </div>
-          <Map profiles={this.state.profiles} mapOptions={this.state.mapOptions}
-               renderMap={this.state.renderMap}/>
-        </div>
+        <Map profiles={this.state.profiles} mapOptions={this.state.mapOptions}
+             renderMap={this.state.renderMap} renderedMap={this.renderedMap}/>
       );
     } else {
-      return(
-        <div className='search-page'>
-          <div className="half-filter-index">
-            <Filters />
-          </div>
-        </div>
-      );
+      return null
     }
+  },
+
+  renderedMap: function () {
+    this.setState({ renderBudget: true })
+  },
+
+  render: function() {
+    return(
+      <div className='search-page'>
+        <div className="half-filter-index">
+          <Filters renderBudget={this.state.renderBudget}/>
+          <Index profiles={this.state.profiles} renderMap={this.state.renderMap}/>
+        </div>
+        {this.renderMap()}
+      </div>
+    );
   }
 });
 

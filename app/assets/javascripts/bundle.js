@@ -52583,7 +52583,8 @@
 	      profiles: ProfileStore.all(),
 	      filterParams: FilterParamsStore.params(),
 	      mapOptions: {},
-	      renderMap: false
+	      renderMap: false,
+	      renderBudget: false
 	    };
 	  },
 	
@@ -52627,31 +52628,31 @@
 	    console.log(this.state.renderMap);
 	  },
 	
-	  render: function () {
+	  renderMap: function () {
 	    if (this.state.renderMap) {
-	      return React.createElement(
-	        'div',
-	        { className: 'search-page' },
-	        React.createElement(
-	          'div',
-	          { className: 'half-filter-index' },
-	          React.createElement(Filters, null),
-	          React.createElement(Index, { profiles: this.state.profiles, renderMap: this.state.renderMap })
-	        ),
-	        React.createElement(Map, { profiles: this.state.profiles, mapOptions: this.state.mapOptions,
-	          renderMap: this.state.renderMap })
-	      );
+	      return React.createElement(Map, { profiles: this.state.profiles, mapOptions: this.state.mapOptions,
+	        renderMap: this.state.renderMap, renderedMap: this.renderedMap });
 	    } else {
-	      return React.createElement(
-	        'div',
-	        { className: 'search-page' },
-	        React.createElement(
-	          'div',
-	          { className: 'half-filter-index' },
-	          React.createElement(Filters, null)
-	        )
-	      );
+	      return null;
 	    }
+	  },
+	
+	  renderedMap: function () {
+	    this.setState({ renderBudget: true });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'search-page' },
+	      React.createElement(
+	        'div',
+	        { className: 'half-filter-index' },
+	        React.createElement(Filters, { renderBudget: this.state.renderBudget }),
+	        React.createElement(Index, { profiles: this.state.profiles, renderMap: this.state.renderMap })
+	      ),
+	      this.renderMap()
+	    );
 	  }
 	});
 	
@@ -52834,7 +52835,16 @@
 	var Filters = React.createClass({
 	  displayName: 'Filters',
 	
+	  renderBudget: function () {
+	    if (this.props.renderBudget) {
+	      return React.createElement(BudgetOption, null);
+	    } else {
+	      return null;
+	    }
+	  },
+	
 	  render: function () {
+	
 	    return React.createElement(
 	      'div',
 	      { className: 'filters' },
@@ -52863,7 +52873,7 @@
 	          { className: 'filter-heading', id: 'budget' },
 	          'Budget'
 	        ),
-	        React.createElement(BudgetOption, null)
+	        this.renderBudget()
 	      )
 	    );
 	  }
@@ -54189,6 +54199,7 @@
 	    this.map = new google.maps.Map(map, this.props.mapOptions);
 	    this.markers = [];
 	    this.registerListeners();
+	    this.props.renderedMap();
 	  },
 	
 	  componentWillReceiveProps: function (newProps) {
