@@ -4,16 +4,7 @@
 
 [heroku]: https://okbnb.herokuapp.com
 
-## Minimum Viable Product
-
-OkBnB is a web application inspired by AirBnb that was build using Ruby on Rails and React.js.  
-
-- [X] New account creation, login, and guest/demo login
-- [X] Smooth, bug-free navigation
-- [X] Adequate seed data to demonstrate the site's features
-- [X] The minimally necessary features for an AirBnb-inspired site: viewing potential tenant profiles and filtering by certain parameters, offer a booking to a tenant, and create new profiles
-- [X] Hosting on Heroku
-- [X] CSS styling that is satisfactorily visually appealing
+Okbnb is a great way to find tenants you really would like to have in your home.
 
 ## Features & Implementation
 
@@ -24,34 +15,33 @@ OkBnB is a web application inspired by AirBnb that was build using Ruby on Rails
 
   This feature was implemented using a filter store that triggers a refetch of all the profiles on change.  The filter params are sent to the `api/profiles` and are used to chain Active Record queries to return the filtered profiles.
 
+![filters][filters]
 
-![imageoffiltersindex](https://github.com/charleswcho/okbnb/tree/master/docs/filters.png)
+[filters]: docs/profileFilters.png
 
 
 ### Communication
 
   When a user is interested in a profile, they can send a booking offer to the potential tenant.  This will call the custom route `api/profiles/contact` which takes the profile's owner and the current user       then sends an email from the current user to the profile's owner to notify them that there is someone interested in them.
 
-![imageoffiltersindex](https://github.com/charleswcho/okbnb/tree/master/docs/profileDetail.png)
+![Profile Detail][profile detail]
+
+[profile detail]: docs/profileDetail.png
 
 
 ### Editing & Deleting Profiles
 
   If the current user is the owner of a particular profile they have access to editing and deleting that profile.  The edit form in prefilled with the information of the profile and on submit, returns to the edited version of the profile.
 
-![imageoffiltersindex](https://github.com/charleswcho/okbnb/tree/master/docs/profileEdit.png)
+![Profile Edit][profile edit]
 
-## Future features
+[profile edit]: docs/profileEdit.png
 
 ### Errors
 
-  Errors will be shown on auth errors, profile create, edit, and delete, and sending messages.
+  Errors are shown on auth errors, profile create.
 
-### Slider
-
-  Filtering is not yet complete with the last feature being a slider for my budget.
-  It will be a two handled slider that will take the range in between and then
-  filter the results on the profiles that have budgets in that range.
+## Future features
 
 ### Search
 
