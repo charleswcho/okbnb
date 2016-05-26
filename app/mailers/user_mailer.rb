@@ -1,3 +1,5 @@
+require 'byebug'
+
 class UserMailer < ApplicationMailer
   def offer_notification_email(sender, receiver)
     @sender = sender

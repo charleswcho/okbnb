@@ -1,3 +1,5 @@
+require 'byebug'
+
 class Api::ProfilesController < ApplicationController
   def index
     @profiles = Profile.all
@@ -66,7 +68,9 @@ class Api::ProfilesController < ApplicationController
       profile_id: params[:profile_id].to_i,
       user_id: params[:user_id].to_i
     })
-    @user = User.find(params[:user_id].to_i)
+
+    @user = Profile.find(params[:profile_id]).user
+    debugger
     UserMailer.offer_notification_email(current_user, @user).deliver_now
     render json: @user
   end

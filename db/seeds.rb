@@ -2,7 +2,7 @@ User.create(email: "Guest", password: "1234567");
 
 # San Francisco
 
-User.create!(email: "VanessaHunter26@gmail.com", password: "1234567");
+User.create!(email: "charleswcho@gmail.com", password: "1234567");
 Profile.create!(
   user_id: 2,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462573634/profile-1_iguqo9.jpg',
