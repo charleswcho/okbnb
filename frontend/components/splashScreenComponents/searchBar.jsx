@@ -1,13 +1,33 @@
 var React = require('react');
 var hashHistory = require('react-router').hashHistory;
 
-module.exports = React.createClass({
+var SearchBar = React.createClass({
 
   getInitialState: function () {
     return {
       location: '',
       placeholder: 'Where to?'
     };
+  },
+
+  componentDidMount: function() {
+    var input = document.getElementById('searchTextField');
+    window.autocomplete = new google.maps.places.Autocomplete(input, {types: ['(cities)']});
+
+    var that = this;
+    document.getElementById('searchTextField').addEventListener(
+      'keypress', function(e) {
+        if (e.charCode === 13) {
+          that.handleSearch();
+      }
+    });
+    google.maps.event.addListener(
+      window.autocomplete,
+      'place_changed',
+      function () {
+        var autoLoc = window.autocomplete.getPlace().name;
+        hashHistory.push({ pathname: 'search/' + autoLoc.replace(/\W+/g, "-") })
+    });
   },
 
   locationChanged: function (e) {
@@ -22,8 +42,12 @@ module.exports = React.createClass({
     if (this.state.location === '') {
       this.setState({ placeholder: 'Please enter a location' });
     } else {
-      var loc = this.state.location.replace(/\W+/g, "-")
-      hashHistory.push({pathname: 'search/' + loc})
+      var loc = this.state.location
+      var autoLoc = window.autocomplete.getPlace()
+      if (autoLoc) {
+        loc = autoLoc.name
+      }
+      hashHistory.push({pathname: 'search/' + loc.replace(/\W+/g, "-")})
     }
   },
 
@@ -32,11 +56,14 @@ module.exports = React.createClass({
 
     return (
       <form className='search-form' onSubmit={this.handleSearch}>
-        <input className='search-input' type='text' value={location}
-               placeholder={this.state.placeholder} onInput={this.locationChanged} />
+        <input id='searchTextField' className='search-input' type='text'
+               value={location} placeholder={this.state.placeholder}
+               onInput={this.locationChanged} />
 
         <button className='search-submit' type='submit'>Search</button>
       </form>
     );
   }
 });
+
+module.exports = SearchBar;

@@ -52372,8 +52372,8 @@
 	var React = __webpack_require__(1);
 	var hashHistory = __webpack_require__(166).hashHistory;
 	
-	module.exports = React.createClass({
-	  displayName: 'exports',
+	var SearchBar = React.createClass({
+	  displayName: 'SearchBar',
 	
 	
 	  getInitialState: function () {
@@ -52381,6 +52381,22 @@
 	      location: '',
 	      placeholder: 'Where to?'
 	    };
+	  },
+	
+	  componentDidMount: function () {
+	    var input = document.getElementById('searchTextField');
+	    window.autocomplete = new google.maps.places.Autocomplete(input, { types: ['(cities)'] });
+	
+	    var that = this;
+	    document.getElementById('searchTextField').addEventListener('keypress', function (e) {
+	      if (e.charCode === 13) {
+	        that.handleSearch();
+	      }
+	    });
+	    google.maps.event.addListener(window.autocomplete, 'place_changed', function () {
+	      var autoLoc = window.autocomplete.getPlace().name;
+	      hashHistory.push({ pathname: 'search/' + autoLoc.replace(/\W+/g, "-") });
+	    });
 	  },
 	
 	  locationChanged: function (e) {
@@ -52395,8 +52411,12 @@
 	    if (this.state.location === '') {
 	      this.setState({ placeholder: 'Please enter a location' });
 	    } else {
-	      var loc = this.state.location.replace(/\W+/g, "-");
-	      hashHistory.push({ pathname: 'search/' + loc });
+	      var loc = this.state.location;
+	      var autoLoc = window.autocomplete.getPlace();
+	      if (autoLoc) {
+	        loc = autoLoc.name;
+	      }
+	      hashHistory.push({ pathname: 'search/' + loc.replace(/\W+/g, "-") });
 	    }
 	  },
 	
@@ -52406,8 +52426,9 @@
 	    return React.createElement(
 	      'form',
 	      { className: 'search-form', onSubmit: this.handleSearch },
-	      React.createElement('input', { className: 'search-input', type: 'text', value: location,
-	        placeholder: this.state.placeholder, onInput: this.locationChanged }),
+	      React.createElement('input', { id: 'searchTextField', className: 'search-input', type: 'text',
+	        value: location, placeholder: this.state.placeholder,
+	        onInput: this.locationChanged }),
 	      React.createElement(
 	        'button',
 	        { className: 'search-submit', type: 'submit' },
@@ -52416,6 +52437,8 @@
 	    );
 	  }
 	});
+	
+	module.exports = SearchBar;
 
 /***/ },
 /* 529 */
