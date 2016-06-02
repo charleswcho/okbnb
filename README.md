@@ -4,14 +4,13 @@
 
 [heroku]: https://okbnb.herokuapp.com
 
-Okbnb is a great way to find tenants you really would like to have in your home.
+Okbnb is a great way to find tenants you would like to have in your home.
 
 ## Features & Implementation
 
 ### Filtering
 
-  Profiles can be filtered by a number of options however even before the user inputs anything the profiles are filtered by the borders of the map.  
-  If a profile's location is not within the bounds of the map, it is not displayed on the index.
+  Profiles can be filtered by a number of options however even before the user inputs anything the profiles are filtered by the borders of the map.  If a profile's location is not within the bounds of the map, it is not displayed on the index.
 
   This feature was implemented using a filter store that triggers a refetch of all the profiles on change.  The filter params are sent to the `api/profiles` and are used to chain Active Record queries to return the filtered profiles.
 
@@ -37,15 +36,21 @@ Okbnb is a great way to find tenants you really would like to have in your home.
 
 [profile edit]: docs/profileEdit.png
 
+### Search
+
+  Google maps autocomplete allows the user to see suggestions for relevant cities based on the current search value.  
+
+  When a user clicks on one of the suggestions in the dropdown the route changes and the index page is rendered.
+
+  ![autocomplete][autocomplete]
+
+  [autocomplete]: docs/autocomplete.png
+
 ### Errors
 
   Errors are shown on auth errors, profile create.
 
 ## Future features
-
-### Search
-
-  My app will be able to give relevant suggestions based on the location typed in.
 
 ### Direct Messaging
 
