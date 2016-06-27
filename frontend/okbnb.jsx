@@ -7,7 +7,6 @@ var Route = ReactRouter.Route;
 var IndexRoute = ReactRouter.IndexRoute;
 var hashHistory = ReactRouter.hashHistory;
 
-
 // Components
 var NavBar = require('./components/navBar');
 var SplashScreen = require('./components/splashScreen');

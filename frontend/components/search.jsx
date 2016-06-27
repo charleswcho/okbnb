@@ -71,14 +71,13 @@ var Search = React.createClass({
       mapOptions: newMapOptions,
       renderMap: true
     });
-    console.log(this.state.renderMap)
   },
 
   renderMap: function () {
     if (this.state.renderMap) {
       return(
         <Map profiles={this.state.profiles} mapOptions={this.state.mapOptions}
-             renderMap={this.state.renderMap} renderedMap={this.renderedMap}/>
+             renderedMap={this.renderedMap}/>
       );
     } else {
       return null

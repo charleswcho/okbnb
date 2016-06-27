@@ -10,7 +10,7 @@ var Navbar = require('react-bootstrap').Navbar,
 var CurrentUserStateMixin = require('../mixins/currentUserState');
 
 var ClientActions = require('../actions/clientActions');
-var ServerActions = require('../actions/ServerActions');
+var ServerActions = require('../actions/serverActions');
 var UserStore = require('../stores/userStore');
 var ErrorStore = require('../stores/errorStore');
 

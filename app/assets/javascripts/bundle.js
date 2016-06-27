@@ -25494,7 +25494,7 @@
 	var CurrentUserStateMixin = __webpack_require__(491);
 	
 	var ClientActions = __webpack_require__(492);
-	var ServerActions = __webpack_require__(523);
+	var ServerActions = __webpack_require__(494);
 	var UserStore = __webpack_require__(505);
 	var ErrorStore = __webpack_require__(524);
 	
@@ -52001,109 +52001,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 523 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(495);
-	var ProfileConstants = __webpack_require__(499);
-	var UserConstants = __webpack_require__(500);
-	var OfferConstants = __webpack_require__(501);
-	var ErrorConstants = __webpack_require__(502);
-	
-	module.exports = {
-	  // User and Session methods
-	  receiveCurrentUser: function (currentUser) {
-	    AppDispatcher.dispatch({
-	      actionType: UserConstants.RECEIVE_CURRENT_USER,
-	      currentUser: currentUser
-	    });
-	  },
-	
-	  removeCurrentUser: function (currentUser) {
-	    AppDispatcher.dispatch({
-	      actionType: UserConstants.REMOVE_CURRENT_USER,
-	      currentUser: currentUser
-	    });
-	  },
-	
-	  handleError: function (error) {
-	    AppDispatcher.dispatch({
-	      actionType: UserConstants.ERRORS,
-	      errors: error.responseJSON
-	    });
-	  },
-	
-	  clearErrors: function () {
-	    AppDispatcher.dispatch({
-	      actionType: UserConstants.CLEAR_ERRORS
-	    });
-	  },
-	
-	  handleError: function (error) {
-	    AppDispatcher.dispatch({
-	      actionType: ErrorConstants.ERRORS,
-	      errors: error.responseJSON
-	    });
-	  },
-	
-	  clearErrors: function () {
-	    AppDispatcher.dispatch({
-	      actionType: ErrorConstants.CLEAR_ERRORS
-	    });
-	  },
-	
-	  // Profile methods
-	  receiveProfiles: function (profiles) {
-	    AppDispatcher.dispatch({
-	      actionType: ProfileConstants.PROFILES_RECEIVED,
-	      profiles: profiles
-	    });
-	  },
-	
-	  receiveProfile: function (profile) {
-	    AppDispatcher.dispatch({
-	      actionType: ProfileConstants.PROFILE_RECEIVED,
-	      profile: profile
-	    });
-	  },
-	
-	  deleteProfile: function (profileId) {
-	    AppDispatcher.dispatch({
-	      actionType: ProfileConstants.DELETE_PROFILE,
-	      profileId: profileId
-	    });
-	  },
-	
-	  clearProfiles: function () {
-	    AppDispatcher.dispatch({
-	      actionType: ProfileConstants.CLEAR_PROFILES
-	    });
-	  },
-	
-	  updateHovered: function (profileId) {
-	    AppDispatcher.dispatch({
-	      actionType: ProfileConstants.UPDATE_HOVERED,
-	      profileId: profileId
-	    });
-	  },
-	
-	  updateLoc: function (loc) {
-	    AppDispatcher.dispatch({
-	      actionType: ProfileConstants.UPDATE_LOC,
-	      loc: loc
-	    });
-	  },
-	
-	  // Offer methods
-	  receiveOffers: function (offers) {
-	    AppDispatcher.dispatch({
-	      actionType: OfferConstants.UPDATE_OFFERS,
-	      offers: offers
-	    });
-	  }
-	};
-
-/***/ },
+/* 523 */,
 /* 524 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -52648,13 +52546,12 @@
 	      mapOptions: newMapOptions,
 	      renderMap: true
 	    });
-	    console.log(this.state.renderMap);
 	  },
 	
 	  renderMap: function () {
 	    if (this.state.renderMap) {
 	      return React.createElement(Map, { profiles: this.state.profiles, mapOptions: this.state.mapOptions,
-	        renderMap: this.state.renderMap, renderedMap: this.renderedMap });
+	        renderedMap: this.renderedMap });
 	    } else {
 	      return null;
 	    }
