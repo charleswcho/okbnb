@@ -2,7 +2,8 @@ User.create(email: "Guest", password: "1234567");
 
 # San Francisco
 
-User.create!(email: "charleswcho@gmail.com", password: "1234567");
+User.create!(email: "VanessaHunter26@gmail.com", password: "1234567", profile_id: 1);
+
 Profile.create!(
   user_id: 2,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462573634/profile-1_iguqo9.jpg',
@@ -19,7 +20,7 @@ Profile.create!(
   budget: 1240
 )
 
-User.create!(email: "AlexReed24@gmail.com", password: "1234567");
+User.create!(email: "AlexReed24@gmail.com", password: "1234567", profile_id: 2);
 Profile.create!(
   user_id: 3,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462573791/profile-2_ytqce2.jpg
@@ -41,7 +42,7 @@ Professional weirdo
   budget: 1452
 )
 
-User.create!(email: "JohnWilis56@gmail.com", password: "1234567");
+User.create!(email: "JohnWilis56@gmail.com", password: "1234567", profile_id: 3);
 Profile.create!(
   user_id: 4,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462573862/profile-3_g6imxu.jpg
@@ -59,7 +60,7 @@ Profile.create!(
   budget: 1956
 )
 
-User.create!(email: "AshleyBre37@gmail.com", password: "1234567");
+User.create!(email: "AshleyBre37@gmail.com", password: "1234567", profile_id: 4);
 Profile.create!(
   user_id: 5,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462573906/profile-4_jedvet.jpg
@@ -79,7 +80,7 @@ Profile.create!(
 
 # New York
 
-User.create!(email: "JacobMason33@gmail.com", password: "1234567");
+User.create!(email: "JacobMason33@gmail.com", password: "1234567", profile_id: 5);
 Profile.create!(
   user_id: 6,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574326/profile-5_jkqstf.jpg
@@ -97,7 +98,7 @@ Profile.create!(
   budget: 1753
 )
 
-User.create!(email: "TofflerinaBox27@gmail.com", password: "1234567");
+User.create!(email: "TofflerinaBox27@gmail.com", password: "1234567", profile_id: 6);
 Profile.create!(
   user_id: 7,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462567098/profile-6_r60ify.jpg
@@ -117,7 +118,7 @@ I'm a really cheerful and ditzy person, leading to jokes about how things fly ov
   budget: 1573
 )
 
-User.create!(email: "EthanNoah28@gmail.com", password: "1234567");
+User.create!(email: "EthanNoah28@gmail.com", password: "1234567", profile_id: 7);
 Profile.create!(
   user_id: 8,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462567097/profile-7_sb1rhw.jpg
@@ -135,7 +136,7 @@ Profile.create!(
   budget: 1267
 )
 
-User.create!(email: "MichaelSmith32@gmail.com", password: "1234567");
+User.create!(email: "MichaelSmith32@gmail.com", password: "1234567", profile_id: 8);
 Profile.create!(
   user_id: 9,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574256/profile-8_zi55ip.jpg
@@ -157,7 +158,7 @@ I am a lifetime student and I have 2 undergrad degrees, one graduate, and I’m 
 
 # Chicago
 
-User.create!(email: "WilliamLiam39@gmail.com", password: "1234567");
+User.create!(email: "WilliamLiam39@gmail.com", password: "1234567", profile_id: 9);
 Profile.create!(
   user_id: 10,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574588/profile-9_zbkazc.jpg
@@ -175,7 +176,7 @@ Profile.create!(
   budget: 1543
 )
 
-User.create!(email: "SophiaMia31@gmail.com", password: "1234567");
+User.create!(email: "SophiaMia31@gmail.com", password: "1234567", profile_id: 10);
 Profile.create!(
   user_id: 11,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574629/profile-10_qmh68p.jpg
@@ -197,7 +198,7 @@ Professional weirdo
   budget: 1343
 )
 
-User.create!(email: "AidenJohnson23@gmail.com", password: "1234567");
+User.create!(email: "AidenJohnson23@gmail.com", password: "1234567", profile_id: 11);
 Profile.create!(
   user_id: 12,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574705/profile-11_dyowfj.jpg
@@ -215,7 +216,7 @@ Profile.create!(
   budget: 1356
 )
 
-User.create!(email: "RobertGarcia34@gmail.com", password: "1234567");
+User.create!(email: "RobertGarcia34@gmail.com", password: "1234567", profile_id: 12);
 Profile.create!(
   user_id: 13,
   profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574758/profile-12_tvlrpq.jpg

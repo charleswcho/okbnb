@@ -8,6 +8,7 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  email           :string
+#  profile_id      :integer
 #
 
 class User < ActiveRecord::Base

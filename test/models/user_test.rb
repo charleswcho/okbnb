@@ -8,6 +8,7 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  email           :string
+#  profile_id      :integer
 #
 
 require 'test_helper'

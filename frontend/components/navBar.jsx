@@ -76,10 +76,10 @@ var NavBar = React.createClass({
     if (this.state.currentUser && this.state.currentUser.email) {
       return (
         <Nav pullRight>
-          <NavItem id='create-profile'
-                   onClick={this.handleCreateProfile}>Create a Profile</NavItem>
-          <NavItem className='' id='email'>{this.state.currentUser.email}
-          </NavItem>
+          <NavItem id='create-profile'onClick={this.handleCreateProfile}>
+            Create a Profile</NavItem>
+          <NavItem className='' onClick={this.showProfile} id='email'>
+            {this.state.currentUser.email}</NavItem>
           <NavItem className='' onClick={this.signOut}>Sign Out</NavItem>
         </Nav>
       )
