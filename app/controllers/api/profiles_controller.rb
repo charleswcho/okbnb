@@ -37,6 +37,7 @@ class Api::ProfilesController < ApplicationController
   def create
     @profile = Profile.new(profile_params)
     if @profile.save
+      User.find(@profile.user_id).update_attribute(:profile_id, @profile.id)
       render json: @profile
     else
       render json: @profile.errors.full_messages, status: 400

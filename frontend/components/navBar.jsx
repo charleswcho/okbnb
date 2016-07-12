@@ -68,34 +68,52 @@ var NavBar = React.createClass({
     });
   },
 
+  showProfile: function () {
+    if (this.state.currentUser.profile_id) {
+      hashHistory.push({pathname: 'profile/' + this.state.currentUser.profile_id})
+    }
+  },
+
   handleCreateProfile: function () {
     hashHistory.push({pathname: 'profile/new'})
   },
 
-  toggleNavBarRight: function () {
-    if (this.state.currentUser && this.state.currentUser.email) {
-      return (
-        <Nav pullRight>
-          <NavItem id='create-profile'onClick={this.handleCreateProfile}>
-            Create a Profile</NavItem>
-          <NavItem className='' onClick={this.showProfile} id='email'>
-            {this.state.currentUser.email}</NavItem>
-          <NavItem className='' onClick={this.signOut}>Sign Out</NavItem>
-        </Nav>
-      )
+  toggleCreateProfile: function () {
+    if (this.state.currentUser.profile_id) {
+      return null;
     } else {
       return (
-        <Nav pullRight>
-          <NavItem className='' onClick={this.openSignUpModal}>Sign Up</NavItem>
-          <NavItem className='' onClick={this.openSignInModal}>Sign In</NavItem>
-        </Nav>
+        <div id='create-profile'onClick={this.handleCreateProfile}>
+        Create a Profile</div>
+      )
+    }
+  },
+
+  toggleNavBarRight: function () {
+    if (this.state.currentUser && this.state.currentUser.email) {
+      return(
+        <div id="user-button" className="nav-bar-button">
+          <img src='https://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif' />
+          <ul className="user-menu">
+            <li id='menu-name'>{this.state.currentUser.email}</li>
+            <li onClick={this.showProfile}>Edit Profile</li>
+            <li onClick={this.signOut}>Log Out</li>
+          </ul>
+        </div>
+      );
+    } else {
+      return (
+        <div className='navBar-auth'>
+          <div onClick={this.openSignUpModal}>Sign Up</div>
+          <div onClick={this.openSignInModal}>Sign In</div>
+        </div>
       )
     }
   },
 
   render: function () {
     return (
-      <div className='navBar'>
+      <div className=''>
         <Modal show={this.state.showSignUpModal} onHide={this.closeSignUpModal}
                onExited={this.clearErrors}>
           <SignUpForm closeSignUpModal={this.closeSignUpModal}
@@ -108,17 +126,10 @@ var NavBar = React.createClass({
                       errors={this.state.errors}/>
         </Modal>
 
-        <Navbar>
-          <Navbar.Header>
-            <Navbar.Brand>
-              <a href="#">okbnb</a>
-            </Navbar.Brand>
-            <Navbar.Toggle />
-          </Navbar.Header>
-          <Navbar.Collapse>
-            {this.toggleNavBarRight()}
-          </Navbar.Collapse>
-        </Navbar>
+        <div className='navBar'>
+          <a className='navBar-logo' href="#">okbnb</a>
+          {this.toggleNavBarRight()}
+        </div>
       </div>
     );
   }

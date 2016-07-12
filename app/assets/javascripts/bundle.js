@@ -25554,43 +25554,66 @@
 	    });
 	  },
 	
+	  showProfile: function () {
+	    if (this.state.currentUser.profile_id) {
+	      hashHistory.push({ pathname: 'profile/' + this.state.currentUser.profile_id });
+	    }
+	  },
+	
 	  handleCreateProfile: function () {
 	    hashHistory.push({ pathname: 'profile/new' });
+	  },
+	
+	  toggleCreateProfile: function () {
+	    if (this.state.currentUser.profile_id) {
+	      return null;
+	    } else {
+	      return React.createElement(
+	        'div',
+	        { id: 'create-profile', onClick: this.handleCreateProfile },
+	        'Create a Profile'
+	      );
+	    }
 	  },
 	
 	  toggleNavBarRight: function () {
 	    if (this.state.currentUser && this.state.currentUser.email) {
 	      return React.createElement(
-	        Nav,
-	        { pullRight: true },
+	        'div',
+	        { id: 'user-button', className: 'nav-bar-button' },
+	        React.createElement('img', { src: 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif' }),
 	        React.createElement(
-	          NavItem,
-	          { id: 'create-profile', onClick: this.handleCreateProfile },
-	          'Create a Profile'
-	        ),
-	        React.createElement(
-	          NavItem,
-	          { className: '', onClick: this.showProfile, id: 'email' },
-	          this.state.currentUser.email
-	        ),
-	        React.createElement(
-	          NavItem,
-	          { className: '', onClick: this.signOut },
-	          'Sign Out'
+	          'ul',
+	          { className: 'user-menu' },
+	          React.createElement(
+	            'li',
+	            { id: 'menu-name' },
+	            this.state.currentUser.email
+	          ),
+	          React.createElement(
+	            'li',
+	            { onClick: this.showProfile },
+	            'Edit Profile'
+	          ),
+	          React.createElement(
+	            'li',
+	            { onClick: this.signOut },
+	            'Log Out'
+	          )
 	        )
 	      );
 	    } else {
 	      return React.createElement(
-	        Nav,
-	        { pullRight: true },
+	        'div',
+	        { className: 'navBar-auth' },
 	        React.createElement(
-	          NavItem,
-	          { className: '', onClick: this.openSignUpModal },
+	          'div',
+	          { onClick: this.openSignUpModal },
 	          'Sign Up'
 	        ),
 	        React.createElement(
-	          NavItem,
-	          { className: '', onClick: this.openSignInModal },
+	          'div',
+	          { onClick: this.openSignInModal },
 	          'Sign In'
 	        )
 	      );
@@ -25600,7 +25623,7 @@
 	  render: function () {
 	    return React.createElement(
 	      'div',
-	      { className: 'navBar' },
+	      { className: '' },
 	      React.createElement(
 	        Modal,
 	        { show: this.state.showSignUpModal, onHide: this.closeSignUpModal,
@@ -25616,27 +25639,14 @@
 	          errors: this.state.errors })
 	      ),
 	      React.createElement(
-	        Navbar,
-	        null,
+	        'div',
+	        { className: 'navBar' },
 	        React.createElement(
-	          Navbar.Header,
-	          null,
-	          React.createElement(
-	            Navbar.Brand,
-	            null,
-	            React.createElement(
-	              'a',
-	              { href: '#' },
-	              'okbnb'
-	            )
-	          ),
-	          React.createElement(Navbar.Toggle, null)
+	          'a',
+	          { className: 'navBar-logo', href: '#' },
+	          'okbnb'
 	        ),
-	        React.createElement(
-	          Navbar.Collapse,
-	          null,
-	          this.toggleNavBarRight()
-	        )
+	        this.toggleNavBarRight()
 	      )
 	    );
 	  }
