@@ -79,13 +79,12 @@ var NavBar = React.createClass({
   },
 
   toggleCreateProfile: function () {
+    console.log(this.state.currentUser.profile_id)
     if (this.state.currentUser.profile_id) {
-      return null;
+      return <li onClick={this.showProfile}>Profile</li>;
     } else {
-      return (
-        <div id='create-profile'onClick={this.handleCreateProfile}>
-        Create a Profile</div>
-      )
+      return <li onClick={this.handleCreateProfile}>Create a Profile</li>;
+
     }
   },
 
@@ -96,7 +95,7 @@ var NavBar = React.createClass({
           <img src='https://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif' />
           <ul className="user-menu">
             <li id='menu-name'>{this.state.currentUser.email}</li>
-            <li onClick={this.showProfile}>Edit Profile</li>
+            {this.toggleCreateProfile()}
             <li onClick={this.signOut}>Log Out</li>
           </ul>
         </div>
@@ -127,7 +126,7 @@ var NavBar = React.createClass({
         </Modal>
 
         <div className='navBar'>
-          <a className='navBar-logo' href="#">okbnb</a>
+          <a id='navBar-logo' href="#">okbnb</a>
           {this.toggleNavBarRight()}
         </div>
       </div>

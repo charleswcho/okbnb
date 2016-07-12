@@ -25565,12 +25565,17 @@
 	  },
 	
 	  toggleCreateProfile: function () {
+	    console.log(this.state.currentUser.profile_id);
 	    if (this.state.currentUser.profile_id) {
-	      return null;
+	      return React.createElement(
+	        'li',
+	        { onClick: this.showProfile },
+	        'Profile'
+	      );
 	    } else {
 	      return React.createElement(
-	        'div',
-	        { id: 'create-profile', onClick: this.handleCreateProfile },
+	        'li',
+	        { onClick: this.handleCreateProfile },
 	        'Create a Profile'
 	      );
 	    }
@@ -25590,11 +25595,7 @@
 	            { id: 'menu-name' },
 	            this.state.currentUser.email
 	          ),
-	          React.createElement(
-	            'li',
-	            { onClick: this.showProfile },
-	            'Edit Profile'
-	          ),
+	          this.toggleCreateProfile(),
 	          React.createElement(
 	            'li',
 	            { onClick: this.signOut },
@@ -25643,7 +25644,7 @@
 	        { className: 'navBar' },
 	        React.createElement(
 	          'a',
-	          { className: 'navBar-logo', href: '#' },
+	          { id: 'navBar-logo', href: '#' },
 	          'okbnb'
 	        ),
 	        this.toggleNavBarRight()

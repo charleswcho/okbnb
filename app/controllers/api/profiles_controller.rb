@@ -56,6 +56,7 @@ class Api::ProfilesController < ApplicationController
   def destroy
     @profile = Profile.find(params[:id])
     if @profile.destroy
+      User.find(@profile.user_id).update_attribute(:profile_id, nil)
       render json: @profile
     else
       render json: @profile.errors.full_messages, status: 400

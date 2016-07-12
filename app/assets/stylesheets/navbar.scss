@@ -11,10 +11,11 @@
   justify-content: space-between;
 }
 
-.navBar-logo {
+#navBar-logo {
   padding-top: 7px;
   font-size: 24px;
   color: white !important;
+  text-decoration: none;
 }
 
 .navBar-auth {
