@@ -12,13 +12,19 @@
 }
 
 .navBar-logo {
+  padding-top: 7px;
   font-size: 24px;
   color: white !important;
 }
 
 .navBar-auth {
+  color: white !important;
   display: flex;
   justify-content: center;
+}
+
+.navBar-auth div {
+  padding: 15px;
 }
 
 .nav-bar-button {
