@@ -79,7 +79,6 @@ var NavBar = React.createClass({
   },
 
   toggleCreateProfile: function () {
-    console.log(this.state.currentUser.profile_id)
     if (this.state.currentUser.profile_id) {
       return <li onClick={this.showProfile}>Profile</li>;
     } else {

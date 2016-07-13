@@ -25565,7 +25565,6 @@
 	  },
 	
 	  toggleCreateProfile: function () {
-	    console.log(this.state.currentUser.profile_id);
 	    if (this.state.currentUser.profile_id) {
 	      return React.createElement(
 	        'li',
