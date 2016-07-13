@@ -2,7 +2,7 @@
 
 [OkBnb live][heroku]
 
-[heroku]: https://okbnb.herokuapp.com
+[heroku]: http://www.okbnb.co/
 
 Okbnb is a great way to find tenants you would like to have in your home.
 
