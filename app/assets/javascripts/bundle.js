@@ -25644,7 +25644,7 @@
 	        React.createElement(
 	          'a',
 	          { id: 'navBar-logo', href: '#' },
-	          'okbnb'
+	          React.createElement('img', { className: '', src: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1468453500/handshake_filled_bq49yt.png', alt: 'logo', height: '40', width: '40' })
 	        ),
 	        this.toggleNavBarRight()
 	      )
@@ -54489,18 +54489,8 @@
 	    var profile = this.props.profile;
 	    var Edit, Delete;
 	    if (this.props.showEditDelete) {
-	      Edit = React.createElement(
-	        'button',
-	        { className: 'profile-button',
-	          onClick: this.props.editProfile, id: 'edit' },
-	        'Edit'
-	      );
-	      Delete = React.createElement(
-	        'button',
-	        { className: 'profile-button',
-	          onClick: this.props.deleteProfile, id: 'delete' },
-	        'Delete'
-	      );
+	      Edit = React.createElement('img', { className: 'profile-button', onClick: this.props.editProfile, src: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1468451999/edit_filled_mc8h3d.png', alt: 'edit profile', height: '20', width: '20' });
+	      Delete = React.createElement('img', { className: 'profile-button', onClick: this.props.deleteProfile, src: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1468452002/trash_filled_tnuxo3.png', alt: 'delete profile', height: '20', width: '20' });
 	    }
 	
 	    return React.createElement(
@@ -54510,6 +54500,8 @@
 	        'div',
 	        { className: 'description-heading' },
 	        'My self summary',
+	        Edit,
+	        Delete,
 	        React.createElement(
 	          'p',
 	          { className: 'description-body' },
@@ -54564,12 +54556,6 @@
 	            Accounting.formatMoney(profile.budget)
 	          )
 	        )
-	      ),
-	      React.createElement(
-	        'div',
-	        { className: 'detail-edit-delete' },
-	        Edit,
-	        Delete
 	      )
 	    );
 	  }

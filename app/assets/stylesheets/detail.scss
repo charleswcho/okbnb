@@ -85,33 +85,7 @@
   padding-right: 20px;
 }
 
-.detail-edit-delete {
-  height: 55px;
-}
-
 .profile-button {
-  color: white;
-  background: #00d280;
-  width: 165px;
-  height: 55px;
-  padding: 10px 20px;
-  margin-right: 20px;
-  border: none;
-  border-radius: 2px;
-}
-
-#edit {
-  background: #00d280;
-}
-
-#edit:hover {
-  background: #48e588;
-}
-
-#delete {
-  background: #db1f31;
-}
-
-#delete:hover {
-  background: #e54857;
+  cursor:pointer;
+  margin-left: 10px;
 }

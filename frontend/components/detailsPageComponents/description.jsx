@@ -8,15 +8,15 @@ module.exports = React.createClass({
     var profile = this.props.profile;
     var Edit, Delete;
     if (this.props.showEditDelete) {
-      Edit = <button className='profile-button'
-                     onClick={this.props.editProfile} id='edit'>Edit</button>
-      Delete = <button className='profile-button'
-                       onClick={this.props.deleteProfile} id='delete'>Delete</button>
+      Edit = <img className='profile-button' onClick={this.props.editProfile} src='http://res.cloudinary.com/ddodpmqri/image/upload/v1468451999/edit_filled_mc8h3d.png' alt='edit profile' height='20' width='20'/>
+      Delete = <img className='profile-button' onClick={this.props.deleteProfile} src='http://res.cloudinary.com/ddodpmqri/image/upload/v1468452002/trash_filled_tnuxo3.png' alt='delete profile' height='20' width='20'/>
     }
 
     return (
       <div className='detail-description'>
         <div className='description-heading'>My self summary
+          {Edit}
+          {Delete}
           <p className='description-body'>{profile.description}</p>
         </div>
         <br/>
@@ -37,10 +37,6 @@ module.exports = React.createClass({
             <img className='description-item-pic' src='http://res.cloudinary.com/ddodpmqri/image/upload/v1462388771/money_box_eywt0a.png' alt='budget' height='20' width='20'/>
             <div className='description-item'>{Accounting.formatMoney(profile.budget)}</div>
           </div>
-        </div>
-        <div className='detail-edit-delete'>
-          {Edit}
-          {Delete}
         </div>
       </div>
     );

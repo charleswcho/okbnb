@@ -125,7 +125,10 @@ var NavBar = React.createClass({
         </Modal>
 
         <div className='navBar'>
-          <a id='navBar-logo' href="#">okbnb</a>
+
+          <a id='navBar-logo' href="#">
+            <img className='' src='http://res.cloudinary.com/ddodpmqri/image/upload/v1468453500/handshake_filled_bq49yt.png' alt='logo' height='40' width='40'/>
+          </a>
           {this.toggleNavBarRight()}
         </div>
       </div>
