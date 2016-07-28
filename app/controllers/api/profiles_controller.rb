@@ -70,7 +70,6 @@ class Api::ProfilesController < ApplicationController
     })
 
     @user = Profile.find(params[:profile_id]).user
-    debugger
     UserMailer.offer_notification_email(current_user, @user).deliver_now
     render json: @user
   end
