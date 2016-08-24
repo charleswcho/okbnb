@@ -1,9 +1,10 @@
 var path = require("path");
+var webpack = require('webpack');
 
 module.exports = {
   context: __dirname,
   entry: "./frontend/okbnb.jsx",
-  devtool: 'source-map',
+  devtool: 'cheap-module-source-map',
   output: {
     path: path.join(__dirname, 'app', 'assets', 'javascripts'),
     filename: "bundle.js"
@@ -26,5 +27,12 @@ module.exports = {
         loader: "node-loader"
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    })
+  ],
 };
