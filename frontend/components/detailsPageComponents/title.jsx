@@ -1,6 +1,6 @@
 var React = require('react');
 
-var emptyProfile = 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif';
+var emptyProfile = 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif';
 module.exports = React.createClass({
   render: function () {
     var profile = this.props.profile;

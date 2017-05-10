@@ -18,20 +18,20 @@ var ProfileEditForm = require('./components/profileEditForm');
 
 // These are for testing
 
-var ClientActions = require('./actions/clientActions');
-window.ClientActions = ClientActions;
-
-var UserStore = require('./stores/userStore');
-window.UserStore = UserStore;
-
-var ProfileStore = require('./stores/profileStore');
-window.ProfileStore = ProfileStore;
-
-var FilterParamsStore = require('./stores/filterParams');
-window.FilterStore = FilterParamsStore;
-
-var OfferStore = require('./stores/offerStore');
-window.OfferStore = OfferStore;
+// var ClientActions = require('./actions/clientActions');
+// window.ClientActions = ClientActions;
+//
+// var UserStore = require('./stores/userStore');
+// window.UserStore = UserStore;
+//
+// var ProfileStore = require('./stores/profileStore');
+// window.ProfileStore = ProfileStore;
+//
+// var FilterParamsStore = require('./stores/filterParams');
+// window.FilterStore = FilterParamsStore;
+//
+// var OfferStore = require('./stores/offerStore');
+// window.OfferStore = OfferStore;
 
 // These are for testing
 

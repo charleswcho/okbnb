@@ -6,7 +6,7 @@ User.create!(email: "VanessaHunter26@gmail.com", password: "1234567", profile_id
 
 Profile.create!(
   user_id: 2,
-  profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462573634/profile-1_iguqo9.jpg',
+  profilePicURL: 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462573634/profile-1_iguqo9.jpg',
   name: 'Vanessa Hunter',
   age: 21,
   description: "Just going to school and work. Taking it day by day, pretty much.",
@@ -23,7 +23,7 @@ Profile.create!(
 User.create!(email: "AlexReed24@gmail.com", password: "1234567", profile_id: 2);
 Profile.create!(
   user_id: 3,
-  profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462573791/profile-2_ytqce2.jpg
+  profilePicURL: 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462573791/profile-2_ytqce2.jpg
 ',
   name: 'Alex Reed',
   age: 19,
@@ -45,7 +45,7 @@ Professional weirdo
 User.create!(email: "JohnWilis56@gmail.com", password: "1234567", profile_id: 3);
 Profile.create!(
   user_id: 4,
-  profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462573862/profile-3_g6imxu.jpg
+  profilePicURL: 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462573862/profile-3_g6imxu.jpg
 ',
   name: 'John Wilis',
   age: 51,
@@ -63,7 +63,7 @@ Profile.create!(
 User.create!(email: "AshleyBre37@gmail.com", password: "1234567", profile_id: 4);
 Profile.create!(
   user_id: 5,
-  profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462573906/profile-4_jedvet.jpg
+  profilePicURL: 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462573906/profile-4_jedvet.jpg
 ',
   name: 'Ashley Bre',
   age: 32,
@@ -83,7 +83,7 @@ Profile.create!(
 User.create!(email: "JacobMason33@gmail.com", password: "1234567", profile_id: 5);
 Profile.create!(
   user_id: 6,
-  profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574326/profile-5_jkqstf.jpg
+  profilePicURL: 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462574326/profile-5_jkqstf.jpg
 ',
   name: 'Jacob Mason',
   age: 28,
@@ -101,7 +101,7 @@ Profile.create!(
 User.create!(email: "TofflerinaBox27@gmail.com", password: "1234567", profile_id: 6);
 Profile.create!(
   user_id: 7,
-  profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462567098/profile-6_r60ify.jpg
+  profilePicURL: 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462567098/profile-6_r60ify.jpg
 ',
   name: 'Tofflerina Box',
   age: 22,
@@ -121,7 +121,7 @@ I'm a really cheerful and ditzy person, leading to jokes about how things fly ov
 User.create!(email: "EthanNoah28@gmail.com", password: "1234567", profile_id: 7);
 Profile.create!(
   user_id: 8,
-  profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462567097/profile-7_sb1rhw.jpg
+  profilePicURL: 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462567097/profile-7_sb1rhw.jpg
 ',
   name: 'Ethan Noah',
   age: 23,
@@ -139,7 +139,7 @@ Profile.create!(
 User.create!(email: "MichaelSmith32@gmail.com", password: "1234567", profile_id: 8);
 Profile.create!(
   user_id: 9,
-  profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574256/profile-8_zi55ip.jpg
+  profilePicURL: 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462574256/profile-8_zi55ip.jpg
 ',
   name: 'Michael Smith',
   age: 27,
@@ -161,7 +161,7 @@ I am a lifetime student and I have 2 undergrad degrees, one graduate, and I’m 
 User.create!(email: "WilliamLiam39@gmail.com", password: "1234567", profile_id: 9);
 Profile.create!(
   user_id: 10,
-  profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574588/profile-9_zbkazc.jpg
+  profilePicURL: 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462574588/profile-9_zbkazc.jpg
 ',
   name: 'William Liam',
   age: 34,
@@ -179,7 +179,7 @@ Profile.create!(
 User.create!(email: "SophiaMia31@gmail.com", password: "1234567", profile_id: 10);
 Profile.create!(
   user_id: 11,
-  profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574629/profile-10_qmh68p.jpg
+  profilePicURL: 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462574629/profile-10_qmh68p.jpg
 ',
   name: 'Sophia Mia',
   age: 26,
@@ -201,7 +201,7 @@ Professional weirdo
 User.create!(email: "AidenJohnson23@gmail.com", password: "1234567", profile_id: 11);
 Profile.create!(
   user_id: 12,
-  profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574705/profile-11_dyowfj.jpg
+  profilePicURL: 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462574705/profile-11_dyowfj.jpg
 ',
   name: 'Aiden Johnson',
   age: 18,
@@ -219,7 +219,7 @@ Profile.create!(
 User.create!(email: "RobertGarcia34@gmail.com", password: "1234567", profile_id: 12);
 Profile.create!(
   user_id: 13,
-  profilePicURL: 'http://res.cloudinary.com/ddodpmqri/image/upload/v1462574758/profile-12_tvlrpq.jpg
+  profilePicURL: 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462574758/profile-12_tvlrpq.jpg
 ',
   name: 'Robert Garcia',
   age: 29,
