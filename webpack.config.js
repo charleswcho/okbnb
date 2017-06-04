@@ -1,30 +1,38 @@
-var path = require("path");
-var webpack = require('webpack');
+const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   context: __dirname,
-  entry: "./frontend/okbnb.jsx",
-  devtool: 'cheap-module-source-map',
+  entry: './frontend/okbnb.jsx',
+  devtool: 'source-map',
   output: {
     path: path.join(__dirname, 'app', 'assets', 'javascripts'),
-    filename: "bundle.js"
+    filename: 'bundle.js'
   },
   resolve: {
-    extensions: ["", ".js", ".jsx"]
+    extensions: ['*', '.js', '.jsx']
   },
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.(js|jsx)$/,
         exclude: /(node_modules|bower_components)/,
-        loader: 'babel',
-        query: {
-          presets: ['react']
-        }
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              babelrc: false,
+              presets: [
+                ['es2015', { modules: false }],
+                'react',
+              ],
+            }
+          }
+        ]
       },
       {
         test: /\.node$/,
-        loader: "node-loader"
+        loader: 'node-loader'
       }
     ]
   },

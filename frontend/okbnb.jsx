@@ -1,20 +1,16 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-var ReactRouter = require('react-router');
-var Router = ReactRouter.Router;
-var Route = ReactRouter.Route;
-var IndexRoute = ReactRouter.IndexRoute;
-var hashHistory = ReactRouter.hashHistory;
+import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 
 // Components
-var NavBar = require('./components/navBar');
-var SplashScreen = require('./components/splashScreen');
+import NavBar from './components/navBar';
+import SplashScreen from './components/splashScreen';
 
-var Search = require('./components/search');
-var Detail = require('./components/detail');
-var ProfileForm = require('./components/profileForm');
-var ProfileEditForm = require('./components/profileEditForm');
+import Search from './components/search';
+import Detail from './components/detail';
+import ProfileForm from './components/profileForm';
+import ProfileEditForm from './components/profileEditForm';
 
 // These are for testing
 
@@ -35,18 +31,20 @@ var ProfileEditForm = require('./components/profileEditForm');
 
 // These are for testing
 
-var App = React.createClass({
-  render: function(){
+class App extends React.PureComponent {
+  render() {
     return (
       <div>
-        <NavBar/>
+        <NavBar />
         {this.props.children}
       </div>
     );
   }
-});
+}
 
-var Router = (
+debugger
+
+const router = (
   <Router history={hashHistory}>
     <Route path='/' component={App}>
       <IndexRoute component={SplashScreen}/>
@@ -58,7 +56,7 @@ var Router = (
   </Router>
 );
 
-document.addEventListener('DOMContentLoaded', function(){
-  var root = document.getElementById("content");
-  ReactDOM.render(Router, root);
+document.addEventListener('DOMContentLoaded', () => {
+  const root = document.getElementById('content');
+  ReactDOM.render(router, root);
 });
