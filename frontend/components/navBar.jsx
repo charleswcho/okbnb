@@ -1,93 +1,73 @@
-var React = require('react');
-var hashHistory = require('react-router').hashHistory;
-var Modal = require('react-bootstrap').Modal;
-var Button = require('react-bootstrap').Button;
+import React from 'react';
+import { hashHistory } from 'react-router';
+import { Modal } from 'react-bootstrap';
 
-var Navbar = require('react-bootstrap').Navbar,
-    Nav = require('react-bootstrap').Nav,
-    NavItem = require('react-bootstrap').NavItem;
+import ClientActions from '../actions/clientActions';
+import ServerActions from '../actions/serverActions';
+import UserStore from '../stores/userStore';
+import ErrorStore from '../stores/errorStore';
 
-var CurrentUserStateMixin = require('../mixins/currentUserState');
+import SignUpForm from './navBarComponents/signUpForm';
+import SignInForm from './navBarComponents/signInForm';
 
-var ClientActions = require('../actions/clientActions');
-var ServerActions = require('../actions/serverActions');
-var UserStore = require('../stores/userStore');
-var ErrorStore = require('../stores/errorStore');
+export default class NavBar extends React.Component {
+  state = {
+    currentUser: UserStore.currentUser(),
+    showSignUpModal: false,
+    showSignInModal: false,
+    errors: ErrorStore.errors()
+  }
 
-var SignUpForm = require('./navBarComponents/signUpForm');
-var SignInForm = require('./navBarComponents/signInForm');
-
-var NavBar = React.createClass({
-  mixins: [CurrentUserStateMixin],
-
-  getInitialState: function () {
-    return {
-      showSignUpModal: false,
-      showSignInModal: false,
-      errors: ErrorStore.errors()
-    }
-  },
-
-  componentDidMount: function () {
+  componentDidMount() {
+    this.listener = UserStore.addListener(this.updateUser);
+    ClientActions.fetchCurrentUser();
     this.errorsListener = ErrorStore.addListener(this._errorsChanged);
-  },
+  }
 
-  componentWillUnmount: function () {
+  componentWillUnmount() {
+    this.listener.remove();
     this.errorsListener.remove();
-  },
+  }
 
-  _errorsChanged: function () {
-    this.setState({ errors: ErrorStore.errors() });
-  },
+  updateUser = () => this.setState({ currentUser: UserStore.currentUser() });
 
-  clearErrors: function () {
-    ServerActions.clearErrors();
-  },
+  _errorsChanged = () => this.setState({ errors: ErrorStore.errors() });
 
-  openSignUpModal: function () {
-    this.setState({ showSignUpModal: true })
-  },
+  clearErrors = () => ServerActions.clearErrors();
 
-  closeSignUpModal: function () {
-    this.setState({ showSignUpModal: false })
-  },
+  openSignUpModal = () => this.setState({ showSignUpModal: true });
+  closeSignUpModal = () => this.setState({ showSignUpModal: false });
 
-  openSignInModal: function () {
-    this.setState({ showSignInModal: true })
-  },
+  openSignInModal = () => this.setState({ showSignInModal: true });
+  closeSignInModal = () => this.setState({ showSignInModal: false });
 
-  closeSignInModal: function () {
-    this.setState({ showSignInModal: false })
-  },
-
-  signOut: function () {
+  signOut = () => {
     ClientActions.signOut();
     this.setState({
       showSignInModal: false,
       showSignOutModal: false
     });
-  },
+  }
 
-  showProfile: function () {
+  showProfile = () => {
     if (this.state.currentUser.profile_id) {
       hashHistory.push({pathname: 'profile/' + this.state.currentUser.profile_id})
     }
-  },
+  }
 
-  handleCreateProfile: function () {
+  handleCreateProfile = () => {
     hashHistory.push({pathname: 'profile/new'})
-  },
+  }
 
-  toggleCreateProfile: function () {
+  toggleCreateProfile = () => {
     if (this.state.currentUser.profile_id) {
       return <li onClick={this.showProfile}>Profile</li>;
     } else {
       return <li onClick={this.handleCreateProfile}>Create a Profile</li>;
-
     }
-  },
+  }
 
-  toggleNavBarRight: function () {
+  toggleNavBarRight = () => {
     if (this.state.currentUser && this.state.currentUser.email) {
       return(
         <div id="user-button" className="nav-bar-button">
@@ -105,23 +85,19 @@ var NavBar = React.createClass({
           <div onClick={this.openSignUpModal}>Sign Up</div>
           <div onClick={this.openSignInModal}>Sign In</div>
         </div>
-      )
+      );
     }
-  },
+  }
 
-  render: function () {
+  render() {
     return (
       <div className=''>
-        <Modal show={this.state.showSignUpModal} onHide={this.closeSignUpModal}
-               onExited={this.clearErrors}>
-          <SignUpForm closeSignUpModal={this.closeSignUpModal}
-                      errors={this.state.errors}/>
+        <Modal show={this.state.showSignUpModal} onHide={this.closeSignUpModal} onExited={this.clearErrors}>
+          <SignUpForm closeSignUpModal={this.closeSignUpModal} errors={this.state.errors}/>
         </Modal>
 
-        <Modal show={this.state.showSignInModal} onHide={this.closeSignInModal}
-               onExited={this.clearErrors}>
-          <SignInForm closeSignInModal={this.closeSignInModal}
-                      errors={this.state.errors}/>
+        <Modal show={this.state.showSignInModal} onHide={this.closeSignInModal} onExited={this.clearErrors}>
+          <SignInForm closeSignInModal={this.closeSignInModal} errors={this.state.errors}/>
         </Modal>
 
         <div className='navBar'>
@@ -134,6 +110,4 @@ var NavBar = React.createClass({
       </div>
     );
   }
-});
-
-module.exports = NavBar;
+}

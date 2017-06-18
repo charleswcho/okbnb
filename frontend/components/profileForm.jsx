@@ -1,22 +1,34 @@
-var React = require('react');
-var hashHistory = require('react-router').hashHistory;
+import React from 'react';
+import { hashHistory } from 'react-router';
 
-var ProfileStore = require('../stores/profileStore');
-var ErrorStore = require('../stores/errorStore');
+import ProfileStore from '../stores/profileStore';
+import ErrorStore from '../stores/errorStore';
 
-var Header = require('./profileFormComponents/header');
-var Form = require('./profileFormComponents/form');
+import Header from './profileFormComponents/header';
+import Form from './profileFormComponents/form';
 
-var Errors = require('../mixins/errors');
+import Errors from '../mixins/errors';
 
-module.exports = React.createClass({
-  mixins: [Errors],
+export default class ProfileForm extends React.Component {
+  state = {
+    errors: ErrorStore.errors()
+  }
 
-  createdProfile: function (id) {
+  componentDidMount() {
+    this.errorsListener = ErrorStore.addListener(this._errorsChanged);
+  }
+
+  componentWillUnmount() {
+    this.errorsListener.remove();
+  }
+
+  _errorsChanged = () => this.setState({ errors: ErrorStore.errors() });
+
+  createdProfile(id) {
     hashHistory.push({pathname: 'profile/' + id})
-  },
+  }
 
-  render: function () {
+  render() {
     return (
       <div className='new-profile-page'>
         <div className='profile-form-container'>
@@ -41,5 +53,5 @@ module.exports = React.createClass({
         </div>
       </div>
     );
-  }
-});
+  }  
+}

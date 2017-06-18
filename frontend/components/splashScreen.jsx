@@ -1,29 +1,23 @@
-var React = require('react');
+import React from 'react';
 
-var SearchBar = require('./splashScreenComponents/searchBar');
-var Cities = require('./splashScreenComponents/cities');
-var Footer = require('./footer');
+import SearchBar from './splashScreenComponents/searchBar';
+import Cities from './splashScreenComponents/cities';
+import Footer from './footer';
 
-module.exports = React.createClass({
-  getInitialState: function () {
-    return {};
-  },
-
-  render: function () {
-    return (
-      <div className='splash-page'>
-        <div className='splash-image-container'>
-          <div className='splash-image'>
-            <div className='splash-image-greeting'>
-              <div id='splash-image-title'>MEET HERE</div>
-              <div id='splash-image-subtitle'>Find tenants from 191+ countries and experience diversity in a whole new way.</div>
-            </div>
-            <SearchBar/>
-          </div>
+const SplashScreen = () => (
+  <div className='splash-page'>
+    <div className='splash-image-container'>
+      <div className='splash-image'>
+        <div className='splash-image-greeting'>
+          <div id='splash-image-title'>MEET HERE</div>
+          <div id='splash-image-subtitle'>Find tenants from 191+ countries and experience diversity in a whole new way.</div>
         </div>
-        <Cities/>
-        <Footer/>
+        <SearchBar/>
       </div>
-    );
-  }
-});
+    </div>
+    <Cities/>
+    <Footer/>
+  </div>
+);
+
+export default SplashScreen;

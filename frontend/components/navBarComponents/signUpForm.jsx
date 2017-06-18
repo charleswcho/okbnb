@@ -1,45 +1,38 @@
-var React = require('react');
+import React from 'react';
 
-var ClientActions = require('../../actions/clientActions');
+import ClientActions from '../../actions/clientActions';
 
-var SignUpForm = React.createClass({
-  getInitialState: function() {
-    return {
-      email: '',
-      password: ''
-    };
-  },
+export default class SignUpForm extends React.Component {
+  state = {
+    email: '',
+    password: ''
+  }
 
-  emailChanged: function(e) {
+  emailChanged = (e) => {
     e.preventDefault();
-    this.setState({
-      email: e.target.value,
-    });
-  },
+    this.setState({ email: e.target.value });
+  }
 
-  passwordChanged: function(e) {
+  passwordChanged = (e) => {
     e.preventDefault();
-    this.setState({
-      password: e.target.value
-    });
-  },
+    this.setState({ password: e.target.value });
+  }
 
-  handleSubmit: function(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
-    ClientActions.create({
-      email: this.state.email,
-      password: this.state.password
-    });
+
+    const { email, password } = this.state;
+
+    ClientActions.create({ email, password });
+
     if (!this.props.errors) {
       this.props.closeSignUpModal()
     }
-  },
+  }
 
-  render: function() {
-    var email = this.state.email;
-    var password = this.state.password;
-    var error1 = this.props.errors[1];
-    var error2 = this.props.errors[0];
+  render() {
+    const { email, password } = this.state;
+    const [error2, error1] = this.props.errors;
 
     return (
       <form className='auth-form' onSubmit={this.handleSubmit}>
@@ -55,6 +48,4 @@ var SignUpForm = React.createClass({
       </form>
     )
   }
-});
-
-module.exports = SignUpForm;
+}

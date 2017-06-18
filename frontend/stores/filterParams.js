@@ -1,42 +1,42 @@
-var AppDispatcher = require('../dispatcher/dispatcher');
-var Store = require('flux/utils').Store;
+import { Store } from 'flux/utils';
 
-var _params = { budget: { min: 0 } };
+import AppDispatcher from '../dispatcher/dispatcher';
+import FilterConstants from '../constants/filterConstants';
 
-var FilterConstants = require('../constants/filterConstants');
+const FilterParamsStore = new Store(AppDispatcher);
 
-var FilterParamsStore = new Store(AppDispatcher);
+const _params = { budget: { min: 0 } };
 
-FilterParamsStore.params = function () {
+FilterParamsStore.params = () => {
   return Object.assign({}, _params);
 };
 
-FilterParamsStore.__onDispatch = function (payload) {
-  switch(payload.actionType){
+FilterParamsStore.__onDispatch = (payload) => {
+  switch (payload.actionType) {
     case FilterConstants.UPDATE_BOUNDS:
       _params.bounds = payload.bounds;
       FilterParamsStore.__emitChange();
       break;
     case FilterConstants.UPDATE_SEARCH_STATUS:
-      if (payload.search_status !== null) {
+      if (payload.search_status) {
         _params.search_status = payload.search_status;
       }
       FilterParamsStore.__emitChange();
       break;
     case FilterConstants.UPDATE_SMOKER:
-      if (payload.smoker !== null) {
+      if (payload.smoker) {
         _params.smoker = payload.smoker;
       }
       FilterParamsStore.__emitChange();
       break;
     case FilterConstants.UPDATE_PET:
-      if (payload.pet !== null) {
+      if (payload.pet) {
         _params.pet = payload.pet;
       }
       FilterParamsStore.__emitChange();
       break;
     case FilterConstants.UPDATE_DIET:
-      if (payload.diet !== null) {
+      if (payload.diet) {
         _params.diet = payload.diet;
       }
       FilterParamsStore.__emitChange();
@@ -48,4 +48,4 @@ FilterParamsStore.__onDispatch = function (payload) {
   }
 };
 
-module.exports = FilterParamsStore;
+export default FilterParamsStore;

@@ -1,55 +1,54 @@
-var React = require('react');
-var hashHistory = require('react-router').hashHistory;
+import React from 'react';
+import { hashHistory } from 'react-router';
 
-var UserStore = require('../stores/userStore');
-var ProfileStore = require('../stores/profileStore');
-var ClientActions = require('../actions/clientActions');
+import UserStore from '../stores/userStore';
+import ProfileStore from '../stores/profileStore';
+import ClientActions from '../actions/clientActions';
 
-var Header = require('./profileEditFormComponents/header');
-var EditForm = require('./profileEditFormComponents/editForm');
+import Header from './profileEditFormComponents/header';
+import EditForm from './profileEditFormComponents/editForm';
 
-module.exports = React.createClass({
-  getInitialState: function () {
-    return {
-      user: UserStore.currentUser(),
-      profile: ProfileStore.find(this.props.params.id)
-    }
-  },
+export default class ProfileEditForm extends React.Component {
+  state = {
+    user: UserStore.currentUser(),
+    profile: ProfileStore.find(this.props.params.id)
+  }
 
-  componentDidMount: function () {
+  componentDidMount() {
     this.userListener = UserStore.addListener(this._userChanged);
     this.profileListener = ProfileStore.addListener(this._profileChanged);
     ClientActions.fetchCurrentUser();
     ClientActions.fetchProfile(this.props.params.id);
-  },
+  }
 
-  componentWillUnmount: function () {
+  componentWillUnmount() {
     this.userListener.remove();
     this.profileListener.remove();
-  },
+  }
 
-  _userChanged: function () {
+  _userChanged = () => {
     this.setState({ user: UserStore.currentUser() });
-  },
+  }
 
-  _profileChanged: function () {
+  _profileChanged = () => {
     this.setState({ profile: ProfileStore.find(this.props.params.id) });
-  },
+  }
 
-  _updatedProfile: function () {
+  _updatedProfile = () => {
     hashHistory.push({pathname: 'profile/' + this.state.profile.id})
-  },
+  }
 
-  render: function () {
+  render() {
+    const { user, profile } = this.state;
+
     return (
       <div className='new-profile-page'>
         <div className='profile-form-container'>
           <Header/>
-          <EditForm user={this.state.user} profile={this.state.profile}
-                    updatedProfile={this._updatedProfile}/>
+          <EditForm user={user} profile={profile} updatedProfile={this._updatedProfile}/>
         </div>
       </div>
 
     );
   }
-});
+}

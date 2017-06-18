@@ -1,17 +1,17 @@
-var React = require('react');
+import React from 'react';
 
-var DropdownButton = require('react-bootstrap').DropdownButton
-var MenuItem = require('react-bootstrap').MenuItem
+import { DropdownButton, MenuItem } from 'react-bootstrap';
 
-var Diet = React.createClass({
+export default class Diet extends React.Component {
+  state = {
+    diet: this.props.diet
+  }
 
-  getInitialState: function () {
-    return { diet: this.props.diet };
-  },
+  handleDietSelect = (eventKey, event) => {
+    const diets = ['Vege', 'Vegan', 'Gluten', 'Other']
 
-  handleDietSelect: function (eventKey, event) {
-    var diets = ['Vege', 'Vegan', 'Gluten', 'Other']
     eventKey = parseInt(eventKey);
+
     switch (eventKey) {
       case 0:
         this.setState({ diet: 'Vege' })
@@ -27,9 +27,9 @@ var Diet = React.createClass({
         break;
     }
     this.props.updateDiet(diets[eventKey]);
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className="diet-option">
         <DropdownButton className='filter-input' title='Diet' onSelect={this.handleDietSelect}>
@@ -42,6 +42,4 @@ var Diet = React.createClass({
       </div>
     );
   }
-});
-
-module.exports = Diet;
+}

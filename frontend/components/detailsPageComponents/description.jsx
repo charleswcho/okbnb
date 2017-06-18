@@ -1,12 +1,13 @@
-var React = require('react');
+import React from 'react';
 
-var Accounting = require('accounting');
+import Accounting from 'accounting';
 
-module.exports = React.createClass({
 
-  render: function () {
-    var profile = this.props.profile;
-    var Edit, Delete;
+export default class Description extends React.Component {
+  render() {
+    let profile = this.props.profile;
+    let Edit, Delete;
+    
     if (this.props.showEditDelete) {
       Edit = <img className='profile-button' onClick={this.props.editProfile} src='https://res.cloudinary.com/ddodpmqri/image/upload/v1468451999/edit_filled_mc8h3d.png' alt='edit profile' height='20' width='20'/>
       Delete = <img className='profile-button' onClick={this.props.deleteProfile} src='https://res.cloudinary.com/ddodpmqri/image/upload/v1468452002/trash_filled_tnuxo3.png' alt='delete profile' height='20' width='20'/>
@@ -41,4 +42,4 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}

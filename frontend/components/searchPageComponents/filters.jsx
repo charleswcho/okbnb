@@ -1,22 +1,21 @@
-var React = require('react');
+import React from 'react';
 
-var SearchStatusOption = require('./filterComponents/search_status');
-var SmokerOption = require('./filterComponents/smoker');
-var DietOption = require('./filterComponents/diet');
-var PetOption = require('./filterComponents/pet');
-var BudgetOption = require('./filterComponents/budget');
+import SearchStatusOption from './filterComponents/search_status';
+import SmokerOption from './filterComponents/smoker';
+import DietOption from './filterComponents/diet';
+import PetOption from './filterComponents/pet';
+import BudgetOption from './filterComponents/budget';
 
-var Filters = React.createClass({
-  renderBudget: function () {
+export default class Filters extends React.Component {
+  renderBudget = () => {
     if (this.props.renderBudget) {
       return (<BudgetOption/>)
     } else {
       return null
     }
-  },
+  }
 
-  render: function () {
-
+  render() {
     return (
       <div className='filters'>
         <div className='filter-preferences'>
@@ -35,6 +34,4 @@ var Filters = React.createClass({
       </div>
     );
   }
-});
-
-module.exports = Filters;
+}

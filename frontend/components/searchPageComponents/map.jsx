@@ -1,54 +1,54 @@
-var React = require('react');
-var ReactDOM = require('react-dom');
-var hashHistory = require('react-router').hashHistory;
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { hashHistory } from 'react-router';
 
-var FilterActions = require('../../actions/filterActions');
-var ProfileStore = require('../../stores/profileStore');
+import FilterActions from '../../actions/filterActions';
+import ProfileStore from '../../stores/profileStore';
 
-function _getCoordsObj(latLng) {
+const _getCoordsObj = latLng => {
   return {
     lat: latLng.lat(),
     lng: latLng.lng()
   };
 }
 
-var Map = React.createClass({
-  componentDidMount: function(){
-    var map = ReactDOM.findDOMNode(this.refs.map);
+export default class Map extends React.Component {
+  componentDidMount() {
+    const map = ReactDOM.findDOMNode(this.refs.map);
     this.map = new google.maps.Map(map, this.props.mapOptions);
     this.markers = [];
     this.registerListeners();
     this.props.renderedMap();
-  },
+  }
 
-  componentWillReceiveProps: function (newProps) {
+  componentWillReceiveProps(newProps) {
     if (this.props.mapOptions.center !== newProps.mapOptions.center) {
-      var center = this.props.mapOptions.center;
+      let center = this.props.mapOptions.center;
       center = new google.maps.LatLng(center);
       this.map.panTo(center);
     }
-  },
+  }
 
-  componentDidUpdate: function () {
+  componentDidUpdate() {
     if (!this.markers){
       this.eachProfile(this.createMarkerFromProfile)
     }
     this._onChange();
-  },
+  }
 
-  componentWillUnmount: function () {
+  componentWillUnmount() {
     this.profileListener.remove();
-  },
+  }
 
-  eachProfile: function (callback) {
-    var profiles = this.props.profiles;
-    var keys = Object.keys(profiles);
+  eachProfile = callback => {
+    let profiles = this.props.profiles;
+    let keys = Object.keys(profiles);
     keys.forEach(function(key){
       callback(profiles[key]);
     });
-  },
+  }
 
-  createMarkerFromProfile: function (profile) {
+  createMarkerFromProfile = profile => {
     var pos = new google.maps.LatLng(profile.lat, profile.lng);
     var marker = new google.maps.Marker({
       position: pos,
@@ -61,9 +61,9 @@ var Map = React.createClass({
     });
 
     this.markers.push(marker);
-  },
+  }
 
-  _onChange: function(){
+  _onChange = () => {
     var profilesToAdd = [];
     var markersToRemove = [];
     // Collect markers to remove
@@ -84,26 +84,25 @@ var Map = React.createClass({
     //Do the adding / removing
     profilesToAdd.forEach(this.createMarkerFromProfile);
     markersToRemove.forEach(this.removeMarker);
-  },
+  }
 
-  updateHovered: function () {
-    var hoveredProfileId = ProfileStore.hovered();
-    this.markers.forEach(function (marker) {
+  updateHovered = () => {
+    let hoveredProfileId = ProfileStore.hovered();
+    this.markers.forEach(marker => {
       if (marker.profileId === hoveredProfileId) {
         marker.setAnimation(google.maps.Animation.BOUNCE);
       } else {
         marker.setAnimation(null);
       }
     });
-  },
+  }
 
-  registerListeners: function(){
-    var self = this;
+  registerListeners = () => {
     this.profileListener = ProfileStore.addListener(this.updateHovered);
-    google.maps.event.addListener(this.map, 'idle', function() {
-      var bounds = self.map.getBounds();
-      var northEast = _getCoordsObj(bounds.getNorthEast());
-      var southWest = _getCoordsObj(bounds.getSouthWest());
+    google.maps.event.addListener(this.map, 'idle', () => {
+      let bounds = this.map.getBounds();
+      let northEast = _getCoordsObj(bounds.getNorthEast());
+      let southWest = _getCoordsObj(bounds.getSouthWest());
       //actually issue the request
       bounds = {
         northEast: northEast,
@@ -111,9 +110,9 @@ var Map = React.createClass({
       };
       FilterActions.updateBounds(bounds);
     });
-  },
+  }
 
-  removeMarker: function(marker){
+  removeMarker = marker => {
     for(var i = 0; i < this.markers.length; i++){
       if (this.markers[i].profileId === marker.profileId){
         this.markers[i].setMap(null);
@@ -121,10 +120,9 @@ var Map = React.createClass({
         break;
       }
     }
-  },
-  render: function(){
+  }
+
+  render() {
     return ( <div className="half-map" ref="map">Map</div>);
   }
-});
-
-module.exports = Map;
+}

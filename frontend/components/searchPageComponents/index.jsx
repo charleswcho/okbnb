@@ -1,20 +1,18 @@
-var React = require('react');
+import React from 'react';
 
-var IndexItem = require('./indexItem');
+import IndexItem from './indexItem';
 
-var Index = React.createClass({
-  render: function () {
-    var profiles = this.props.profiles;
+export default class Index extends React.Component {
+  render() {
+    const { profiles, renderMap } = this.props;
 
-    var profileKeys = Object.keys(profiles);
+    const profileKeys = Object.keys(profiles);
 
-    if (this.props.renderMap) {
+    if (renderMap) {
       return (
         <div className='profiles-index'>
           {
-            profileKeys.map(function(id) {
-              return (<IndexItem key={id} profile={profiles[id]}/>);
-            })
+            profileKeys.map(id => <IndexItem key={id} profile={profiles[id]} />)
           }
         </div>
       );
@@ -22,6 +20,4 @@ var Index = React.createClass({
       return <div>Loading</div>;
     }
   }
-});
-
-module.exports = Index;
+}

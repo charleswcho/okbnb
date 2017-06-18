@@ -1,27 +1,27 @@
-var AppDispatcher = require('../dispatcher/dispatcher');
-var ErrorConstants = require('../constants/errorConstants');
-var Store = require('flux/utils').Store;
+import { Store } from 'flux/utils';
 
-var ErrorStore = new Store(AppDispatcher);
+import AppDispatcher from '../dispatcher/dispatcher';
+import ErrorConstants from '../constants/errorConstants';
 
-var _errors = [];
+const ErrorStore = new Store(AppDispatcher);
 
-var setErrors = function (errors) {
+let _errors = [];
+
+const setErrors = (errors) => {
   _errors = [];
   _errors = errors;
   console.log(_errors);
 };
 
-var clearErrors = function () {
+const clearErrors = () => {
   _errors = [];
 };
 
-ErrorStore.errors = function () {
-  return _errors;
-};
+ErrorStore.errors = () => _errors;
 
-ErrorStore.__onDispatch = function (payload) {
-  switch(payload.actionType) {
+ErrorStore.__onDispatch = (payload) => {
+
+  switch (payload.actionType) {
     case ErrorConstants.ERRORS:
       setErrors(payload.errors);
       ErrorStore.__emitChange();
@@ -29,6 +29,8 @@ ErrorStore.__onDispatch = function (payload) {
     case ErrorConstants.CLEAR_ERRORS:
       clearErrors();
       ErrorStore.__emitChange();
+      break;
+    default:
       break;
   }
 };

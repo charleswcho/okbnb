@@ -1,41 +1,44 @@
-var AppDispatcher = require('../dispatcher/dispatcher');
-var FilterConstants = require('../constants/filterConstants');
+import AppDispatcher from '../dispatcher/dispatcher';
+import FilterConstants from '../constants/filterConstants';
 
-module.exports = {
-  updateBounds: function (value) {
+
+const ClientActions = {
+  updateBounds(value) {
     AppDispatcher.dispatch({
       actionType: FilterConstants.UPDATE_BOUNDS,
-      bounds: value
+      bounds: value,
     });
   },
-  updateSearchState: function (value) {
+  updateSearchState(value) {
     AppDispatcher.dispatch({
       actionType: FilterConstants.UPDATE_SEARCH_STATUS,
-      search_status: value
+      search_status: value,
     });
   },
-  updateSmoker: function (value) {
+  updateSmoker(value) {
     AppDispatcher.dispatch({
       actionType: FilterConstants.UPDATE_SMOKER,
-      smoker: value
+      smoker: value,
     });
   },
-  updatePet: function (value){
+  updatePet(value) {
     AppDispatcher.dispatch({
       actionType: FilterConstants.UPDATE_PET,
       pet: value,
     });
   },
-  updateDiet: function (value){
+  updateDiet(value) {
     AppDispatcher.dispatch({
       actionType: FilterConstants.UPDATE_DIET,
       diet: value,
     });
   },
-  updateBudget: function (value){
+  updateBudget(value) {
     AppDispatcher.dispatch({
       actionType: FilterConstants.UPDATE_BUDGET,
       budget: value,
     });
-  }
+  },
 };
+
+export default ClientActions;

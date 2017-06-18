@@ -1,16 +1,17 @@
-var React = require('react');
+import React from 'react';
 
-var DropdownButton = require('react-bootstrap').DropdownButton
-var MenuItem = require('react-bootstrap').MenuItem
+import { DropdownButton, MenuItem } from 'react-bootstrap';
 
-var SearchStatus = React.createClass({
-  getInitialState: function () {
-    return { search_status: this.props.searchStatus };
-  },
+export default class SearchStatus extends React.Component {
+  state = {
+    search_status: this.props.searchStatus
+  }
 
-  handleSearchStatusSelect: function (eventKey, event) {
-    var statuses = ['Active', 'Passive', "Don't contact"]
+  handleSearchStatusSelect = (eventKey, event) => {
+    const statuses = ['Active', 'Passive', "Don't contact"]
+
     eventKey = parseInt(eventKey);
+
     switch (eventKey) {
       case 0:
         this.setState({ search_status: statuses[0] })
@@ -23,9 +24,9 @@ var SearchStatus = React.createClass({
         break;
     }
     this.props.updateSearchStatus(statuses[eventKey]);
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className="search_status-option">
         <DropdownButton className='filter-input' title='Search Status' onSelect={this.handleSearchStatusSelect}>
@@ -39,6 +40,4 @@ var SearchStatus = React.createClass({
       </div>
     );
   }
-});
-
-module.exports = SearchStatus;
+}

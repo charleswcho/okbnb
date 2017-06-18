@@ -1,8 +1,8 @@
-var UserApiUtil = require('../util/userApiUtil');
-var ApiUtil = require('../util/apiUtils');
-var OfferUtil = require('../util/offerUtils');
+import UserApiUtil from '../util/userApiUtil';
+import ApiUtil from '../util/apiUtils';
+import OfferUtil from '../util/offerUtils';
 
-module.exports = {
+const ClientActions = {
   // User and Session methods
   create: UserApiUtil.create,
   signIn: UserApiUtil.signIn,
@@ -21,3 +21,5 @@ module.exports = {
   // Offer methods
   fetchOffers: OfferUtil.fetchOffers
 }
+
+export default ClientActions;

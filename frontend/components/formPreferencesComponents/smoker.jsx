@@ -1,16 +1,17 @@
-var React = require('react');
+import React from 'react';
 
-var DropdownButton = require('react-bootstrap').DropdownButton
-var MenuItem = require('react-bootstrap').MenuItem
+import { DropdownButton, MenuItem } from 'react-bootstrap';
 
-var Smoker = React.createClass({
-  getInitialState: function () {
-    return { smoker: this.props.smoker };
-  },
+export default class Smoker extends React.Component {
+  state = {
+    smoker: this.props.smoker
+  }
 
-  handleSmokerSelect: function (eventKey, event) {
-    var smoker = [true, false]
+  handleSmokerSelect = (eventKey, event) => {
+    const smoker = [true, false]
+
     eventKey = parseInt(eventKey)
+
     switch (eventKey) {
       case 0:
         this.setState({ smoker: true })
@@ -21,18 +22,16 @@ var Smoker = React.createClass({
     }
 
     this.props.updateSmoker(smoker[eventKey]);
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className="smoker-option">
         <DropdownButton className='filter-input' title='Smoker' onSelect={this.handleSmokerSelect}>
-            <MenuItem eventKey="0" active={this.state.smoker === true}>Yes</MenuItem>
-            <MenuItem eventKey="1" active={this.state.smoker === false}>No</MenuItem>
+          <MenuItem eventKey="0" active={this.state.smoker === true}>Yes</MenuItem>
+          <MenuItem eventKey="1" active={this.state.smoker === false}>No</MenuItem>
         </DropdownButton>
       </div>
     );
   }
-});
-
-module.exports = Smoker;
+}

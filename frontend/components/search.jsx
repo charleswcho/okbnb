@@ -1,40 +1,38 @@
-var React = require('react');
-var hashHistory = require('react-router').hashHistory;
+import React from 'react';
+import { hashHistory } from 'react-router';
 
-var ClientActions = require('../actions/clientActions');
-var ServerActions = require('../actions/serverActions');
-var ProfileStore = require('../stores/profileStore');
-var FilterParamsStore = require('../stores/filterParams');
+import ClientActions from '../actions/clientActions';
+import ServerActions from '../actions/serverActions';
+import ProfileStore from '../stores/profileStore';
+import FilterParamsStore from '../stores/filterParams';
 
-var Filters = require('./searchPageComponents/filters');
-var Index = require('./searchPageComponents/index');
-var Map = require('./searchPageComponents/Map');
+import Filters from './searchPageComponents/filters';
+import Index from './searchPageComponents/index';
+import Map from './searchPageComponents/Map';
 
-var GeoUtils = require('../util/geoUtils');
+import GeoUtils from '../util/geoUtils';
 
-var Search = React.createClass({
-  _profilesChanged: function () {
+export default class Search extends React.Component {
+  state = {
+    profiles: ProfileStore.all(),
+    filterParams: FilterParamsStore.params(),
+    mapOptions: {},
+    renderMap: false,
+    renderBudget: false
+  }
+
+  _profilesChanged = () => {
     this.setState({profiles: ProfileStore.all()});
-  },
+  }
 
-  _filtersChanged: function () {
+  _filtersChanged = () => {
     var newParams = FilterParamsStore.params();
     this.setState({ filterParams: newParams });
     ClientActions.fetchProfiles(newParams);
     console.log(newParams);
-  },
+  }
 
-  getInitialState: function () {
-    return {
-      profiles: ProfileStore.all(),
-      filterParams: FilterParamsStore.params(),
-      mapOptions: {},
-      renderMap: false,
-      renderBudget: false
-    };
-  },
-
-  componentDidMount: function () {
+  componentDidMount() {
     window.scroll(0,0);
     // Start parse request
     var loc = this.props.params.loc;
@@ -45,15 +43,15 @@ var Search = React.createClass({
     this.filterListener = FilterParamsStore.addListener(this._filtersChanged);
     var filterParams = FilterParamsStore.params();
     ServerActions.clearProfiles();
-  },
+  }
 
-  componentWillUnmount: function () {
+  componentWillUnmount() {
     this.profileListener.remove();
     this.filterListener.remove();
-  },
+  }
 
   // Callback that is called after the location has been parsed
-  locationChanged: function (coords) {
+  locationChanged = coords => {
     var newMapOptions = {
       center: coords,
       zoom: 12,
@@ -71,24 +69,21 @@ var Search = React.createClass({
       mapOptions: newMapOptions,
       renderMap: true
     });
-  },
+  }
 
-  renderMap: function () {
-    if (this.state.renderMap) {
-      return(
-        <Map profiles={this.state.profiles} mapOptions={this.state.mapOptions}
-             renderedMap={this.renderedMap}/>
-      );
+  renderMap = () => {
+    const { renderMap, profiles, mapOptions } = this.state;
+
+    if (renderMap) {
+      return (<Map profiles={profiles} mapOptions={mapOptions} renderedMap={this.renderedMap}/>);
     } else {
       return null
     }
-  },
+  }
 
-  renderedMap: function () {
-    this.setState({ renderBudget: true })
-  },
+  renderedMap = () => this.setState({ renderBudget: true });
 
-  render: function() {
+  render() {
     return(
       <div className='search-page'>
         <div className="half-filter-index">
@@ -99,6 +94,4 @@ var Search = React.createClass({
       </div>
     );
   }
-});
-
-module.exports = Search;
+}

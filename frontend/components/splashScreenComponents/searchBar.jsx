@@ -1,58 +1,54 @@
-var React = require('react');
-var hashHistory = require('react-router').hashHistory;
+import React from 'react';
+import { hashHistory } from 'react-router';
 
-var SearchBar = React.createClass({
 
-  getInitialState: function () {
-    return {
-      location: '',
-      placeholder: 'Where to?'
-    };
-  },
+export default class SearchBar extends React.Component {
+  state = {
+    location: '',
+    placeholder: 'Where to?'
+  }
 
-  componentDidMount: function() {
-    var input = document.getElementById('searchTextField');
+  componentDidMount() {
+    const input = document.getElementById('searchTextField');
     window.autocomplete = new google.maps.places.Autocomplete(input, {types: ['(cities)']});
 
-    var that = this;
     document.getElementById('searchTextField').addEventListener(
-      'keypress', function(e) {
+      'keypress', (e) => {
         if (e.charCode === 13) {
-          that.handleSearch();
-      }
+          this.handleSearch();
+        }
     });
+
     google.maps.event.addListener(
       window.autocomplete,
       'place_changed',
-      function () {
-        var autoLoc = window.autocomplete.getPlace().name;
+      () => {
+        const autoLoc = window.autocomplete.getPlace().name;
         hashHistory.push({ pathname: 'search/' + autoLoc.replace(/\W+/g, "-") })
     });
-  },
+  }
 
-  locationChanged: function (e) {
+  locationChanged = (e) => {
     e.preventDefault();
-    this.setState({
-      location: e.target.value
-    });
-  },
+    this.setState({ location: e.target.value });
+  }
 
-  handleSearch: function (e) {
+  handleSearch = (e) => {
     e.preventDefault();
     if (this.state.location === '') {
       this.setState({ placeholder: 'Please enter a location' });
     } else {
-      var loc = this.state.location
-      var autoLoc = window.autocomplete.getPlace()
+      const autoLoc = window.autocomplete.getPlace()
+      let loc = this.state.location
       if (autoLoc) {
         loc = autoLoc.name
       }
       hashHistory.push({pathname: 'search/' + loc.replace(/\W+/g, "-")})
     }
-  },
+  }
 
-  render: function () {
-    var location = this.state.location
+  render() {
+    const location = this.state.location
 
     return (
       <form className='search-form' onSubmit={this.handleSearch}>
@@ -62,8 +58,6 @@ var SearchBar = React.createClass({
 
         <button className='search-submit' type='submit'>Search</button>
       </form>
-    );
+    )
   }
-});
-
-module.exports = SearchBar;
+}
