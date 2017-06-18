@@ -1,15 +1,16 @@
-var React = require('react');
+import React from 'react';
 
-var emptyProfile = 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif';
-module.exports = React.createClass({
-  render: function () {
-    var profile = this.props.profile;
-    var profilePicURL = emptyProfile;
+let emptyProfile = 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif';
+
+export default class Title extends React.Component {
+  render() {
+    let profile = this.props.profile;
+    let profilePicURL = emptyProfile;
     if (profile.profilePicURL) {
       profilePicURL = profile.profilePicURL;
     }
 
-    var offerText = 'Send Booking Offer';
+    let offerText = 'Send Booking Offer';
     if (this.props.offered) {
       offerText = 'Sent Booking Offer';
     }
@@ -29,4 +30,4 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}

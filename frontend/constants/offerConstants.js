@@ -1,5 +1,5 @@
+const OfferConstants = {
+  UPDATE_OFFERS: 'UPDATE_OFFERS',
+};
 
-
-module.exports = {
-  UPDATE_OFFERS: "UPDATE_OFFERS"
-}
+export default OfferConstants;

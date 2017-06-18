@@ -42,8 +42,6 @@ class App extends React.PureComponent {
   }
 }
 
-debugger
-
 const router = (
   <Router history={hashHistory}>
     <Route path='/' component={App}>

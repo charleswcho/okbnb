@@ -1,61 +1,61 @@
-var Store = require('flux/utils').Store;
-var AppDispatcher = require('../dispatcher/dispatcher');
-var ProfileConstants = require('../constants/profileConstants');
+import { Store } from 'flux/utils';
+import AppDispatcher from '../dispatcher/dispatcher';
+import ProfileConstants from '../constants/profileConstants';
 
-var ProfileStore = new Store(AppDispatcher);
+const ProfileStore = new Store(AppDispatcher);
 
-var _profiles = {};
-var _hoveredProfileId = null;
-var _currentLocation = null;
+let profiles = {};
+let hoveredProfileId = null;
+let currentLocation = null;
 
-function resetProfiles (profiles) {
-  _profiles = {};
-  profiles.forEach(function (profile) {
-    _profiles[profile.id] = profile;
+function resetProfiles(newProfiles) {
+  profiles = {};
+  newProfiles.forEach((profile) => {
+    profiles[profile.id] = profile;
   });
-};
+}
 
-function addProfile (profile) {
-  _profiles[profile.id] = profile;
-};
+function addProfile(profile) {
+  profiles[profile.id] = profile;
+}
 
-function deleteProfile (id) {
-  delete _profiles[id];
-};
+function deleteProfile(id) {
+  delete profiles[id];
+}
 
-function clearProfiles () {
-  _profiles = {};
-};
+function clearProfiles() {
+  profiles = {};
+}
 
-function updateHovered (profileId) {
-  if (_hoveredProfileId === profileId) {
-    _hoveredProfileId = null;
+function updateHovered(profileId) {
+  if (hoveredProfileId === profileId) {
+    hoveredProfileId = null;
   } else {
-    _hoveredProfileId = profileId;
+    hoveredProfileId = profileId;
   }
+}
+
+function updateLoc(loc) {
+  currentLocation = loc;
+}
+
+ProfileStore.all = () => {
+  return Object.assign({}, profiles);
 };
 
-function updateLoc (loc) {
-  _currentLocation = loc;
+ProfileStore.find = (id) => {
+  return Object.assign({}, profiles[id]);
 };
 
-ProfileStore.all = function () {
-  return Object.assign({}, _profiles);
+ProfileStore.hovered = () => {
+  return hoveredProfileId;
+}
+
+ProfileStore.currentLoc = () => {
+  return currentLocation;
 };
 
-ProfileStore.find = function(id){
-  return Object.assign({}, _profiles[id]);
-};
-
-ProfileStore.hovered = function () {
-  return _hoveredProfileId;
-};
-
-ProfileStore.currentLoc = function () {
-  return _currentLocation;
-};
-
-ProfileStore.__onDispatch = function (payload) {
+ProfileStore.__onDispatch = (payload) => {
   switch(payload.actionType) {
     case ProfileConstants.PROFILES_RECEIVED:
       resetProfiles(payload.profiles);
@@ -83,4 +83,4 @@ ProfileStore.__onDispatch = function (payload) {
   }
 };
 
-module.exports = ProfileStore;
+export default ProfileStore;

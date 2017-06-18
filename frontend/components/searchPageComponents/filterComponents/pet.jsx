@@ -1,18 +1,18 @@
-var React = require('react');
-var FilterActions = require('../../../actions/filterActions');
+import React from 'react';
+import FilterActions from '../../../actions/filterActions';
 
-var DropdownButton = require('react-bootstrap').DropdownButton
-var MenuItem = require('react-bootstrap').MenuItem
+import { DropdownButton, MenuItem } from 'react-bootstrap';
 
-var PetOption = React.createClass({
+export default class PetOption extends React.Component {
+  state = {
+    pet: null
+  }
 
-  getInitialState: function () {
-    return { pet: null };
-  },
+  handlePetSelect = (eventKey, event) => {
+    const pets = ['Dog', 'Cat', 'Bird', 'Other'];
 
-  handlePetSelect: function (eventKey, event) {
-    var pets = ['Dog', 'Cat', 'Bird', 'Other']
     eventKey = parseInt(eventKey);
+
     switch (eventKey) {
       case 0:
         this.setState({ pet: 'Dog' })
@@ -31,22 +31,20 @@ var PetOption = React.createClass({
         break;
     }
     FilterActions.updatePet(pets[eventKey]);
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className="pet-option">
         <DropdownButton className='filter-input' title='Pet' onSelect={this.handlePetSelect}>
-            <MenuItem eventKey="0" active={(this.state.pet === 'Dog')}>Dog</MenuItem>
-            <MenuItem eventKey="1" active={(this.state.pet === 'Cat')}>Cat</MenuItem>
-            <MenuItem eventKey="2" active={(this.state.pet === 'Bird')}>Bird</MenuItem>
-            <MenuItem eventKey="3" active={(this.state.pet === 'Other')}>Other</MenuItem>
-            <MenuItem divider />
-            <MenuItem eventKey="4">Clear</MenuItem>
+          <MenuItem eventKey="0" active={(this.state.pet === 'Dog')}>Dog</MenuItem>
+          <MenuItem eventKey="1" active={(this.state.pet === 'Cat')}>Cat</MenuItem>
+          <MenuItem eventKey="2" active={(this.state.pet === 'Bird')}>Bird</MenuItem>
+          <MenuItem eventKey="3" active={(this.state.pet === 'Other')}>Other</MenuItem>
+          <MenuItem divider />
+          <MenuItem eventKey="4">Clear</MenuItem>
         </DropdownButton>
       </div>
     );
   }
-});
-
-module.exports = PetOption;
+}

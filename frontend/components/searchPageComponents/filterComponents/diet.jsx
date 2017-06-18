@@ -1,18 +1,18 @@
-var React = require('react');
-var FilterActions = require('../../../actions/filterActions');
+import React from 'react';
+import FilterActions from '../../../actions/filterActions';
 
-var DropdownButton = require('react-bootstrap').DropdownButton
-var MenuItem = require('react-bootstrap').MenuItem
+import { DropdownButton, MenuItem } from 'react-bootstrap';
 
-var DietOption = React.createClass({
+export default class DietOption extends React.Component {
+  state = {
+    diet: null
+  }
 
-  getInitialState: function () {
-    return { diet: null };
-  },
+  handleDietSelect = (eventKey, event) => {
+    const diets = ['Vege', 'Vegan', 'Gluten', 'Other'];
 
-  handleDietSelect: function (eventKey, event) {
-    var diets = ['Vege', 'Vegan', 'Gluten', 'Other']
     eventKey = parseInt(eventKey);
+
     switch (eventKey) {
       case 0:
         this.setState({ diet: 'Vege' })
@@ -32,22 +32,20 @@ var DietOption = React.createClass({
     }
 
     FilterActions.updateDiet(diets[eventKey]);
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className="diet-option">
         <DropdownButton className='filter-input' title='Diet' onSelect={this.handleDietSelect}>
-            <MenuItem eventKey="0" active={(this.state.diet === 'Vege')}>Vege</MenuItem>
-            <MenuItem eventKey="1" active={(this.state.diet === 'Vegan')}>Vegan</MenuItem>
-            <MenuItem eventKey="2" active={(this.state.diet === 'Gluten')}>Gluten</MenuItem>
-            <MenuItem eventKey="3" active={(this.state.diet === 'Other')}>Other</MenuItem>
-            <MenuItem divider />
-            <MenuItem eventKey="4">Clear</MenuItem>
+          <MenuItem eventKey="0" active={(this.state.diet === 'Vege')}>Vege</MenuItem>
+          <MenuItem eventKey="1" active={(this.state.diet === 'Vegan')}>Vegan</MenuItem>
+          <MenuItem eventKey="2" active={(this.state.diet === 'Gluten')}>Gluten</MenuItem>
+          <MenuItem eventKey="3" active={(this.state.diet === 'Other')}>Other</MenuItem>
+          <MenuItem divider />
+          <MenuItem eventKey="4">Clear</MenuItem>
         </DropdownButton>
       </div>
     );
   }
-});
-
-module.exports = DietOption;
+}

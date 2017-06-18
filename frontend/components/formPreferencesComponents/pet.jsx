@@ -1,17 +1,17 @@
-var React = require('react');
+import React from 'react';
 
-var DropdownButton = require('react-bootstrap').DropdownButton
-var MenuItem = require('react-bootstrap').MenuItem
+import { DropdownButton, MenuItem } from 'react-bootstrap';
 
-var Pet = React.createClass({
+export default class Pet extends React.Component {
+  state = {
+    pet: this.props.pet
+  }
 
-  getInitialState: function () {
-    return { pet: this.props.pet };
-  },
+  handlePetSelect = (eventKey, event) => {
+    const pets = ['Dog', 'Cat', 'Bird', 'Other']
 
-  handlePetSelect: function (eventKey, event) {
-    var pets = ['Dog', 'Cat', 'Bird', 'Other']
     eventKey = parseInt(eventKey);
+
     switch (eventKey) {
       case 0:
         this.setState({ pet: 'Dog' })
@@ -27,9 +27,9 @@ var Pet = React.createClass({
         break;
     }
     this.props.updatePet(pets[eventKey]);
-  },
+  }
 
-  render: function() {
+  render() {
     return (
       <div className="pet-option">
         <DropdownButton className='filter-input' title='Pet' onSelect={this.handlePetSelect}>
@@ -42,6 +42,4 @@ var Pet = React.createClass({
       </div>
     );
   }
-});
-
-module.exports = Pet;
+}

@@ -1,98 +1,100 @@
-var AppDispatcher = require('../dispatcher/dispatcher');
-var ProfileConstants = require('../constants/profileConstants');
-var UserConstants = require('../constants/userConstants');
-var OfferConstants = require('../constants/offerConstants');
-var ErrorConstants = require('../constants/errorConstants');
+import AppDispatcher from '../dispatcher/dispatcher';
+import ProfileConstants from '../constants/profileConstants';
+import UserConstants from '../constants/userConstants';
+import OfferConstants from '../constants/offerConstants';
+import ErrorConstants from '../constants/errorConstants';
 
-module.exports = {
+const ServerActions = {
   // User and Session methods
-  receiveCurrentUser: function (currentUser) {
+  receiveCurrentUser(currentUser) {
     AppDispatcher.dispatch({
       actionType: UserConstants.RECEIVE_CURRENT_USER,
-      currentUser: currentUser
+      currentUser,
     });
   },
 
-  removeCurrentUser: function (currentUser) {
+  removeCurrentUser(currentUser) {
     AppDispatcher.dispatch({
       actionType: UserConstants.REMOVE_CURRENT_USER,
-      currentUser: currentUser
+      currentUser,
     });
   },
 
-  handleError: function(error) {
+  handleError(error) {
 		AppDispatcher.dispatch({
 			actionType: UserConstants.ERRORS,
 			errors: error.responseJSON
 		});
 	},
 
-  clearErrors: function () {
+  clearErrors() {
     AppDispatcher.dispatch({
       actionType: UserConstants.CLEAR_ERRORS
     });
   },
 
-  handleError: function(error) {
+  handleError(error) {
     AppDispatcher.dispatch({
       actionType: ErrorConstants.ERRORS,
       errors: error.responseJSON
     });
   },
 
-  clearErrors: function () {
+  clearErrors() {
     AppDispatcher.dispatch({
       actionType: ErrorConstants.CLEAR_ERRORS
     });
   },
 
   // Profile methods
-  receiveProfiles: function(profiles){
+  receiveProfiles(profiles) {
     AppDispatcher.dispatch({
       actionType: ProfileConstants.PROFILES_RECEIVED,
-      profiles: profiles
+      profiles,
     });
   },
 
-  receiveProfile: function(profile){
+  receiveProfile(profile) {
     AppDispatcher.dispatch({
       actionType: ProfileConstants.PROFILE_RECEIVED,
-      profile: profile
+      profile,
     });
   },
 
-  deleteProfile: function(profileId){
+  deleteProfile(profileId) {
     AppDispatcher.dispatch({
       actionType: ProfileConstants.DELETE_PROFILE,
-      profileId: profileId
+      profileId,
     });
   },
 
-  clearProfiles: function () {
+  clearProfiles() {
     AppDispatcher.dispatch({
-      actionType: ProfileConstants.CLEAR_PROFILES
+      actionType: ProfileConstants.CLEAR_PROFILES,
     });
   },
 
-  updateHovered: function(profileId) {
+  updateHovered(profileId) {
     AppDispatcher.dispatch({
       actionType: ProfileConstants.UPDATE_HOVERED,
-      profileId: profileId
+      profileId,
     });
   },
 
-  updateLoc: function(loc) {
+  updateLoc(loc) {
     AppDispatcher.dispatch({
       actionType: ProfileConstants.UPDATE_LOC,
-      loc: loc
+      loc,
     });
   },
 
   // Offer methods
-  receiveOffers: function(offers){
+  receiveOffers(offers) {
     AppDispatcher.dispatch({
       actionType: OfferConstants.UPDATE_OFFERS,
-      offers: offers
+      offers,
     });
-  }
+  },
 };
+
+export default ServerActions;

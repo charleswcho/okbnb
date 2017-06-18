@@ -1,84 +1,84 @@
-var ServerActions = require('../actions/serverActions');
-var OfferUtil = require('./offerUtils');
+import ServerActions from '../actions/serverActions';
+import OfferUtil from './offerUtils';
 
-var ApiUtils = {
-  fetchProfiles: function (filters) {
+const ApiUtils = {
+  fetchProfiles(filters) {
     console.log("Set Profiles request")
     $.ajax({
       url: "api/profiles",
       data: filters,
-      success: function (profiles) {
+      success(profiles) {
         console.log("Received Profiles")
         ServerActions.receiveProfiles(profiles)
       },
-      error: function (e) {
+      error(e) {
         console.log(e.responceText)
         // ServerActions.handleError(e)
       },
     });
   },
 
-  fetchProfile: function (id) {
+  fetchProfile(id) {
     $.ajax({
       url: "api/profiles/" + id,
-      success: function (profile) {
+      success(profile) {
         ServerActions.receiveProfile(profile)
       },
-      error: function (e) {
+      error(e) {
         console.log(e.responceText)
         // ServerActions.handleError(e)
       },
     });
   },
 
-  createProfile: function (profileParams, cb) {
+  createProfile(profileParams, cb) {
     $.ajax({
       method: "POST",
       url: "api/profiles",
       data: profileParams,
-      success: function (profile) {
+      success(profile) {
         console.log("Created new Profile");
         ServerActions.receiveProfile(profile)
         cb(profile.id);
       },
-      error: function (e) {
+      error(e) {
         ServerActions.handleError(e)
       },
     });
   },
 
-  updateProfile: function (profileParams) {
+  updateProfile(profileParams) {
     $.ajax({
       method: "PATCH",
       url: "api/profiles/" + profileParams.profile.id,
       data: profileParams,
-      success: function (profile) {
+      success(profile) {
         console.log("Updated Profile");
         ServerActions.receiveProfile(profile)
       },
-      error: function (e) {
+      error(e) {
         console.log(e.responceText)
         // ServerActions.handleError(e)
       },
     });
   },
 
-  deleteProfile: function (id) {
+  deleteProfile(id) {
     $.ajax({
       method: "DELETE",
       url: "api/profiles/" + id,
-      success: function (profile) {
+      success(profile) {
         console.log("Deleted Profile");
         ServerActions.deleteProfile(profile.id)
       },
-      error: function (e) {
+      error(e) {
         console.log(e.responceText)
         // ServerActions.handleError(e)
       },
     });
   },
 
-  contactProfile: function (profile_id, user_id) {
+  contactProfile(profile_id, user_id) {
     console.log('Sending contact request')
     $.ajax({
       method: "POST",
@@ -87,7 +87,7 @@ var ApiUtils = {
         profile_id: profile_id,
         user_id: user_id
       },
-      success: function () {
+      success() {
         console.log("Contacted Profile");
         OfferUtil.fetchOffers(profile_id);
       }
@@ -95,4 +95,4 @@ var ApiUtils = {
   }
 }
 
- module.exports = ApiUtils;
+export default ApiUtils;

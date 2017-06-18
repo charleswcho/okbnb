@@ -1,181 +1,116 @@
-var React = require('react');
-var DropdownButton = require('react-bootstrap').DropdownButton
-var MenuItem = require('react-bootstrap').MenuItem
+import React from 'react';
+import { DropdownButton, MenuItem } from 'react-bootstrap';
 
-var ClientActions = require('../../actions/clientActions');
-var UserStore = require('../../stores/userStore');
-var ProfileStore = require('../../stores/profileStore');
-var FilterParamsStore = require('../../stores/filterParams');
+import ClientActions from '../../actions/clientActions';
+import UserStore from '../../stores/userStore';
+import ProfileStore from '../../stores/profileStore';
+import FilterParamsStore from '../../stores/filterParams';
 
-var GeoUtils = require('../../util/geoUtils');
+import GeoUtils from '../../util/geoUtils';
 
 // Components
-var SearchStatus = require('../formPreferencesComponents/search_status');
-var Smoker = require('../formPreferencesComponents/smoker');
-var Diet = require('../formPreferencesComponents/diet');
-var Pet = require('../formPreferencesComponents/pet');
+import SearchStatus from '../formPreferencesComponents/search_status';
+import Smoker from '../formPreferencesComponents/smoker';
+import Diet from '../formPreferencesComponents/diet';
+import Pet from '../formPreferencesComponents/pet';
 
-var Form = React.createClass({
-  getInitialState: function () {
-    return {
-      ageFocused: false,
-      budgetFocused: false,
+export default class Form extends React.Component {
+  state = {
+    ageFocused: false,
+    budgetFocused: false,
 
-      user_id: UserStore.currentUser().id,
-      profilePicURL: '',
-      name: '',
-      age: null,
-      description: '',
-      location: '',
-      search_status: null,
-      smoker: null,
-      diet: null,
-      pet: null,
-      budget: null
-    };
-  },
+    user_id: UserStore.currentUser().id,
+    profilePicURL: '',
+    name: '',
+    age: null,
+    description: '',
+    location: '',
+    search_status: null,
+    smoker: null,
+    diet: null,
+    pet: null,
+    budget: null
+  }
 
-  userChanged: function () {
-    this.setState({ user_id: UserStore.currentUser().id });
-  },
-
-  componentDidMount: function () {
+  componentDidMount() {
     this.listener = UserStore.addListener(this.userChaged)
     ClientActions.fetchCurrentUser();
-  },
+  }
 
-  componentWillUnmount: function () {
+  componentWillUnmount() {
     this.listener.remove();
     ClientActions.clearErrors();
-  },
+  }
 
-  openUploadWidget: function(e) {
+  openUploadWidget = (e) => {
     e.preventDefault();
-    var self = this;
 
-    cloudinary.openUploadWidget({ cloud_name: 'ddodpmqri',
-                                  upload_preset: 'jeh6p6xu',
-                                  theme: 'minimal'
-                                },
-      function(error, result) {
-        self.setState({ profilePicURL: result[0].url });
+    cloudinary.openUploadWidget(
+      {
+        cloud_name: 'ddodpmqri',
+        upload_preset: 'jeh6p6xu',
+        theme: 'minimal'
+      },
+      (error, result) => {
+        this.setState({ profilePicURL: result[0].url });
       }
     );
+  }
 
-  },
+  userChanged = () => this.setState({ user_id: UserStore.currentUser().id });
 
-  nameChanged: function(e) {
-    e.preventDefault();
-    this.setState({
-      name: e.target.value
-    });
-  },
+  nameChanged = e => this.setState({ name: e.target.value });
+  ageChanged = e => this.setState({ age: e.target.value });
+  descriptionChanged = e => this.setState({ description: e.target.value });
+  locationChanged = e => this.setState({ location: e.target.value });
 
-  ageChanged: function(e) {
-    e.preventDefault();
-    this.setState({
-      age: e.target.value
-    });
-  },
+  updateSearchStatus = search_status => this.setState({ search_status });
+  updateSmoker = smoker => this.setState({ smoker });
+  updateDiet = diet => this.setState({ diet });
+  updatePet = pet => this.setState({ pet });
 
-  descriptionChanged: function(e) {
-    e.preventDefault();
-    this.setState({
-      description: e.target.value
-    });
-  },
+  budgetChanged = e => this.setState({ budget: e.target.value });
 
-  locationChanged: function(e) {
-    e.preventDefault();
-    this.setState({
-      location: e.target.value
-    });
-  },
-
-  updateSearchStatus: function(search_status) {
-    this.setState({ search_status: search_status })
-  },
-
-  updateSmoker: function(smoker) {
-    this.setState({ smoker: smoker })
-  },
-
-  updateDiet: function(diet) {
-    this.setState({ diet: diet })
-  },
-
-  updatePet: function(pet) {
-    this.setState({ pet: pet })
-  },
-
-  budgetChanged: function(e) {
-    e.preventDefault();
-    this.setState({
-      budget: e.target.value
-    });
-  },
-
-  handleSubmit: function(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
 
-    var params = {
+    const { profilePicURL, name, age, description, location, search_status, smoker, diet, pet, budget } = this.state
+
+    const params = {
       user_id: UserStore.currentUser().id,
-      profilePicURL: this.state.profilePicURL,
-      name: this.state.name,
-      age: this.state.age,
-      description: this.state.description,
-      location: this.state.location,
-      search_status: this.state.search_status,
-      smoker: this.state.smoker,
-      diet: this.state.diet,
-      pet: this.state.pet,
-      budget: this.state.budget
+      profilePicURL,
+      name,
+      age,
+      description,
+      location,
+      search_status,
+      smoker,
+      diet,
+      pet,
+      budget,
     };
 
     console.log(params)
 
     GeoUtils.parseAddress(params, ClientActions.createProfile, this.props.createdProfile)
-  },
+  }
 
-  ageFocus: function () {
-    this.setState({
-      ageFocused: true
-    });
-  },
+  ageFocus = () => this.setState({ ageFocused: true });
+  ageUnfocus = () => this.setState({ ageFocused: false });
+  budgetFocus = () => this.setState({ budgetFocused: true });
+  budgetUnfocus = () => this.setState({ budgetFocused: false });
 
-  ageUnfocus: function () {
-    this.setState({
-      ageFocused: false
-    });
-  },
+  render() {
+    const { name, age, description, location, budget } = this.state;
 
-  budgetFocus: function () {
-    this.setState({
-      budgetFocused: true
-    });
-  },
-
-  budgetUnfocus: function () {
-    this.setState({
-      budgetFocused: false
-    });
-  },
-
-  render: function() {
-    var profilePicURL = 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif';
+    let profilePicURL = 'https://res.cloudinary.com/ddodpmqri/image/upload/v1462480743/empty-profile_whfqjj.gif';
     if (this.state.profilePicURL) {
       profilePicURL = this.state.profilePicURL;
     }
-    var name = this.state.name;
-    var age = this.state.age;
-    var description = this.state.description;
-    var location = this.state.location;
-    var budget = this.state.budget;
-    var errors;
+
+    let errors;
     if (this.props.errors) {
-      errors = this.props.errors.map(function (error) {
-        return <div className='errors'>{error}</div>
-      });
+      errors = this.props.errors.map(error => <div className='errors'>{error}</div>);
     }
 
     return (
@@ -233,6 +168,4 @@ var Form = React.createClass({
       </form>
     )
   }
-});
-
-module.exports = Form;
+}

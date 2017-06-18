@@ -1,17 +1,17 @@
-var ServerActions = require('../actions/serverActions');
+import ServerActions from '../actions/serverActions';
 
-var OfferUtils = {
-  fetchOffers: function (profile_id) {
+const OfferUtils = {
+  fetchOffers(profile_id) {
     $.ajax({
       url: "api/offers/" + profile_id,
-      success: function (offers) {
+      success(offers) {
         ServerActions.receiveOffers(offers)
       },
-      error: function (e) {
+      error(e) {
         console.log(["Error", e.responseText]);
       },
     });
   }
 }
 
- module.exports = OfferUtils;
+export default OfferUtils;

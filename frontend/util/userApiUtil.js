@@ -1,61 +1,63 @@
-var ServerActions = require('../actions/serverActions');
+import ServerActions from '../actions/serverActions';
 
-module.exports = {
-  create: function (credentials) {
+const UserApiUtil = {
+  create(credentials) {
     console.log(credentials)
     $.ajax({
       method: "POST",
       url: "api/user",
       data: { user: credentials },
-      success: function (currentUser) {
+      success(currentUser) {
         ServerActions.receiveCurrentUser(currentUser);
       },
-      error: function (e) {
+      error(e) {
         ServerActions.handleError(e)
       }
     });
   },
 
-  signIn: function (credentials) {
+  signIn(credentials) {
     $.ajax({
       method: "POST",
       url: "api/session",
       data: { user: credentials },
-      success: function (currentUser) {
+      success(currentUser) {
         ServerActions.receiveCurrentUser(currentUser);
       },
-      error: function (e) {
+      error(e) {
         ServerActions.handleError(e)
       }
     });
   },
 
-  signOut: function () {
+  signOut() {
     $.ajax({
       method: "DELETE",
       url: "api/session",
-      success: function (currentUser) {
+      success(currentUser) {
         ServerActions.removeCurrentUser(currentUser);
       },
-      error: function (e) {
+      error(e) {
         ServerActions.handleError(e)
       }
     });
   },
 
-  fetchCurrentUser: function () {
+  fetchCurrentUser() {
     $.ajax({
       url: "api/session",
-      success: function (currentUser) {
+      success(currentUser) {
         ServerActions.receiveCurrentUser(currentUser);
       },
-      error: function (e) {
+      error(e) {
         ServerActions.handleError(e);
       }
     });
   },
 
-  clearErrors: function () {
+  clearErrors() {
     ServerActions.clearErrors();
   }
 }
+
+export default UserApiUtil;

@@ -1,15 +1,15 @@
-var React = require('react');
-var hashHistory = require('react-router').hashHistory;
+import React from 'react';
+import { hashHistory } from 'react-router';
 
-var Footer = React.createClass({
-  componentDidMount: function () {
+export default class Footer extends React.Component {
+  componentDidMount() {
     // Start parse request
     // debugger;
     // var loc = this.props.params.loc;
     // console.log(loc);
-  },
+  }
 
-  render: function () {
+  render() {
     return (
       <div className='footer'>
         <div className='footer-header'>Join Us On</div>
@@ -31,6 +31,4 @@ var Footer = React.createClass({
       </div>
     );
   }
-});
-
-module.exports = Footer;
+}

@@ -1,34 +1,39 @@
-var React = require('react');
-var hashHistory = require('react-router').hashHistory;
+import React from 'react';
+import { hashHistory } from 'react-router';
 
-var ServerActions = require('../../actions/serverActions');
+import ServerActions from '../../actions/serverActions';
 
-var Image = require('react').Image;
-
-module.exports = React.createClass({
-
-  handleClick: function (e) {
+export default class IndexItem extends React.Component {
+  handleClick = (e) => {
     e.preventDefault();
     hashHistory.push({pathname: 'profile/' + this.props.profile.id})
-  },
+  }
 
-  mouseEnter: function (e) {
+  mouseEnter = (e) => {
     e.preventDefault();
     ServerActions.updateHovered(this.props.profile.id)
-  },
+  }
 
-  mouseLeave: function (e) {
+  mouseLeave = (e) => {
     e.preventDefault();
     ServerActions.updateHovered(this.props.profile.id)
-  },
+  }
 
-  render: function () {
-    var profile = this.props.profile
+  render() {
+    const { profile } = this.props;
+
     return (
-      <div className='index-item' onClick={this.handleClick}
-           onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
-        <img className='profile-image'
-             src={profile.profilePicURL} alt="Profile Image"/>
+      <div
+        className='index-item'
+        onClick={this.handleClick}
+        onMouseEnter={this.mouseEnter}
+        onMouseLeave={this.mouseLeave}>
+
+        <img
+          className='profile-image'
+          src={profile.profilePicURL}
+          alt="Profile Image"/>
+
         <div className='index-item-info'>
           <div className='profile-name'>{profile.name}</div>
           <div>{profile.age} · {profile.location}</div>
@@ -36,4 +41,4 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}

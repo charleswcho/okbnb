@@ -4,7 +4,7 @@ const webpack = require('webpack');
 module.exports = {
   context: __dirname,
   entry: './frontend/okbnb.jsx',
-  devtool: 'source-map',
+  devtool: 'cheap-module-source-map',
   output: {
     path: path.join(__dirname, 'app', 'assets', 'javascripts'),
     filename: 'bundle.js'
@@ -23,7 +23,10 @@ module.exports = {
             options: {
               babelrc: false,
               presets: [
-                ['es2015', { modules: false }],
+                'es2015',
+                'es2016',
+                'es2017',
+                'stage-2',
                 'react',
               ],
             }
@@ -39,8 +42,10 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify('production')
+        'NODE_ENV': JSON.stringify('development')
       }
-    })
+    }),
   ],
 };
+
+// new webpack.optimize.UglifyJsPlugin(),
