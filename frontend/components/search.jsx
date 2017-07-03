@@ -1,14 +1,14 @@
 import React from 'react';
-import { hashHistory } from 'react-router';
 
 import ClientActions from '../actions/clientActions';
+import FilterActions from '../actions/filterActions';
 import ServerActions from '../actions/serverActions';
 import ProfileStore from '../stores/profileStore';
 import FilterParamsStore from '../stores/filterParams';
 
-import Filters from './searchPageComponents/filters';
 import Index from './searchPageComponents/index';
-import Map from './searchPageComponents/Map';
+import Map from './searchPageComponents/map';
+import Filters from './theme/filters';
 
 import GeoUtils from '../util/geoUtils';
 
@@ -18,30 +18,23 @@ export default class Search extends React.Component {
     filterParams: FilterParamsStore.params(),
     mapOptions: {},
     renderMap: false,
-    renderBudget: false
-  }
-
-  _profilesChanged = () => {
-    this.setState({profiles: ProfileStore.all()});
-  }
-
-  _filtersChanged = () => {
-    var newParams = FilterParamsStore.params();
-    this.setState({ filterParams: newParams });
-    ClientActions.fetchProfiles(newParams);
-    console.log(newParams);
+    renderBudget: false,
+    search_status: null,
+    smoker: null,
+    diet: null,
+    pet: null,
   }
 
   componentDidMount() {
-    window.scroll(0,0);
+    window.scroll(0, 0);
     // Start parse request
-    var loc = this.props.params.loc;
+    const loc = this.props.params.loc;
     GeoUtils.parseLoc(loc, this.locationChanged);
     ServerActions.updateLoc(loc);
 
-    this.profileListener = ProfileStore.addListener(this._profilesChanged);
-    this.filterListener = FilterParamsStore.addListener(this._filtersChanged);
-    var filterParams = FilterParamsStore.params();
+    this.profileListener = ProfileStore.addListener(this.profilesChanged);
+    this.filterListener = FilterParamsStore.addListener(this.filtersChanged);
+
     ServerActions.clearProfiles();
   }
 
@@ -50,45 +43,87 @@ export default class Search extends React.Component {
     this.filterListener.remove();
   }
 
+  profilesChanged = () => {
+    this.setState({ profiles: ProfileStore.all() });
+  }
+
+  filtersChanged = () => {
+    const newParams = FilterParamsStore.params();
+
+    ClientActions.fetchProfiles(newParams);
+
+    this.setState({ filterParams: newParams });
+  }
+
   // Callback that is called after the location has been parsed
-  locationChanged = coords => {
-    var newMapOptions = {
+  locationChanged = (coords) => {
+    const newMapOptions = {
       center: coords,
       zoom: 12,
       scrollwheel: false,
       mapTypeControl: false,
       zoomControl: true,
       zoomControlOptions: {
-       position: google.maps.ControlPosition.LEFT_TOP
+        position: google.maps.ControlPosition.LEFT_TOP
       },
       scaleControl: false,
       streetViewControl: false,
-    }
+    };
 
     this.setState({
       mapOptions: newMapOptions,
-      renderMap: true
+      renderMap: true,
     });
+  }
+
+  updateValue = (type, value) => {
+    switch (type) {
+      case 'search_status':
+        FilterActions.updateSearchState(value);
+        break;
+      case 'smoker':
+        FilterActions.updateSmoker(value);
+        break;
+      case 'diet':
+        FilterActions.updateDiet(value);
+        break;
+      case 'pet':
+        FilterActions.updatePet(value);
+        break;
+      default:
+        break;
+    }
+
+    this.setState({ [type]: value });
   }
 
   renderMap = () => {
     const { renderMap, profiles, mapOptions } = this.state;
 
     if (renderMap) {
-      return (<Map profiles={profiles} mapOptions={mapOptions} renderedMap={this.renderedMap}/>);
-    } else {
-      return null
+      return (<Map profiles={profiles} mapOptions={mapOptions} renderedMap={this.renderedMap} />);
     }
+
+    return null;
   }
 
   renderedMap = () => this.setState({ renderBudget: true });
 
   render() {
-    return(
-      <div className='search-page'>
+    const { search_status, smoker, diet, pet } = this.state;
+
+    return (
+      <div className="search-page">
         <div className="half-filter-index">
-          <Filters renderBudget={this.state.renderBudget}/>
-          <Index profiles={this.state.profiles} renderMap={this.state.renderMap}/>
+          <Filters
+            search_status={search_status}
+            smoker={smoker}
+            diet={diet}
+            pet={pet}
+            renderBudget={this.state.renderBudget}
+            updateValue={this.updateValue}
+          />
+          <Index profiles={this.state.profiles} renderMap={this.state.renderMap} />
         </div>
         {this.renderMap()}
       </div>
